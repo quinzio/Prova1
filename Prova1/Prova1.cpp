@@ -86,13 +86,13 @@ int main()
             if (smCatchGlobals[1].length() == depth) {
                 tempNode->parent = cursor->parent;
                 tempNode->prevSib = cursor;
+                cursor->nextSib = tempNode;
                 cursor = tempNode;
             }
             // Did I find a new child (on a deeper indentation level) ?
             if (smCatchGlobals[1].length() > depth) {
                 depth = smCatchGlobals[1].length();
                 tempNode->parent = cursor;
-                tempNode->prevSib = cursor;
                 cursor = tempNode;
             }
 
