@@ -208,7 +208,6 @@ unsigned long long visit(Node *node)
     }
 
 
-
     if (node->astType.compare("<<<NULL") == 0) {
         
         
