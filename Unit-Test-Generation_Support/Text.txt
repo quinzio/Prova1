@@ -1,0 +1,36 @@
+TranslationUnitDecl 0xcfe220 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xcfe768 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0xcfe490 '__int128'
+|-TypedefDecl 0xcfe7c8 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0xcfe4b0 'unsigned __int128'
+|-TypedefDecl 0xcfeaa8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0xcfe8a0 'struct __NSConstantString_tag'
+|   `-Record 0xcfe818 '__NSConstantString_tag'
+|-TypedefDecl 0xcfeb08 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0xcfe3f0 'unsigned long long'
+|-TypedefDecl 0xcfeb98 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0xcfeb60 'char *'
+|   `-BuiltinType 0xcfe2b0 'char'
+|-TypedefDecl 0xcfebf8 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0xcfeb60 'char *'
+|   `-BuiltinType 0xcfe2b0 'char'
+|-VarDecl 0xcfec58 <temp.c:1:1, col:5> col:5 used a 'int'
+|-VarDecl 0xcfed08 <line:2:1, col:5> col:5 b 'int'
+`-FunctionDecl 0xcfedb8 <line:4:1, line:10:1> line:4:5 f1 'int ()'
+  `-CompoundStmt 0x4ab2fa8 <col:10, line:10:1>
+    |-DeclStmt 0xcfeed0 <line:5:5, col:19>
+    | `-VarDecl 0xcfee70 <col:5, col:18> col:18 used c 'unsigned int'
+    |-IfStmt 0x4ab2f30 <line:6:5, line:8:5>
+    | |-<<<NULL>>>
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x4ab2e70 <line:6:9, col:13> 'int' '<'
+    | | |-ImplicitCastExpr 0xcfef38 <col:9> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0xcfeee8 <col:9> 'int' lvalue Var 0xcfec58 'a' 'int'
+    | | `-IntegerLiteral 0xcfef10 <col:13> 'int' 10
+    | |-CompoundStmt 0x4ab2f10 <col:17, line:8:5>
+    | | `-BinaryOperator 0x4ab2ee8 <line:7:9, col:13> 'unsigned int' '='
+    | |   |-DeclRefExpr 0x4ab2e98 <col:9> 'unsigned int' lvalue Var 0xcfee70 'c' 'unsigned int'
+    | |   `-IntegerLiteral 0x4ab2ec0 <col:13> 'unsigned int' 1
+    | `-<<<NULL>>>
+    `-ReturnStmt 0x4ab2f90 <line:9:5, col:12>
+      `-IntegerLiteral 0x4ab2f68 <col:12> 'int' 1
