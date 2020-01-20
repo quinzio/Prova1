@@ -57,7 +57,7 @@ Variable::~Variable()
 
 std::vector<Variable> vVariable;
 
-unsigned long long visit(Node* node);
+Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
 
 int main()
@@ -148,10 +148,11 @@ int main()
     /*
         Visit the AST
     */
-    visit(&myRoot);
+    Variable t;
+    t = visit(&myRoot);
 }
 
-unsigned long long visit(Node *node)
+Variable visit(Node *node)
 {
     std::regex eIntegralType(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\s(\d+))###");
     std::smatch smIntegralType;
@@ -159,7 +160,10 @@ unsigned long long visit(Node *node)
     std::smatch smVarDecl;
     std::regex eDeclRefExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\slvalue\sVar\s0x[\da-f]{6,7}\s'(\w+)')###");
     std::smatch smDeclRefExpr;
-
+    std::regex eImplicitCastExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)')###");
+    std::smatch smImplicitCastExpr;
+    std::regex eBinaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
+    std::smatch smBinaryOperator;
     /*
         <<<NULL  (>>>)
         BinaryOperator
@@ -181,29 +185,53 @@ unsigned long long visit(Node *node)
     */
     if (node->astType.compare("IntegerLiteral") == 0) {
         unsigned long long integral;
-        unsigned long long ret;
+        Variable ret;
         std::regex_search(node->text, smIntegralType, eIntegralType);
         integral = std::stoi(smIntegralType[2]);
-        ret = cast(smIntegralType[1], integral);
+        ret.value = cast(smIntegralType[1], integral);
         return ret;
     }
     if (node->astType.compare("VarDecl") == 0) {
         std::regex_search(node->text, smVarDecl, eVarDecl);
-        Variable temp;
+        Variable temp, ret;
         temp.name = smVarDecl[1];
         temp.type = smVarDecl[2];
         temp.value = 0;
         vVariable.push_back(temp);
-        return 0;
+        ret.value = 0;
+        return ret;
     }
     if (node->astType.compare("DeclRefExpr") == 0) {
         std::regex_search(node->text, smDeclRefExpr, eDeclRefExpr);
         std::string varName = smDeclRefExpr[2];
         for (auto it = vVariable.begin(); it != vVariable.end(); it++) {
             if (it->name.compare(varName) == 0) {
-                return (unsigned long long)it._Ptr;
-                
+                return *it;
             }
+        }
+    }
+    if (node->astType.compare("ImplicitCastExpr") == 0) {
+        std::regex_search(node->text, smImplicitCastExpr, eImplicitCastExpr);
+        std::string castTo = smDeclRefExpr[1];
+        Variable ret;
+        ret = visit(node->child);
+        ret.value = cast(castTo, ret.value);
+    }
+    if (node->astType.compare("BinaryOperator") == 0) {
+        std::regex_search(node->text, smBinaryOperator, eBinaryOperator);
+        std::string castTo = smDeclRefExpr[1];
+        std::string boperator = smDeclRefExpr[2];
+        Variable opa, opb, ret;
+        opa = visit(node->child);
+        opb = visit(node->child->nextSib);
+        if (boperator.compare("<")) {
+            ret.value = opa.value < opb.value;
+        }
+    }
+    if (node->astType.compare("CompoundStmt") == 0) {
+        Variable temp;
+        for (Node* next = node->child; next != NULL; next = next->nextSib) {
+            temp = visit(next);
         }
     }
 
@@ -214,10 +242,12 @@ unsigned long long visit(Node *node)
     }
 
     if (node->child) {
-        visit(node->child);
+        Variable t;
+        t = visit(node->child);
     }
     if (node->nextSib) {
-        visit(node->nextSib);
+        Variable t;
+        t = visit(node->nextSib);
     }
 }
 
