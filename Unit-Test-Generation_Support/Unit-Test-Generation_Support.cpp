@@ -164,6 +164,8 @@ Variable visit(Node *node)
     std::smatch smImplicitCastExpr;
     std::regex eBinaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
     std::smatch smBinaryOperator;
+    std::regex eDeclStmt(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>)###");
+    std::smatch smDeclStmt;
     /*
         <<<NULL  (>>>)
         BinaryOperator
@@ -183,23 +185,21 @@ Variable visit(Node *node)
         TypedefDecl
         VarDecl
     */
+    Variable ret;
     if (node->astType.compare("IntegerLiteral") == 0) {
         unsigned long long integral;
-        Variable ret;
         std::regex_search(node->text, smIntegralType, eIntegralType);
         integral = std::stoi(smIntegralType[2]);
         ret.value = cast(smIntegralType[1], integral);
-        return ret;
     }
     if (node->astType.compare("VarDecl") == 0) {
         std::regex_search(node->text, smVarDecl, eVarDecl);
-        Variable temp, ret;
+        Variable temp;
         temp.name = smVarDecl[1];
         temp.type = smVarDecl[2];
         temp.value = 0;
         vVariable.push_back(temp);
         ret.value = 0;
-        return ret;
     }
     if (node->astType.compare("DeclRefExpr") == 0) {
         std::regex_search(node->text, smDeclRefExpr, eDeclRefExpr);
@@ -213,7 +213,6 @@ Variable visit(Node *node)
     if (node->astType.compare("ImplicitCastExpr") == 0) {
         std::regex_search(node->text, smImplicitCastExpr, eImplicitCastExpr);
         std::string castTo = smDeclRefExpr[1];
-        Variable ret;
         ret = visit(node->child);
         ret.value = cast(castTo, ret.value);
     }
@@ -221,24 +220,25 @@ Variable visit(Node *node)
         std::regex_search(node->text, smBinaryOperator, eBinaryOperator);
         std::string castTo = smDeclRefExpr[1];
         std::string boperator = smDeclRefExpr[2];
-        Variable opa, opb, ret;
+        Variable opa, opb;
         opa = visit(node->child);
         opb = visit(node->child->nextSib);
         if (boperator.compare("<")) {
             ret.value = opa.value < opb.value;
         }
     }
-    if (node->astType.compare("CompoundStmt") == 0) {
-        Variable temp;
-        for (Node* next = node->child; next != NULL; next = next->nextSib) {
-            temp = visit(next);
-        }
+
+    if (node->astType.compare("IfStmt") == 0) {
     }
 
+    if (node->astType.compare("CompoundStmt") == 0) {
+    }
+
+    if (node->astType.compare("DeclStmt") == 0) {
+    }
 
     if (node->astType.compare("<<<NULL") == 0) {
-        
-        
+
     }
 
     if (node->child) {
@@ -249,6 +249,7 @@ Variable visit(Node *node)
         Variable t;
         t = visit(node->nextSib);
     }
+    return Variable();
 }
 
 unsigned long long cast(std::string str, unsigned long long v) 
