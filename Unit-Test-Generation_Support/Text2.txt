@@ -1,0 +1,37 @@
+TranslationUnitDecl 0xd6e050 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xd6e598 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0xd6e2c0 '__int128'
+|-TypedefDecl 0xd6e5f8 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0xd6e2e0 'unsigned __int128'
+|-TypedefDecl 0xd6e8d8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0xd6e6d0 'struct __NSConstantString_tag'
+|   `-Record 0xd6e648 '__NSConstantString_tag'
+|-TypedefDecl 0xd6e938 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0xd6e220 'unsigned long long'
+|-TypedefDecl 0xd6e9c8 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0xd6e990 'char *'
+|   `-BuiltinType 0xd6e0e0 'char'
+|-TypedefDecl 0xd6ea28 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0xd6e990 'char *'
+|   `-BuiltinType 0xd6e0e0 'char'
+|-VarDecl 0xd6ea88 <.\2\temp.c:1:1, col:5> col:5 used a 'int'
+|-VarDecl 0xd6eb38 <col:1, col:8> col:8 used b 'int'
+`-FunctionDecl 0xd6ebf8 <line:3:1, line:6:1> line:3:5 f1 'int ()'
+  `-CompoundStmt 0x3676700 <col:10, line:6:1>
+    |-ForStmt 0x3676688 <line:4:5, col:37>
+    | |-BinaryOperator 0xd6ecf0 <col:10, col:14> 'int' '='
+    | | |-DeclRefExpr 0xd6eca0 <col:10> 'int' lvalue Var 0xd6ea88 'a' 'int'
+    | | `-IntegerLiteral 0xd6ecc8 <col:14> 'int' 0
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x3676580 <col:17, col:21> 'int' '<'
+    | | |-ImplicitCastExpr 0xd6ed68 <col:17> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0xd6ed18 <col:17> 'int' lvalue Var 0xd6ea88 'a' 'int'
+    | | `-IntegerLiteral 0xd6ed40 <col:21> 'int' 10
+    | |-UnaryOperator 0x36765d0 <col:25, col:26> 'int' postfix '++'
+    | | `-DeclRefExpr 0x36765a8 <col:25> 'int' lvalue Var 0xd6ea88 'a' 'int'
+    | `-CompoundStmt 0x3676668 <col:30, col:37>
+    |   `-BinaryOperator 0x3676640 <col:31, col:35> 'int' '='
+    |     |-DeclRefExpr 0x36765f0 <col:31> 'int' lvalue Var 0xd6eb38 'b' 'int'
+    |     `-IntegerLiteral 0x3676618 <col:35> 'int' 0
+    `-ReturnStmt 0x36766e8 <line:5:5, col:12>
+      `-IntegerLiteral 0x36766c0 <col:12> 'int' 0

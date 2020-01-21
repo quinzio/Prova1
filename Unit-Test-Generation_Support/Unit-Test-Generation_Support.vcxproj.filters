@@ -31,5 +31,8 @@
     <Text Include="Text-MCN1_acmotor.txt">
       <Filter>File di origine</Filter>
     </Text>
+    <Text Include="Text2.txt">
+      <Filter>File di origine</Filter>
+    </Text>
   </ItemGroup>
 </Project>
