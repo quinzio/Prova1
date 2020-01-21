@@ -157,6 +157,7 @@
     <Text Include="Text-MCN1_acmotor.txt" />
     <Text Include="Text.txt" />
     <Text Include="Text2.txt" />
+    <Text Include="Text3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

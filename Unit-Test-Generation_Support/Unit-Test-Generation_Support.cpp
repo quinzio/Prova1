@@ -74,7 +74,7 @@ int main()
     std::cout << sm[1] << "\n";
     std::cout << sm[2] << "\n";
 
-    std::ifstream infile("Text2.txt");
+    std::ifstream infile("Text3.txt");
     std::string str;
     std::regex eCatchGlobals    (R"(([^\w<]*)([\w<]+).*)");
     std::smatch smCatchGlobals;
