@@ -1,0 +1,3 @@
+#if defined(__AUTOMATIC_DISTRIBUTION__) && defined(_DISTRIBUTE_CODE)
+#pragma pop
+#endif
