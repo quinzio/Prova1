@@ -1402,7 +1402,7 @@ protected:
 
     bool enabled_macro_tracing() const
     {
-        return (flags & trace_macros) && (logging_flags & trace_macros);
+        return (flags & trace_macros) || (logging_flags & trace_macros);
     }
     bool enabled_include_tracing() const
     {

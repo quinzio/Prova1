@@ -1,5 +1,8 @@
-// ConsoleApplication2.cpp : Questo file contiene la funzione 'main', in cui inizia e termina l'esecuzione del programma.
-//
+/*=============================================================================
+    This example was taken fom the issue list on Github
+    for the project Boost Wave.
+    https://github.com/boostorg/wave/issues
+=============================================================================*/
 
 // code to reproduce TRAC 10733
 
@@ -15,6 +18,8 @@
 
 #include <boost/wave/cpplexer/re2clex/cpp_re2c_lexer.hpp>
 
+std::string hookRes;
+
 // custom preprocessor hooks
 
 struct pp_hooks : boost::wave::context_policies::default_preprocessing_hooks
@@ -24,7 +29,8 @@ struct pp_hooks : boost::wave::context_policies::default_preprocessing_hooks
         ContextT const&, TokenT const& macro,
         ContainerT const&, TokenT const&)
     {
-        std::cout << "expanding object macro " << macro.get_value() << "\n";
+        //std::cout << "expanding object macro " << macro.get_value() << "\n";
+        hookRes += "expanding object macro " << macro.get_value() << "\n";
         return false;   // do not skip expansion
     }
 
@@ -35,11 +41,12 @@ struct pp_hooks : boost::wave::context_policies::default_preprocessing_hooks
         std::cout << "macro expanded to |";
         for (auto const& tok : result)
         {
-            std::cout << tok.get_value();
+            //std::cout << tok.get_value();
+            hookRes += tok.get_value();
         }
-        std::cout << "|\n";
+        //std::cout << "|\n";
+        hookRes += "\n";
     }
-
 };
 
 typedef boost::wave::cpplexer::lex_token<> cpplexer_token_t;
@@ -93,10 +100,14 @@ int main() {
     ctx.add_sysinclude_path("./Sources/sysfiles");
 
     for (cpplexer_token_t const& tok : ctx) { 
+        std::string temp;
         (void)tok;
+        temp = tok.get_value().c_str();
+        if (temp.replace()
         //std::cout << tok.get_position() << "\n";
-        //std::cout << tok.get_value() << "\n";
-        std::cout << "\n";
+        std::cout << tok.get_value();
+        //std::cout << "\n";
+        
     }
 
     return 0;

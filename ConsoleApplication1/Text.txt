@@ -1,6 +1,7 @@
-#define A 1
+#define A(x) x
 #define B 3
-#define C (A + B)
+#define C (A(1) + \
+        B)
 #define D (2 * C)
 
 int main() {

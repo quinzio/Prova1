@@ -1,4 +1,11 @@
 /*=============================================================================
+    This example is the quick_start example of the Boost library
+    file:\\\C:\local\boost_1_72_0\libs\wave\samples\quick_start
+
+=============================================================================*/
+
+
+/*=============================================================================
     Boost.Wave: A Standard compliant C++ preprocessor library
 
     http://www.boost.org/
