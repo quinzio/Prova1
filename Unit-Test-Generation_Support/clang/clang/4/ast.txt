@@ -1,0 +1,72 @@
+TranslationUnitDecl 0xd4a600 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xd4ab48 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0xd4a870 '__int128'
+|-TypedefDecl 0xd4aba8 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0xd4a890 'unsigned __int128'
+|-TypedefDecl 0xd4ae88 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0xd4ac80 'struct __NSConstantString_tag'
+|   `-Record 0xd4abf8 '__NSConstantString_tag'
+|-TypedefDecl 0xd4aee8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0xd4a7d0 'unsigned long long'
+|-TypedefDecl 0xd4af78 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0xd4af40 'char *'
+|   `-BuiltinType 0xd4a690 'char'
+|-TypedefDecl 0xd4afd8 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0xd4af40 'char *'
+|   `-BuiltinType 0xd4a690 'char'
+`-FunctionDecl 0xd4b078 <.\4\temp.c:1:1, line:23:1> line:2:1 main 'int ()'
+  `-CompoundStmt 0x36a3128 <line:3:1, line:23:1>
+    |-DeclStmt 0xd4b1d0 <line:4:2, col:7>
+    | `-VarDecl 0xd4b170 <col:2, col:6> col:6 used x 'int'
+    |-DeclStmt 0xd4b290 <line:5:2, col:8>
+    | `-VarDecl 0xd4b230 <col:2, col:7> col:7 used p 'int *'
+    |-DeclStmt 0x36a2b70 <line:6:2, col:10>
+    | `-VarDecl 0x36a2b10 <col:2, col:8> col:8 used pp 'int **'
+    |-BinaryOperator 0x36a2bd8 <line:8:2, col:6> 'int' '='
+    | |-DeclRefExpr 0x36a2b88 <col:2> 'int' lvalue Var 0xd4b170 'x' 'int'
+    | `-IntegerLiteral 0x36a2bb0 <col:6> 'int' 0
+    |-BinaryOperator 0x36a2c70 <line:9:2, col:7> 'int *' '='
+    | |-DeclRefExpr 0x36a2c00 <col:2> 'int *' lvalue Var 0xd4b230 'p' 'int *'
+    | `-UnaryOperator 0x36a2c50 <col:6, col:7> 'int *' prefix '&'
+    |   `-DeclRefExpr 0x36a2c28 <col:7> 'int' lvalue Var 0xd4b170 'x' 'int'
+    |-BinaryOperator 0x36a2d08 <line:10:2, col:8> 'int **' '='
+    | |-DeclRefExpr 0x36a2c98 <col:2> 'int **' lvalue Var 0x36a2b10 'pp' 'int **'
+    | `-UnaryOperator 0x36a2ce8 <col:7, col:8> 'int **' prefix '&'
+    |   `-DeclRefExpr 0x36a2cc0 <col:8> 'int *' lvalue Var 0xd4b230 'p' 'int *'
+    |-IfStmt 0x36a2de8 <line:12:2, line:13:10>
+    | |-<<<NULL>>>
+    | |-<<<NULL>>>
+    | |-ImplicitCastExpr 0x36a2d90 <line:12:5, col:6> 'int' <LValueToRValue>
+    | | `-UnaryOperator 0x36a2d70 <col:5, col:6> 'int' lvalue prefix '*'
+    | |   `-ImplicitCastExpr 0x36a2d58 <col:6> 'int *' <LValueToRValue>
+    | |     `-DeclRefExpr 0x36a2d30 <col:6> 'int *' lvalue Var 0xd4b230 'p' 'int *'
+    | |-ReturnStmt 0x36a2dd0 <line:13:3, col:10>
+    | | `-IntegerLiteral 0x36a2da8 <col:10> 'int' 1
+    | `-<<<NULL>>>
+    |-IfStmt 0x36a2ff8 <line:14:2, line:17:10>
+    | |-<<<NULL>>>
+    | |-<<<NULL>>>
+    | |-ImplicitCastExpr 0x36a2eb8 <line:14:5, col:7> 'int' <LValueToRValue>
+    | | `-UnaryOperator 0x36a2e98 <col:5, col:7> 'int' lvalue prefix '*'
+    | |   `-ImplicitCastExpr 0x36a2e80 <col:6, col:7> 'int *' <LValueToRValue>
+    | |     `-UnaryOperator 0x36a2e60 <col:6, col:7> 'int *' lvalue prefix '*'
+    | |       `-ImplicitCastExpr 0x36a2e48 <col:7> 'int **' <LValueToRValue>
+    | |         `-DeclRefExpr 0x36a2e20 <col:7> 'int **' lvalue Var 0x36a2b10 'pp' 'int **'
+    | |-ReturnStmt 0x36a2ef8 <line:15:3, col:10>
+    | | `-IntegerLiteral 0x36a2ed0 <col:10> 'int' 1
+    | `-BinaryOperator 0x36a2fd0 <line:17:3, col:10> 'int' '='
+    |   |-UnaryOperator 0x36a2f88 <col:3, col:5> 'int' lvalue prefix '*'
+    |   | `-ImplicitCastExpr 0x36a2f70 <col:4, col:5> 'int *' <LValueToRValue>
+    |   |   `-UnaryOperator 0x36a2f50 <col:4, col:5> 'int *' lvalue prefix '*'
+    |   |     `-ImplicitCastExpr 0x36a2f38 <col:5> 'int **' <LValueToRValue>
+    |   |       `-DeclRefExpr 0x36a2f10 <col:5> 'int **' lvalue Var 0x36a2b10 'pp' 'int **'
+    |   `-IntegerLiteral 0x36a2fa8 <col:10> 'int' 1
+    `-IfStmt 0x36a30f0 <line:19:2, line:22:10>
+      |-<<<NULL>>>
+      |-<<<NULL>>>
+      |-ImplicitCastExpr 0x36a3058 <line:19:5> 'int' <LValueToRValue>
+      | `-DeclRefExpr 0x36a3030 <col:5> 'int' lvalue Var 0xd4b170 'x' 'int'
+      |-ReturnStmt 0x36a3098 <line:20:3, col:10>
+      | `-IntegerLiteral 0x36a3070 <col:10> 'int' 0
+      `-ReturnStmt 0x36a30d8 <line:22:3, col:10>
+        `-IntegerLiteral 0x36a30b0 <col:10> 'int' 1

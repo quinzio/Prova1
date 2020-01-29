@@ -40,9 +40,18 @@ public:
     ~Variable();
     std::string name;
     unsigned long long value;
+    int braceNested;
+    int used = false;
+    enum typeEnum_t{
+        isArray,
+        isRef,
+        isValue
+    };
+    enum typeEnum_t typeEnum;
     std::string type;
     Variable* pointsTo;
-    int pointDepth;
+    std::vector<Variable> *array = new std::vector<Variable>;
+    int arrayIx;
 
 private:
 };
@@ -74,7 +83,11 @@ int main()
     std::cout << sm[1] << "\n";
     std::cout << sm[2] << "\n";
 
-    std::ifstream infile("Text3.txt");
+    std::ofstream pippo("pippo.txt");
+    pippo << "pippo";
+    pippo.close();
+
+    std::ifstream infile("ex3/ast.txt");
     std::string str;
     std::regex eCatchGlobals    (R"(([^\w<]*)([\w<]+).*)");
     std::smatch smCatchGlobals;
@@ -154,20 +167,24 @@ int main()
 
 Variable visit(Node *node)
 {
-    std::regex eIntegralType(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\s(\d+))###");
+    std::regex eIntegralType(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s(\d+))###");
     std::smatch smIntegralType;
-    std::regex eVarDecl(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+    std::regex eVarDecl(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
     std::smatch smVarDecl;
-    std::regex eDeclRefExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\slvalue\sVar\s0x[\da-f]{6,7}\s'(\w+)')###");
+    std::regex eDeclRefExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\slvalue\sVar\s0x[\da-f]{6,11}\s'(\w+)')###");
     std::smatch smDeclRefExpr;
-    std::regex eImplicitCastExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)')###");
+    std::regex eImplicitCastExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s<([^>]*)>)###");
     std::smatch smImplicitCastExpr;
-    std::regex eBinaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
+    std::regex eBinaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
     std::smatch smBinaryOperator;
-    std::regex eUnaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s'([^']+)'\s(postfix|prefix)\s'([^']+)')###");
+    std::regex eUnaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
     std::smatch smUnaryOperator;
-    std::regex eDeclStmt(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>)###");
+    std::regex eDeclStmt(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>)###");
     std::smatch smDeclStmt;
+    std::regex eArrayDecl(R"###(.*\[(\d+)\])###");
+    std::smatch smArrayDecl;
+    std::regex ePointerDecl(R"###(.*\s\*)###");
+    std::smatch smPointerDecl;
     /*
         <<<NULL  (>>>)
         BinaryOperator
@@ -197,22 +214,46 @@ Variable visit(Node *node)
     }
 
     if (node->astType.compare("VarDecl") == 0) {
-        std::regex_search(node->text, smVarDecl, eVarDecl);
         Variable temp;
+        std::string rawType;
+        std::regex_search(node->text, smVarDecl, eVarDecl);
         temp.name = smVarDecl[1];
-        temp.type = smVarDecl[2];
-        temp.value = 0;
+        rawType = smVarDecl[2];
+        temp.type = rawType;
+        temp.used = true;
+        std::regex_search(rawType, smArrayDecl, eArrayDecl);
+        if (smArrayDecl.size() > 0) {
+            int arrSize = std::stoi(smArrayDecl[1]);
+            Variable a;
+            a.typeEnum = Variable::typeEnum_t::isValue;
+            temp.typeEnum = Variable::typeEnum_t::isArray;
+            for (int i = 0; i < arrSize; i++) {
+                a.value = i;
+                temp.array->push_back(a);
+            }
+        }
+        else if (std::regex_search(rawType, smPointerDecl, ePointerDecl)) {
+            temp.typeEnum = Variable::typeEnum_t::isRef;
+        }
+        else {
+            temp.typeEnum = Variable::typeEnum_t::isValue;
+            temp.value = 0;
+        }
+        // Add Variable to store
         vVariable.push_back(temp);
+        std::cout << "Value of variable " << temp.name << "\n";
+        std::cin >> temp.value;
         return temp;
     }
 
     if (node->astType.compare("DeclRefExpr") == 0) {
-        Variable ret;
         std::regex_search(node->text, smDeclRefExpr, eDeclRefExpr);
         std::string varName = smDeclRefExpr[2];
+        Variable ret;
         for (auto it = vVariable.begin(); it != vVariable.end(); it++) {
             if (it->name.compare(varName) == 0) {
-                ret = *it;
+                ret.pointsTo = &*it;
+                ret.typeEnum = Variable::typeEnum_t::isRef;
                 return ret;
             }
         }
@@ -222,8 +263,20 @@ Variable visit(Node *node)
         Variable ret;
         std::regex_search(node->text, smImplicitCastExpr, eImplicitCastExpr);
         std::string castTo = smImplicitCastExpr[1];
+        /// Must always be a pointer to variable
         ret = visit(node->child);
-        ret.value = cast(castTo, ret.value);
+        if (smImplicitCastExpr[2].compare("ArrayToPointerDecay") == 0) {
+            // Leave the pointer as it is, it's already a pointer to array.
+            return ret;
+        }
+        if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
+            if (ret.typeEnum == Variable::typeEnum_t::isArray) {
+                return (*ret.pointsTo->array)[ret.pointsTo->arrayIx];
+            }
+            return *ret.pointsTo;
+        }
+        // No cast should be necessary as the type is not changed by 
+        // ImplicitCastExpr
         return ret;
     }
 
@@ -234,20 +287,30 @@ Variable visit(Node *node)
         std::string fix = smUnaryOperator[2];
         std::string uoperator = smUnaryOperator[3];
         opa = visit(node->child);
-        Variable* mod = NULL;
-        for (auto it = vVariable.begin(); it != vVariable.end(); it++) {
-            if (it->name.compare(opa.name) == 0) {
-                mod = &*it;
-                break;
+        if (uoperator.compare("++") == 0) {
+            if (fix.compare("postfix") == 0) {
+                ret = *opa.pointsTo;
+            }
+            opa.pointsTo->value++;
+            if (fix.compare("prefix") == 0) {
+                ret = *opa.pointsTo;
             }
         }
-        if (fix.compare("postfix") == 0) {
-            ret = *mod;
+        if (uoperator.compare("--") == 0)  {
+            if (fix.compare("postfix") == 0) {
+                ret = *opa.pointsTo;
+            }
+            opa.pointsTo->value++;
+            if (fix.compare("prefix") == 0) {
+                ret = *opa.pointsTo;
+            }
         }
-        if (uoperator.compare("++") == 0)  mod->value++;
-        if (uoperator.compare("--") == 0)  mod->value++;
-        if (fix.compare("prefix") == 0) {
-            ret = *mod;
+        if (uoperator.compare("&") == 0) {
+            ret = opa;
+        }
+        if (uoperator.compare("*") == 0) {
+            ret = opa;
+            ret.typeEnum = Variable::typeEnum_t::isRef;
         }
         return ret;
     }
@@ -265,16 +328,10 @@ Variable visit(Node *node)
             return ret;
         }
         if (boperator.compare("=") == 0) {
-            Variable* mod = NULL;
-            for (auto it = vVariable.begin(); it != vVariable.end(); it++) {
-                if (it->name.compare(opa.name) == 0) {
-                    mod = &*it;
-                    break;
-                }
-            }
-            if (mod) mod->value = opb.value;
-            else mod = new Variable();
-            return *mod;
+            std::string saveName = opa.pointsTo->name;
+            *opa.pointsTo = opb;
+            opa.pointsTo->name = saveName;
+            ret = *opa.pointsTo;
         }
         return ret;
     }
@@ -320,6 +377,23 @@ Variable visit(Node *node)
             temp = visit(next);
         }
         return Variable();
+    }
+
+    if (node->astType.compare("ArraySubscriptExpr") == 0) {
+        Variable ret;
+        Variable pArray = visit(node->child);
+        int ix = visit(node->child->nextSib).value;
+        ret.pointsTo = pArray.pointsTo->array->data() + ix;
+        ret.typeEnum = Variable::typeEnum_t::isRef;
+        return ret;
+    }
+
+    if (node->astType.compare("FunctionDecl") == 0) {
+        Variable temp = visit(node->child);
+        for (auto v : vVariable) {
+            std::cout << "Value of variable " << v.name << ": " << v.value << "\n";
+        }
+        return temp;
     }
 
     if (node->astType.compare("DeclStmt") == 0) {

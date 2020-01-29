@@ -1,0 +1,6 @@
+#! sh
+SCRIPT_PATH=$(dirname $0)
+gcc -o $1 $1.c -fdump-tree-original-raw
+$SCRIPT_PATH/pre.awk $1.c.* | $SCRIPT_PATH/treeviz.awk > $1.dot
+echo Running dot
+dot -Tpng $1.dot -o $1.png

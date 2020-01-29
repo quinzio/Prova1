@@ -1,0 +1,24 @@
+/*lint -estring(960, "use of '#undef' is discouraged") , MISRA 19.6 REQ, #undef required to support non-ANSI pointer qualifiers 'near' and 'far' */
+#undef FAR
+#undef NEAR
+#undef _FAR
+#undef _NEAR
+/*lint +estring(960, "use of '#undef' is discouraged") */
+
+#if defined (__BANKED__) || defined (__LARGE__)
+#pragma CODE_SEG NEAR NON_BANKED
+#endif
+
+#if defined(__STAR12__) || __STDC__
+#define FAR    /* */
+#define NEAR   /* */
+#define _FAR   /* */
+#define _NEAR  /* */
+#else
+#define FAR    far
+#define NEAR   near
+#define _FAR   far
+#define _NEAR  near
+#endif
+
+/*lint -efile(537, non_bank.sgm) allow multiple use */
