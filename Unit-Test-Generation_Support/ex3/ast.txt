@@ -1,44 +1,45 @@
-TranslationUnitDecl 0x212caad28e8 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x212caad3180 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x212caad2e80 '__int128'
-|-TypedefDecl 0x212caad31f0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x212caad2ea0 'unsigned __int128'
-|-TypedefDecl 0x212caad34f8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x212caad32d0 'struct __NSConstantString_tag'
-|   `-Record 0x212caad3248 '__NSConstantString_tag'
-|-TypedefDecl 0x212caad3568 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x212caad2ac0 'unsigned long long'
-|-TypedefDecl 0x212caad3600 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x212caad35c0 'char *'
-|   `-BuiltinType 0x212caad2980 'char'
-|-TypedefDecl 0x212caad3670 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x212caad35c0 'char *'
-|   `-BuiltinType 0x212caad2980 'char'
-|-VarDecl 0x212caad36e0 <temp.c:1:1, col:5> col:5 a 'int'
-|-VarDecl 0x212caad37a8 <col:1, col:8> col:8 used b 'int'
-|-VarDecl 0x212cac63200 <line:2:1, col:20> col:5 used c 'int [3]' cinit
-| `-InitListExpr 0x212cac63338 <col:12, col:20> 'int [3]'
-|   |-IntegerLiteral 0x212cac63268 <col:13> 'int' 1
-|   |-IntegerLiteral 0x212cac63290 <col:16> 'int' 2
-|   `-IntegerLiteral 0x212cac632b8 <col:19> 'int' 3
-|-VarDecl 0x212cac633f8 <line:3:1, col:8> col:5 d 'int [3]'
-|-VarDecl 0x212cac634a0 <line:4:1, col:6> col:6 p 'int *'
-`-FunctionDecl 0x212cac63560 <line:9:1, line:13:1> line:9:5 main 'int ()'
-  `-CompoundStmt 0x212cac637e8 <col:12, line:13:1>
-    |-BinaryOperator 0x212cac636b8 <line:10:5, line:6:17> 'int' '='
-    | |-DeclRefExpr 0x212cac63600 <line:10:5> 'int' lvalue Var 0x212caad37a8 'b' 'int'
-    | `-ImplicitCastExpr 0x212cac636a0 <line:6:14, col:17> 'int' <LValueToRValue>
-    |   `-ArraySubscriptExpr 0x212cac63680 <col:14, col:17> 'int' lvalue
-    |     |-ImplicitCastExpr 0x212cac63668 <col:14> 'int *' <ArrayToPointerDecay>
-    |     | `-DeclRefExpr 0x212cac63620 <col:14> 'int [3]' lvalue Var 0x212cac63200 'c' 'int [3]'
-    |     `-IntegerLiteral 0x212cac63640 <col:16> 'int' 2
-    |-BinaryOperator 0x212cac63790 <line:11:5, col:12> 'int' '='
-    | |-ArraySubscriptExpr 0x212cac63738 <col:5, col:8> 'int' lvalue
-    | | |-ImplicitCastExpr 0x212cac63720 <col:5> 'int *' <ArrayToPointerDecay>
-    | | | `-DeclRefExpr 0x212cac636d8 <col:5> 'int [3]' lvalue Var 0x212cac63200 'c' 'int [3]'
-    | | `-IntegerLiteral 0x212cac636f8 <col:7> 'int' 1
-    | `-ImplicitCastExpr 0x212cac63778 <col:12> 'int' <LValueToRValue>
-    |   `-DeclRefExpr 0x212cac63758 <col:12> 'int' lvalue Var 0x212caad37a8 'b' 'int'
-    `-ReturnStmt 0x212cac637d8 <line:12:5, col:12>
-      `-IntegerLiteral 0x212cac637b0 <col:12> 'int' 0
-C:\Users\munarid\AppData\Local\Temp\temp-58f759.o : fatal error LNK1136: file danneggiato o non valido
+TranslationUnitDecl 0x230924d2da8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x230924d3640 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x230924d3340 '__int128'
+|-TypedefDecl 0x230924d36b0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x230924d3360 'unsigned __int128'
+|-TypedefDecl 0x230924d39b8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x230924d3790 'struct __NSConstantString_tag'
+|   `-Record 0x230924d3708 '__NSConstantString_tag'
+|-TypedefDecl 0x230924d3a28 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x230924d2f80 'unsigned long long'
+|-TypedefDecl 0x230924d3ac0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x230924d3a80 'char *'
+|   `-BuiltinType 0x230924d2e40 'char'
+|-TypedefDecl 0x230924d3b30 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x230924d3a80 'char *'
+|   `-BuiltinType 0x230924d2e40 'char'
+|-VarDecl 0x230924d3ba0 <temp.c:1:1, col:5> col:5 used a 'int'
+|-VarDecl 0x230924d3c68 <col:1, col:8> col:8 used b 'int'
+|-VarDecl 0x23092643200 <line:2:1, col:20> col:5 c 'int [3]' cinit
+| `-InitListExpr 0x23092643338 <col:12, col:20> 'int [3]'
+|   |-IntegerLiteral 0x23092643268 <col:13> 'int' 1
+|   |-IntegerLiteral 0x23092643290 <col:16> 'int' 2
+|   `-IntegerLiteral 0x230926432b8 <col:19> 'int' 3
+|-VarDecl 0x230926433f8 <line:3:1, col:8> col:5 d 'int [3]'
+|-VarDecl 0x230926434a0 <line:4:1, col:6> col:6 p 'int *'
+|-RecordDecl 0x23092643508 <line:6:1, line:9:1> line:6:8 struct s definition
+| |-FieldDecl 0x230926435c8 <line:7:5, col:9> col:9 referenced a 'int'
+| `-FieldDecl 0x23092643630 <line:8:5, col:10> col:10 b 'char'
+|-VarDecl 0x23092643750 <line:6:1, line:9:3> col:3 t 'struct s *'
+|-VarDecl 0x23092643950 <line:6:1, line:9:13> col:9 k 'struct s *(*)[3]'
+`-FunctionDecl 0x23092643a30 <line:14:1, line:19:1> line:14:5 main 'int ()'
+  `-CompoundStmt 0x23092643d40 <col:12, line:19:1>
+    |-DeclStmt 0x23092643b88 <line:15:5, col:16>
+    | `-VarDecl 0x23092643b20 <col:5, col:14> col:14 used s1 'struct s':'struct s'
+    |-BinaryOperator 0x23092643c18 <line:16:5, col:12> 'int' '='
+    | |-MemberExpr 0x23092643bc0 <col:5, col:8> 'int' lvalue .a 0x230926435c8
+    | | `-DeclRefExpr 0x23092643ba0 <col:5> 'struct s':'struct s' lvalue Var 0x23092643b20 's1' 'struct s':'struct s'
+    | `-IntegerLiteral 0x23092643bf0 <col:12> 'int' 10
+    |-BinaryOperator 0x23092643ce8 <line:17:5, col:9> 'int' '='
+    | |-DeclRefExpr 0x23092643c90 <col:5> 'int' lvalue Var 0x230924d3c68 'b' 'int'
+    | `-ImplicitCastExpr 0x23092643cd0 <col:9> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x23092643cb0 <col:9> 'int' lvalue Var 0x230924d3ba0 'a' 'int'
+    `-ReturnStmt 0x23092643d30 <line:18:5, col:12>
+      `-IntegerLiteral 0x23092643d08 <col:12> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-8987cc.o : fatal error LNK1136: file danneggiato o non valido

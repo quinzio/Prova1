@@ -10,6 +10,8 @@
 #include <set>
 #include <utility>
 
+#include "Variabile.h"
+
 class Node
 {
 public:
@@ -33,36 +35,6 @@ Node::~Node()
 {
 }
 
-class Variable
-{
-public:
-    Variable();
-    ~Variable();
-    std::string name;
-    unsigned long long value;
-    int braceNested;
-    int used = false;
-    enum typeEnum_t{
-        isArray,
-        isRef,
-        isValue
-    };
-    enum typeEnum_t typeEnum;
-    std::string type;
-    Variable* pointsTo;
-    std::vector<Variable> *array = new std::vector<Variable>;
-    int arrayIx;
-
-private:
-};
-
-Variable::Variable()
-{
-}
-
-Variable::~Variable()
-{
-}
 
 std::vector<Variable> vVariable;
 
@@ -171,7 +143,7 @@ Variable visit(Node *node)
     std::smatch smIntegralType;
     std::regex eVarDecl(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
     std::smatch smVarDecl;
-    std::regex eDeclRefExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\slvalue\sVar\s0x[\da-f]{6,11}\s'(\w+)')###");
+    std::regex eDeclRefExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)':?(?:'(?:[^']+)')?\slvalue\sVar\s0x[\da-f]{6,11}\s'(\w+)')###");
     std::smatch smDeclRefExpr;
     std::regex eImplicitCastExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s<([^>]*)>)###");
     std::smatch smImplicitCastExpr;

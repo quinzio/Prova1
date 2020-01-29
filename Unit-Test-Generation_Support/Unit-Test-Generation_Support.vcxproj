@@ -153,6 +153,9 @@
   <ItemGroup>
     <ResourceCompile Include="Unit-Test-Generation_Support.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Variabile.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

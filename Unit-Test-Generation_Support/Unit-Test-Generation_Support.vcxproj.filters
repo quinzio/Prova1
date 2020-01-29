@@ -24,4 +24,9 @@
       <Filter>File di risorse</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Variabile.h">
+      <Filter>File di origine</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
