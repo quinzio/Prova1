@@ -23,7 +23,7 @@ public:
     enum typeEnum_t typeEnum;
     std::string type;
     Variable* pointsTo;
-    std::vector<Variable>* array = new std::vector<Variable>;
+    std::vector<Variable> array;
     int arrayIx;
     std::vector<Variable> intStruct;
 

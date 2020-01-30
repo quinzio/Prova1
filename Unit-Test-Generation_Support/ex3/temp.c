@@ -3,10 +3,17 @@ int c[3] = {1, 2, 3};
 int d[3];
 int* p;
 
+int(*(*(*((*foo)(int, char(*)[2])))[4])[4])[4];
+
+union u {
+    int a;
+    char b;
+}u2;
+
 struct s {
     int a;
     char b;
-}s2[3];
+}s2;
 
 struct st {
     int c;
@@ -16,6 +23,10 @@ struct st {
 
 
 int main() {
-    s2[0].a = 1;
+    struct s* s4[4];
+    struct s(*s5[3])[4];
+    int i;
+    int * i1;
+    s2.a = 1;
     return 0;
 }

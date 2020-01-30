@@ -1,46 +1,56 @@
-TranslationUnitDecl 0x1e1daab19e8 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x1e1daab2280 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x1e1daab1f80 '__int128'
-|-TypedefDecl 0x1e1daab22f0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x1e1daab1fa0 'unsigned __int128'
-|-TypedefDecl 0x1e1daab25f8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x1e1daab23d0 'struct __NSConstantString_tag'
-|   `-Record 0x1e1daab2348 '__NSConstantString_tag'
-|-TypedefDecl 0x1e1daab2668 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x1e1daab1bc0 'unsigned long long'
-|-TypedefDecl 0x1e1daab2700 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x1e1daab26c0 'char *'
-|   `-BuiltinType 0x1e1daab1a80 'char'
-|-TypedefDecl 0x1e1daab2770 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x1e1daab26c0 'char *'
-|   `-BuiltinType 0x1e1daab1a80 'char'
-|-VarDecl 0x1e1daab27e0 <temp.c:1:1, col:5> col:5 a 'int'
-|-VarDecl 0x1e1daab28a8 <col:1, col:8> col:8 b 'int'
-|-VarDecl 0x1e1dacf6230 <line:2:1, col:20> col:5 c 'int [3]' cinit
-| `-InitListExpr 0x1e1dacf6368 <col:12, col:20> 'int [3]'
-|   |-IntegerLiteral 0x1e1dacf6298 <col:13> 'int' 1
-|   |-IntegerLiteral 0x1e1dacf62c0 <col:16> 'int' 2
-|   `-IntegerLiteral 0x1e1dacf62e8 <col:19> 'int' 3
-|-VarDecl 0x1e1dacf6428 <line:3:1, col:8> col:5 d 'int [3]'
-|-VarDecl 0x1e1dacf64d0 <line:4:1, col:6> col:6 p 'int *'
-|-RecordDecl 0x1e1dacf6538 <line:6:1, line:9:1> line:6:8 struct s definition
-| |-FieldDecl 0x1e1dacf65f8 <line:7:5, col:9> col:9 referenced a 'int'
-| `-FieldDecl 0x1e1dacf6660 <line:8:5, col:10> col:10 b 'char'
-|-VarDecl 0x1e1dacf6838 <line:6:1, line:9:6> col:2 used s2 'struct s [3]'
-|-RecordDecl 0x1e1dacf68b8 <line:11:1, line:15:1> line:11:8 struct st definition
-| |-FieldDecl 0x1e1dacf6978 <line:12:5, col:9> col:9 c 'int'
-| |-FieldDecl 0x1e1dacf69e0 <line:13:5, col:10> col:10 d 'char'
-| `-FieldDecl 0x1e1dacf6a90 <line:14:5, col:14> col:14 s3 'struct s':'struct s'
-|-VarDecl 0x1e1dacf6b48 <line:11:1, line:15:2> col:2 st1 'struct st':'struct st'
-`-FunctionDecl 0x1e1dacf6c20 <line:18:1, line:21:1> line:18:5 main 'int ()'
-  `-CompoundStmt 0x1e1dacf6e50 <col:12, line:21:1>
-    |-BinaryOperator 0x1e1dacf6df8 <line:19:5, col:15> 'int' '='
-    | |-MemberExpr 0x1e1dacf6da0 <col:5, col:11> 'int' lvalue .a 0x1e1dacf65f8
-    | | `-ArraySubscriptExpr 0x1e1dacf6d80 <col:5, col:9> 'struct s':'struct s' lvalue
-    | |   |-ImplicitCastExpr 0x1e1dacf6d68 <col:5> 'struct s *' <ArrayToPointerDecay>
-    | |   | `-DeclRefExpr 0x1e1dacf6cc0 <col:5> 'struct s [3]' lvalue Var 0x1e1dacf6838 's2' 'struct s [3]'
-    | |   `-IntegerLiteral 0x1e1dacf6ce0 <col:8> 'int' 0
-    | `-IntegerLiteral 0x1e1dacf6dd0 <col:15> 'int' 1
-    `-ReturnStmt 0x1e1dacf6e40 <line:20:5, col:12>
-      `-IntegerLiteral 0x1e1dacf6e18 <col:12> 'int' 0
-C:\Users\munarid\AppData\Local\Temp\temp-b1abc2.o : fatal error LNK1136: file danneggiato o non valido
+TranslationUnitDecl 0x13737470ec8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x13737471760 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x13737471460 '__int128'
+|-TypedefDecl 0x137374717d0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x13737471480 'unsigned __int128'
+|-TypedefDecl 0x13737471ad8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x137374718b0 'struct __NSConstantString_tag'
+|   `-Record 0x13737471828 '__NSConstantString_tag'
+|-TypedefDecl 0x13737471b48 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x137374710a0 'unsigned long long'
+|-TypedefDecl 0x13737471be0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x13737471ba0 'char *'
+|   `-BuiltinType 0x13737470f60 'char'
+|-TypedefDecl 0x13737471c50 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x13737471ba0 'char *'
+|   `-BuiltinType 0x13737470f60 'char'
+|-VarDecl 0x13737471cc0 <temp.c:1:1, col:5> col:5 a 'int'
+|-VarDecl 0x13737471d88 <col:1, col:8> col:8 b 'int'
+|-VarDecl 0x137375b3200 <line:2:1, col:20> col:5 c 'int [3]' cinit
+| `-InitListExpr 0x137375b3338 <col:12, col:20> 'int [3]'
+|   |-IntegerLiteral 0x137375b3268 <col:13> 'int' 1
+|   |-IntegerLiteral 0x137375b3290 <col:16> 'int' 2
+|   `-IntegerLiteral 0x137375b32b8 <col:19> 'int' 3
+|-VarDecl 0x137375b33f8 <line:3:1, col:8> col:5 d 'int [3]'
+|-VarDecl 0x137375b34a0 <line:4:1, col:6> col:6 p 'int *'
+|-VarDecl 0x137375b3cb8 <line:6:1, col:46> col:13 foo 'int (*(*(*((*)(int, char (*)[2])))[4])[4])[4]'
+|-RecordDecl 0x137375b3d20 <line:8:1, line:11:1> line:8:7 union u definition
+| |-FieldDecl 0x137375b3dd8 <line:9:5, col:9> col:9 a 'int'
+| `-FieldDecl 0x137375b3e40 <line:10:5, col:10> col:10 b 'char'
+|-VarDecl 0x137375b3ef8 <line:8:1, line:11:2> col:2 u2 'union u':'union u'
+|-RecordDecl 0x137375b3f78 <line:13:1, line:16:1> line:13:8 struct s definition
+| |-FieldDecl 0x137375b4038 <line:14:5, col:9> col:9 referenced a 'int'
+| `-FieldDecl 0x137375b40a0 <line:15:5, col:10> col:10 b 'char'
+|-VarDecl 0x137375b4158 <line:13:1, line:16:2> col:2 used s2 'struct s':'struct s'
+|-RecordDecl 0x137375bb280 <line:18:1, line:22:1> line:18:8 struct st definition
+| |-FieldDecl 0x137375bb338 <line:19:5, col:9> col:9 c 'int'
+| |-FieldDecl 0x137375bb3a0 <line:20:5, col:10> col:10 d 'char'
+| `-FieldDecl 0x137375bb450 <line:21:5, col:14> col:14 s3 'struct s':'struct s'
+|-VarDecl 0x137375bb508 <line:18:1, line:22:2> col:2 st1 'struct st':'struct st'
+`-FunctionDecl 0x137375bb5e0 <line:25:1, line:32:1> line:25:5 main 'int ()'
+  `-CompoundStmt 0x137375bbd78 <col:12, line:32:1>
+    |-DeclStmt 0x137375bb838 <line:26:5, col:20>
+    | `-VarDecl 0x137375bb7d0 <col:5, col:19> col:15 s4 'struct s *[4]'
+    |-DeclStmt 0x137375bbb60 <line:27:5, col:24>
+    | `-VarDecl 0x137375bbaf8 <col:5, col:23> col:15 s5 'struct s (*[3])[4]'
+    |-DeclStmt 0x137375bbbf8 <line:28:5, col:10>
+    | `-VarDecl 0x137375bbb90 <col:5, col:9> col:9 i 'int'
+    |-DeclStmt 0x137375bbc90 <line:29:5, col:13>
+    | `-VarDecl 0x137375bbc28 <col:5, col:11> col:11 i1 'int *'
+    |-BinaryOperator 0x137375bbd20 <line:30:5, col:12> 'int' '='
+    | |-MemberExpr 0x137375bbcc8 <col:5, col:8> 'int' lvalue .a 0x137375b4038
+    | | `-DeclRefExpr 0x137375bbca8 <col:5> 'struct s':'struct s' lvalue Var 0x137375b4158 's2' 'struct s':'struct s'
+    | `-IntegerLiteral 0x137375bbcf8 <col:12> 'int' 1
+    `-ReturnStmt 0x137375bbd68 <line:31:5, col:12>
+      `-IntegerLiteral 0x137375bbd40 <col:12> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-865260.o : fatal error LNK1136: file danneggiato o non valido

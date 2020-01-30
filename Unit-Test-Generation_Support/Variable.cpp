@@ -21,7 +21,7 @@ std:: string Variable::print(std::string prefix) {
 	std::cout << prefix << "Value of variable " + this->name + ": " + std::to_string(this->value) + "\n";
 	int ix = 0;
 	if (this->typeEnum == Variable::typeEnum_t::isArray) {
-		for (auto v = this->array->begin(); v != this->array->end(); v++) {
+		for (auto v = this->array.begin(); v != this->array.end(); v++) {
 			std::cout << "array " << ix++ << " ";
 			v->print();
 		}

@@ -156,7 +156,7 @@ Variable visit(Node *node)
     std::smatch smUnaryOperator;
     std::regex eDeclStmt(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>)###");
     std::smatch smDeclStmt;
-    std::regex eArrayDecl(R"###(.*\[(\d+)\])###");
+    std::regex eArrayDecl(R"###((.*)\[(\d+)\])###");
     std::smatch smArrayDecl;
     std::regex ePointerDecl(R"###(.*\s\*)###");
     std::smatch smPointerDecl;
@@ -168,6 +168,18 @@ Variable visit(Node *node)
     std::smatch smFieldDeclaration;
     std::regex eMemberExpr(R"###([^\w<]*MemberExpr\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)':?(?:'(?:[^']+)')?\slvalue\s.([\w\d]+)\s0x[\da-f]{6,11})###");
     std::smatch smMemberExpr;
+    /*
+    Generic type regex
+    capturing groups:
+    1: union or struct or empty
+    2: basic type or type or struct type
+    3: indirection(pointer)
+    4: nested type
+    5: array size
+    */
+    std::regex eGenericType(R"###((union|struct|)?\s?([\w\d]+|)?\s?(\**)((?:\(.+\))?)\[?((?:\d+)?)\]?)###");
+    std::smatch smGenericType;
+    
 
     /*
         <<<NULL  (>>>)
@@ -199,31 +211,53 @@ Variable visit(Node *node)
 
     if (node->astType.compare("VarDecl") == 0) {
         Variable temp;
-        std::string rawType;
+        std::string rawType, coreType;
         std::regex_search(node->text, smVarDecl, eVarDecl);
         temp.name = smVarDecl[1];
         rawType = smVarDecl[2];
         temp.type = rawType;
         temp.used = true;
-        std::regex_search(rawType, smArrayDecl, eArrayDecl);
-        if (smArrayDecl.size() > 0) {
-            int arrSize = std::stoi(smArrayDecl[1]);
+        /*
+        Must extract the core type, example: struct s (*[3])[4]
+        Core type is *[3]
+        example: struct s (*(*[10])[3])[4]
+        Core type is *[10]
+        */
+        coreType = rawType;
+        for (auto c = rawType.end(); c >= rawType.begin(); c--) {
+        }
+
+
+        if (smGenericType[5].length() > 0) {
+            int arrSize = std::stoi(smGenericType[5]);
             Variable a;
             a.typeEnum = Variable::typeEnum_t::isValue;
+            if (smGenericType[3].length() > 0) {
+                // example: int *[3], can be a struct or not
+                a.typeEnum = Variable::typeEnum_t::isRef;
+            } 
+            else if (smGenericType[1].compare("struct") == 0) {
+                // example: struct s[3], without the pointer
+                for (auto t : vStruct) {
+                    if (t.name.compare(smGenericType[2]) == 0) {
+                        a = t;
+                    }
+                }
+            }
             temp.typeEnum = Variable::typeEnum_t::isArray;
             for (int i = 0; i < arrSize; i++) {
                 a.value = i;
-                temp.array->push_back(a);
+                temp.array.push_back(a);
             }
         }
-        else if (std::regex_search(rawType, smPointerDecl, ePointerDecl)) {
+        else if (smGenericType[3].length() > 0) {
+            // example: int *, it's not an array, but a pointer
             temp.typeEnum = Variable::typeEnum_t::isRef;
         }
-        else if (std::regex_search(rawType, smStructType, eStructType)) {
-            // smStructType[1]: struct name
-            // Search struct and copy it
+        else if (smGenericType[1].length() > 0) {
+            // example: struct s, it's neither an array not a pointer, but a struct
             for (Variable v : vStruct) {
-                if (v.name.compare(smStructType[1]) == 0) {
+                if (v.name.compare(smGenericType[2]) == 0) {
                     temp = v;
                     break;
                 }
@@ -232,6 +266,7 @@ Variable visit(Node *node)
             temp.name = smVarDecl[1];
         }
         else {
+            // example: int, it's neither an array nor a pointer nor a struct, but a basic type
             temp.typeEnum = Variable::typeEnum_t::isValue;
             temp.value = 0;
         }
@@ -268,7 +303,7 @@ Variable visit(Node *node)
         }
         if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
             if (ret.typeEnum == Variable::typeEnum_t::isArray) {
-                return (*ret.pointsTo->array)[ret.pointsTo->arrayIx];
+                return ret.pointsTo->array[ret.pointsTo->arrayIx];
             }
             return *ret.pointsTo;
         }
@@ -442,7 +477,7 @@ Variable visit(Node *node)
         Variable ret;
         Variable pArray = visit(node->child);
         int ix = visit(node->child->nextSib).value;
-        ret.pointsTo = pArray.pointsTo->array->data() + ix;
+        ret.pointsTo = pArray.pointsTo->array.data() + ix;
         ret.typeEnum = Variable::typeEnum_t::isRef;
         return ret;
     }
