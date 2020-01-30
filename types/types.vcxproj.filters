@@ -15,8 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="types.cpp">
+    <ClCompile Include="CoreTypes.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CoreTypes.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

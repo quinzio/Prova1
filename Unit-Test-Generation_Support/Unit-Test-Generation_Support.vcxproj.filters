@@ -21,6 +21,9 @@
     <ClCompile Include="Variable.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="CoreTypes.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Unit-Test-Generation_Support.rc">
@@ -29,6 +32,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Variabile.h">
+      <Filter>File di origine</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreTypes.h">
       <Filter>File di origine</Filter>
     </ClInclude>
   </ItemGroup>

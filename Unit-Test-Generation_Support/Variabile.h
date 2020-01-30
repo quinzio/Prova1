@@ -5,8 +5,6 @@
 class Variable
 {
 public:
-    Variable();
-    ~Variable();
     [[maybe_unused]] std::string print(std::string prefix);
     [[maybe_unused]] std::string print();
 

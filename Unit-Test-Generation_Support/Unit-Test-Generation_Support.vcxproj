@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CoreTypes.cpp" />
     <ClCompile Include="Unit-Test-Generation_Support.cpp" />
     <ClCompile Include="Variable.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ResourceCompile Include="Unit-Test-Generation_Support.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CoreTypes.h" />
     <ClInclude Include="Variabile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

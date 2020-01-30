@@ -3,14 +3,6 @@
 #include "Variabile.h"
 
 
-Variable::Variable()
-{
-}
-
-Variable::~Variable()
-{
-}
-
 std::string Variable::print() {
 	std::string prefix = "";
 	this->print(prefix);

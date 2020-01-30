@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "Variabile.h"
+#include "CoreTypes.h"
 
 class Node
 {
@@ -166,7 +167,7 @@ Variable visit(Node *node)
     std::smatch smStructDefinition;
     std::regex eFieldDeclaration(R"###([^\w<]*FieldDecl+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(\sreferenced)?\s(\w+)\s'([^']+)')###");
     std::smatch smFieldDeclaration;
-    std::regex eMemberExpr(R"###([^\w<]*MemberExpr\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)':?(?:'(?:[^']+)')?\slvalue\s.([\w\d]+)\s0x[\da-f]{6,11})###");
+    std::regex eMemberExpr(R"###([^\w<]*MemberExpr\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)':?(?:'(?:[^']+)')?\slvalue\s(?:\.|->)([\w\d]+)\s0x[\da-f]{6,11})###");
     std::smatch smMemberExpr;
     /*
     Generic type regex
@@ -212,6 +213,7 @@ Variable visit(Node *node)
     if (node->astType.compare("VarDecl") == 0) {
         Variable temp;
         std::string rawType, coreType;
+        struct coreType_str CoreTypes;
         std::regex_search(node->text, smVarDecl, eVarDecl);
         temp.name = smVarDecl[1];
         rawType = smVarDecl[2];
@@ -224,10 +226,9 @@ Variable visit(Node *node)
         Core type is *[10]
         */
         coreType = rawType;
-        for (auto c = rawType.end(); c >= rawType.begin(); c--) {
-        }
-
-
+        CoreTypes.coreType = rawType;
+        findCoreType(CoreTypes);
+        std::regex_search(CoreTypes.core, smGenericType, eGenericType);
         if (smGenericType[5].length() > 0) {
             int arrSize = std::stoi(smGenericType[5]);
             Variable a;
@@ -477,7 +478,7 @@ Variable visit(Node *node)
         Variable ret;
         Variable pArray = visit(node->child);
         int ix = visit(node->child->nextSib).value;
-        ret.pointsTo = pArray.pointsTo->array.data() + ix;
+        ret.pointsTo = &pArray.pointsTo->array[ix];
         ret.typeEnum = Variable::typeEnum_t::isRef;
         return ret;
     }
