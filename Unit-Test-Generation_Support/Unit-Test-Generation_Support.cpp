@@ -35,8 +35,11 @@ Node::~Node()
 {
 }
 
-
+// vVariable contains all the global and local variables defined.
 std::vector<Variable> vVariable;
+// vStruct contains all the struct definition
+std::vector<Variable> vStruct;
+
 
 Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
@@ -157,6 +160,15 @@ Variable visit(Node *node)
     std::smatch smArrayDecl;
     std::regex ePointerDecl(R"###(.*\s\*)###");
     std::smatch smPointerDecl;
+    std::regex eStructType(R"###(struct\s([\w\d]+).*)###");
+    std::smatch smStructType;
+    std::regex eStructDefinition(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s(\w+)\sdefinition)###");
+    std::smatch smStructDefinition;
+    std::regex eFieldDeclaration(R"###([^\w<]*FieldDecl+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(\sreferenced)?\s(\w+)\s'([^']+)')###");
+    std::smatch smFieldDeclaration;
+    std::regex eMemberExpr(R"###([^\w<]*MemberExpr\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)':?(?:'(?:[^']+)')?\slvalue\s.([\w\d]+)\s0x[\da-f]{6,11})###");
+    std::smatch smMemberExpr;
+
     /*
         <<<NULL  (>>>)
         BinaryOperator
@@ -207,6 +219,18 @@ Variable visit(Node *node)
         else if (std::regex_search(rawType, smPointerDecl, ePointerDecl)) {
             temp.typeEnum = Variable::typeEnum_t::isRef;
         }
+        else if (std::regex_search(rawType, smStructType, eStructType)) {
+            // smStructType[1]: struct name
+            // Search struct and copy it
+            for (Variable v : vStruct) {
+                if (v.name.compare(smStructType[1]) == 0) {
+                    temp = v;
+                    break;
+                }
+            }
+            temp.typeEnum = Variable::typeEnum_t::isStruct;
+            temp.name = smVarDecl[1];
+        }
         else {
             temp.typeEnum = Variable::typeEnum_t::isValue;
             temp.value = 0;
@@ -214,7 +238,8 @@ Variable visit(Node *node)
         // Add Variable to store
         vVariable.push_back(temp);
         std::cout << "Value of variable " << temp.name << "\n";
-        std::cin >> temp.value;
+        //std::cin >> temp.value;
+        temp.value = 1;
         return temp;
     }
 
@@ -307,6 +332,68 @@ Variable visit(Node *node)
         }
         return ret;
     }
+
+    if (node->astType.compare("RecordDecl") == 0) {
+        Variable tStruct, vField;
+        std::regex_search(node->text, smStructDefinition, eStructDefinition);
+        tStruct.name = smStructDefinition[1];
+        tStruct.typeEnum = Variable::typeEnum_t::isStruct;
+        for (auto n = node->child; n != NULL; n = n->nextSib) {
+            vField = visit(n);
+            tStruct.intStruct.push_back(vField);
+        }
+        vStruct.push_back(tStruct);
+        return tStruct;
+    }
+
+    if (node->astType.compare("FieldDecl") == 0) {
+        Variable vField;
+        std::regex_search(node->text, smFieldDeclaration, eFieldDeclaration);
+        // Capture 1: "referenced" (or void)
+        // Capture 2: field name
+        // Capture 3: type
+        std::string rawType = smFieldDeclaration[3];
+        if (std::regex_search(rawType, smStructType, eStructType)) {
+            // Field is a nested struct
+            for (Variable v : vStruct) {
+                if (smStructType[1].compare(v.name) == 0) {
+                    vField = v;
+                }
+            }
+        }
+        else {
+            vField.typeEnum = Variable::typeEnum_t::isValue;
+            vField.type = smFieldDeclaration[3];
+        }
+        vField.name = smFieldDeclaration[2];
+        // Note the blank space in " referenced"
+        if (smFieldDeclaration[1].compare(" referenced") == 0) {
+            vField.used = true;
+        }
+        return vField;
+    }
+
+    if (node->astType.compare("MemberExpr") == 0) {
+        Variable v, ret;
+        std::string memberName;
+        std::regex_search(node->text, smMemberExpr, eMemberExpr);
+        memberName = smMemberExpr[2];
+        v = visit(node->child);
+        if (v.pointsTo->typeEnum == Variable::typeEnum_t::isStruct) {
+            for (auto m = v.pointsTo->intStruct.begin(); m != v.pointsTo->intStruct.end(); m++) {
+                if (memberName.compare(m->name) == 0) {
+                    ret.pointsTo = &*m;
+                    ret.typeEnum = Variable::typeEnum_t::isRef;
+                    // Always return a pointer because Memeber Expression is a lvalue
+                    return ret;
+                }
+            }
+        }
+        else {
+            std::cout << "Error referencing variable is not a struct.";
+        }
+    }
+
     if (node->astType.compare("IfStmt") == 0) {
         Variable cond, vtrue, vfalse;
         cond = visit(node->child->nextSib->nextSib);
@@ -362,11 +449,12 @@ Variable visit(Node *node)
 
     if (node->astType.compare("FunctionDecl") == 0) {
         Variable temp = visit(node->child);
-        for (auto v : vVariable) {
-            std::cout << "Value of variable " << v.name << ": " << v.value << "\n";
+        for (auto v = vVariable.begin(); v != vVariable.end(); v++) {
+            v->print();
         }
         return temp;
     }
+    
 
     if (node->astType.compare("DeclStmt") == 0) {
         Variable temp = visit(node->child);

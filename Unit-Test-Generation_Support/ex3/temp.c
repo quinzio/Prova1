@@ -6,14 +6,16 @@ int* p;
 struct s {
     int a;
     char b;
-}*t, *(*k)[3];
+}s2[3];
 
-#define MASK c[2]
+struct st {
+    int c;
+    char d;
+    struct s s3;
+}st1;
 
 
 int main() {
-    struct s s1;
-    s1.a = 10;
-    b = a;
+    s2[0].a = 1;
     return 0;
 }
