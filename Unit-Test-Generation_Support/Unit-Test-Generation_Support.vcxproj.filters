@@ -15,26 +15,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Unit-Test-Generation_Support.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Variable.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="CoreTypes.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Unit-Test-Generation_Support.rc">
       <Filter>File di risorse</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Variabile.h">
+    <ClCompile Include="src\CoreTypes.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Unit-Test-Generation_Support.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Variable.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CoreTypes.h">
       <Filter>File di origine</Filter>
     </ClInclude>
-    <ClInclude Include="CoreTypes.h">
+    <ClInclude Include="src\RegexColl.h">
+      <Filter>File di origine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Variabile.h">
       <Filter>File di origine</Filter>
     </ClInclude>
   </ItemGroup>

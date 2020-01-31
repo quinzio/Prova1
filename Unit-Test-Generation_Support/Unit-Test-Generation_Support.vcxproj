@@ -148,16 +148,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CoreTypes.cpp" />
-    <ClCompile Include="Unit-Test-Generation_Support.cpp" />
-    <ClCompile Include="Variable.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Unit-Test-Generation_Support.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoreTypes.h" />
-    <ClInclude Include="Variabile.h" />
+    <ClCompile Include="src\CoreTypes.cpp" />
+    <ClCompile Include="src\Unit-Test-Generation_Support.cpp" />
+    <ClCompile Include="src\Variable.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CoreTypes.h" />
+    <ClInclude Include="src\RegexColl.h" />
+    <ClInclude Include="src\Variabile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
