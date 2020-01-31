@@ -240,7 +240,7 @@ Variable visit(Node *node)
             else if (smGenericType[1].compare("struct") == 0) {
                 // example: struct s[3], without the pointer
                 for (auto t : vStruct) {
-                    if (t.name.compare(smGenericType[2]) == 0) {
+                    if (t.name.compare(smGenericType[2]) == 0) { 
                         a = t;
                     }
                 }
