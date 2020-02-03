@@ -1,0 +1,34 @@
+TranslationUnitDecl 0x1b1f61fe228 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1b1f61feac0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1b1f61fe7c0 '__int128'
+|-TypedefDecl 0x1b1f61feb30 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1b1f61fe7e0 'unsigned __int128'
+|-TypedefDecl 0x1b1f61fee38 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1b1f61fec10 'struct __NSConstantString_tag'
+|   `-Record 0x1b1f61feb88 '__NSConstantString_tag'
+|-TypedefDecl 0x1b1f61feed0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1b1f61fee90 'char *'
+|   `-BuiltinType 0x1b1f61fe2c0 'char'
+|-TypedefDecl 0x1b1f61fef40 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1b1f61fee90 'char *'
+|   `-BuiltinType 0x1b1f61fe2c0 'char'
+|-RecordDecl 0x1b1f61fef98 <temp.c:3:1, line:7:1> line:3:1 struct definition
+| |-FieldDecl 0x1b1f61ff098 <line:4:5, col:21> col:19 referenced a 'unsigned char'
+| | `-ConstantExpr 0x1b1f61ff080 <col:21> 'int'
+| |   `-IntegerLiteral 0x1b1f61ff040 <col:21> 'int' 1
+| |-FieldDecl 0x1b1f61ff148 <line:5:5, col:21> col:19 b 'unsigned char'
+| | `-ConstantExpr 0x1b1f61ff130 <col:21> 'int'
+| |   `-IntegerLiteral 0x1b1f61ff0f0 <col:21> 'int' 1
+| `-FieldDecl 0x1b1f63e5220 <line:6:5, col:21> col:19 c 'unsigned char'
+|   `-ConstantExpr 0x1b1f61ff1e0 <col:21> 'int'
+|     `-IntegerLiteral 0x1b1f61ff1a0 <col:21> 'int' 1
+|-VarDecl 0x1b1f63e52d8 <line:3:1, line:7:2> col:2 used vb 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)'
+`-FunctionDecl 0x1b1f63e53f0 <line:10:1, line:13:1> line:10:5 f1 'int ()'
+  `-CompoundStmt 0x1b1f63e55d8 <col:9, line:13:1>
+    |-BinaryOperator 0x1b1f63e5520 <line:11:3, col:10> 'unsigned char' '='
+    | |-MemberExpr 0x1b1f63e54b0 <col:3, col:6> 'unsigned char' lvalue bitfield .a 0x1b1f61ff098
+    | | `-DeclRefExpr 0x1b1f63e5490 <col:3> 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)' lvalue Var 0x1b1f63e52d8 'vb' 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)'
+    | `-ImplicitCastExpr 0x1b1f63e5508 <col:10> 'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x1b1f63e54e0 <col:10> 'int' 1
+    `-ReturnStmt 0x1b1f63e55c8 <line:12:3, col:10>
+      `-IntegerLiteral 0x1b1f63e55a0 <col:10> 'int' 0
