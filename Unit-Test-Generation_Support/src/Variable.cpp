@@ -40,6 +40,7 @@ std:: string Variable::print(std::string prefix, std::string postfix) {
 		}
 		else {
 			std::cout << "Null pointer\n";
+			Variable::outputFile << "Null pointer\n";
 		}
 	}
 	prefix = "";

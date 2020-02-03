@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 
+
 class Variable
 {
 public:
@@ -26,8 +27,20 @@ public:
     std::vector<Variable> array;
     int arrayIx;
     std::vector<Variable> intStruct;
+    Variable* myAddressDebug = NULL;
 
 
 private:
 };
+
+class VariableShadow {
+public:
+    typedef std::vector<Variable> vVariable;
+    std::vector<vVariable> shadows;
+    VariableShadow() {
+        vVariable v;
+        shadows.push_back(v);
+    }
+};
+
 

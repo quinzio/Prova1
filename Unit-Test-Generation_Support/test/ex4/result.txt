@@ -1,0 +1,7 @@
+vb = 0
+member b b.b = 0
+member b member f1 f1.f1.b = 0
+member b member f2 f2.f2.b = 0
+member va va.va = 0
+member va member f1 f1.f1.va = 111
+member va member f2 f2.f2.va = 0

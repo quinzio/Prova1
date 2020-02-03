@@ -1,4 +1,25 @@
 #pragma once
+std::string strCol("col:(\\d+)");
+/*
+Extracts the source location with column only.
+col:1
+A  col
+B  :
+C1 1
+*/
+std::regex eCol(strCol);
+
+/*
+Extracts the source location with line and column only.
+line:1:1
+*/
+std::regex eLineCol(
+    /*A  */    "line:"
+    /*B 1*/    "(\\d+)"
+    /*C  */    ":"
+    /*D 2*/    "(\\d+)"
+);
+
 
 /*
 |-RecordDecl 0x1b57f115d98 <temp.c:1:1, line:9:1> line:1:1 struct definition
@@ -23,36 +44,12 @@ std::regex eSourceRef(
     /*   */ "\\w+\\.\\w+:line:\\d+:\\d+)"
     /*K  */ ".*"
 );
-std::smatch smSourceRef;
 
 std::regex eCatchGlobals(R"(([^\w<]*)([\w<]+).*)");
-std::smatch smCatchGlobals;
 
 std::regex eCatchGlobalName(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
-std::smatch smCatchGlobalName;
 
-/*
-Extracts the source location with column only.
-    1
-col:1
-A  BC
-*/
-std::regex eCol("col:(\\d+)");
-std::smatch smCol;
 
-/*
-Extracts the source location with line and column only.
-     1 2
-line:1:1
-A   BCDE
-*/
-std::regex eLineCol(
-    /*A  */    "line:"
-    /*B 1*/    "(\\d+)"
-    /*C  */    ":"
-    /*D 2*/    "(\\d+)"
-);
-std::smatch smLineCol;
 
 /*
 Extracts the source location complete with line source and column.
@@ -69,43 +66,30 @@ std::regex eFileLineCol(
     /*F  */    ":"
     /*G 4*/    "(\\d+)"
 );
-std::smatch smFileLineCol;
 
 std::regex eIntegralType(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s(\d+))###");
-std::smatch smIntegralType;
 
 std::regex eVarDecl(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
-std::smatch smVarDecl;
 
 std::regex eDeclRefExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)':?(?:'(?:[^']+)')?\slvalue\sVar\s0x[\da-f]{6,11}\s'(\w+)')###");
-std::smatch smDeclRefExpr;
 
 std::regex eImplicitCastExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s<([^>]*)>)###");
-std::smatch smImplicitCastExpr;
 
 std::regex eBinaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
-std::smatch smBinaryOperator;
 
 std::regex eUnaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
-std::smatch smUnaryOperator;
 
 std::regex eDeclStmt(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>)###");
-std::smatch smDeclStmt;
 
 std::regex eArrayDecl(R"###((.*)\[(\d+)\])###");
-std::smatch smArrayDecl;
 
 std::regex ePointerDecl(R"###(.*\s\*)###");
-std::smatch smPointerDecl;
 
 std::regex eStructType(R"###(struct\s([\w\d]+).*)###");
-std::smatch smStructType;
 
 std::regex eStructDefinition(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s(\w+)\sdefinition)###");
-std::smatch smStructDefinition;
 
 std::regex eFieldDeclaration(R"###([^\w<]*FieldDecl+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(\sreferenced)?\s(\w+)\s'([^']+)')###");
-std::smatch smFieldDeclaration;
 
 /*
     | |-MemberExpr 0x26114378700 <col:5, col:8> 'int':'int' lvalue .a 0x26114378368
@@ -130,7 +114,7 @@ std::regex eMemberExpr(
     "\\s"               /* P A space                                                        */ \
     "0x[\\da-f]{6,11}"  /* Q The hex identifier of the ast member node 0x123456             */ \
 );
-std::smatch smMemberExpr;
+
 /*
 Generic type regex
 capturing groups:
@@ -154,7 +138,6 @@ std::regex eGenericType(
     "(?:\\(.+\\))?)"
     "\\[?((?:\\d+)?)\\]?"
 );
-std::smatch smGenericType;
 
 /*
                                                      1---------- 2  3--------
@@ -176,6 +159,5 @@ std::regex eTypeDef(
     "\\s"                          /* L A space                                          */ \
     /*3*/  "'([^']+)'"             /* M The referenced type                              */ \
 );
-std::smatch smTypeDef;
 
 

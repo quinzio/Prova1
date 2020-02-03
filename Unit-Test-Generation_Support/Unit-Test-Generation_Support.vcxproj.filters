@@ -46,5 +46,8 @@
     <ClInclude Include="src\Unit-Test-Generation-Support.h">
       <Filter>File di origine</Filter>
     </ClInclude>
+    <ClInclude Include="src\main.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

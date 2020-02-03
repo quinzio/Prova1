@@ -51,18 +51,18 @@ Node::~Node()
 }
 
 // vVariable contains all the global and local variables defined.
-std::vector<Variable> vVariable;
+VariableShadow vShadowedVar;
 // vStruct contains all the struct definition
 std::vector<Variable> vStruct;
 // vTypeDef contains all the user defined types
 std::vector<Variable> vTypeDef;
 std::ofstream Variable::outputFile;
-
+int shadowLevel = 0;
 
 Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
 
-int inner_main(int argc, const char* argv[]) throw (const std::exception&)
+int inner_main(int argc, std::string argv[]) throw (const std::exception&)
 {
     if (argc != 3) {
         throw std::exception("\n\n*** There must be 2 arguments: ast file name and output file name. ***\n\n");
@@ -79,7 +79,7 @@ int inner_main(int argc, const char* argv[]) throw (const std::exception&)
     std::cout << sm[1] << "\n";
     std::cout << sm[2] << "\n";
 
-    Variable::outputFile.open(argv[2]);
+    Variable::outputFile.open(argv[2], std::ios_base::trunc);
     if (!Variable::outputFile) throw std::exception("\n\n*** Cannot open output file. ***\n\n");
 
     std::ifstream infile(argv[1]);
@@ -93,6 +93,8 @@ int inner_main(int argc, const char* argv[]) throw (const std::exception&)
     cursor = &myRoot;
     //
     std::set<std::string> astTypesSet;
+    std::smatch smCatchGlobals;
+    std::smatch smCatchGlobalName;
 
     while (std::getline(infile, str)) {
         if (std::regex_search(str, smCatchGlobals, eCatchGlobals) && smCatchGlobals.size() >= 2) {
@@ -190,9 +192,11 @@ Variable visit(Node *node)
     if (node->astType.compare("IntegerLiteral") == 0) {
         unsigned long long integral;
         Variable ret;
+        std::smatch smIntegralType;
         std::regex_search(node->text, smIntegralType, eIntegralType);
         integral = std::stoi(smIntegralType[2]);
         ret.value = cast(smIntegralType[1], integral);
+        ret.typeEnum = Variable::typeEnum_t::isValue;
         return ret;
     }
 
@@ -200,6 +204,9 @@ Variable visit(Node *node)
         Variable temp;
         std::string rawType, coreType;
         struct coreType_str CoreTypes;
+        std::smatch smVarDecl;
+        std::smatch smGenericType;
+        Variable* vback = NULL;
         std::regex_search(node->text, smVarDecl, eVarDecl);
         temp.name = smVarDecl[1];
         rawType = smVarDecl[2];
@@ -258,7 +265,9 @@ Variable visit(Node *node)
             temp.value = 0;
         }
         // Add Variable to store
-        vVariable.push_back(temp);
+        vShadowedVar.shadows[shadowLevel].push_back(temp);
+        vback = &vShadowedVar.shadows[shadowLevel].back();
+        vback->myAddressDebug = vback;
         std::cout << "Value of variable " << temp.name << "\n";
         //std::cin >> temp.value;
         temp.value = 1;
@@ -266,6 +275,7 @@ Variable visit(Node *node)
     }
 
     if (node->astType.compare("TypedefDecl") == 0) {
+        std::smatch smTypeDef;
         std::regex_search(node->text, smTypeDef, eTypeDef);
         std::string refed = smTypeDef[1];
         std::string name  = smTypeDef[2];
@@ -274,20 +284,24 @@ Variable visit(Node *node)
     }
 
     if (node->astType.compare("DeclRefExpr") == 0) {
+        std::smatch smDeclRefExpr;
         std::regex_search(node->text, smDeclRefExpr, eDeclRefExpr);
         std::string varName = smDeclRefExpr[2];
         Variable ret;
-        for (auto it = vVariable.begin(); it != vVariable.end(); it++) {
-            if (it->name.compare(varName) == 0) {
-                ret.pointsTo = &*it;
-                ret.typeEnum = Variable::typeEnum_t::isRef;
-                return ret;
+        for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+            for (auto itit = it->begin(); itit != it->end(); itit++) {
+                if (itit->name.compare(varName) == 0) {
+                    ret.pointsTo = &*itit;
+                    ret.typeEnum = Variable::typeEnum_t::isRef;
+                    return ret;
+                }
             }
         }
     }
 
     if (node->astType.compare("ImplicitCastExpr") == 0) {
         Variable ret;
+        std::smatch smImplicitCastExpr;
         std::regex_search(node->text, smImplicitCastExpr, eImplicitCastExpr);
         std::string castTo = smImplicitCastExpr[1];
         /// Must always be a pointer to variable
@@ -309,6 +323,7 @@ Variable visit(Node *node)
 
     if (node->astType.compare("UnaryOperator") == 0) {
         Variable opa, ret;
+        std::smatch smUnaryOperator;
         std::regex_search(node->text, smUnaryOperator, eUnaryOperator);
         std::string castTo = smUnaryOperator[1];
         std::string fix = smUnaryOperator[2];
@@ -343,6 +358,7 @@ Variable visit(Node *node)
     }
 
     if (node->astType.compare("BinaryOperator") == 0) {
+        std::smatch smBinaryOperator;
         std::regex_search(node->text, smBinaryOperator, eBinaryOperator);
         std::string castTo = smBinaryOperator[1];
         std::string boperator = smBinaryOperator[2];
@@ -365,6 +381,7 @@ Variable visit(Node *node)
 
     if (node->astType.compare("RecordDecl") == 0) {
         Variable tStruct, vField;
+        std::smatch smStructDefinition;
         std::regex_search(node->text, smStructDefinition, eStructDefinition);
         tStruct.name = smStructDefinition[1];
         tStruct.typeEnum = Variable::typeEnum_t::isStruct;
@@ -378,6 +395,8 @@ Variable visit(Node *node)
 
     if (node->astType.compare("FieldDecl") == 0) {
         Variable vField;
+        std::smatch smFieldDeclaration;
+        std::smatch smStructType;
         std::regex_search(node->text, smFieldDeclaration, eFieldDeclaration);
         // Capture 1: "referenced" (or void)
         // Capture 2: field name
@@ -406,6 +425,7 @@ Variable visit(Node *node)
     if (node->astType.compare("MemberExpr") == 0) {
         Variable v, ret;
         std::string memberName;
+        std::smatch smMemberExpr;
         std::regex_search(node->text, smMemberExpr, eMemberExpr);
         memberName = smMemberExpr[2];
         v = visit(node->child);
@@ -426,12 +446,17 @@ Variable visit(Node *node)
 
     if (node->astType.compare("IfStmt") == 0) {
         Variable cond, vtrue, vfalse;
-        cond = visit(node->child->nextSib->nextSib);
+        //cond = visit(node->child->nextSib->nextSib);  You may see this version <<NULL>>
+        cond = visit(node->child);
         if (cond.value) {
-            vtrue = visit(node->child->nextSib->nextSib->nextSib);
+            if (node->child->nextSib)
+            //vtrue = visit(node->child->nextSib->nextSib->nextSib); You may see this version <<NULL>>
+                vtrue = visit(node->child->nextSib);
         }
         else {
-            vfalse = visit(node->child->nextSib->nextSib->nextSib->nextSib);
+            if (node->child->nextSib->nextSib)
+            //vfalse = visit(node->child->nextSib->nextSib->nextSib->nextSib); You may see this version <<NULL>>
+                vfalse = visit(node->child->nextSib->nextSib);
         }
         return Variable();
     }
@@ -454,9 +479,25 @@ Variable visit(Node *node)
     if (node->astType.compare("CompoundStmt") == 0) {
         Variable temp;
         Variable ret;
+        VariableShadow::vVariable v;
+        VariableShadow::vVariable* vVar;
+        shadowLevel++;
+        vShadowedVar.shadows.push_back(v);
         for (auto next = node->child; next != NULL; next = next->nextSib) {
             temp = visit(next);
         }
+        vVar = &vShadowedVar.shadows.back(); 
+        // For each variable that will go out of scope it searches if there are 
+        // pointer that points to it and will set them to NULL.
+        for (auto var = vVar->begin(); var != vVar->end(); var++) {
+            for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+                for (auto itit = it->begin(); itit != it->end(); itit++) {
+                    recurseVaribale(&*itit, &*var, nullifyPointer);
+                }
+            }
+        }
+        vShadowedVar.shadows.pop_back();
+        shadowLevel--;
         return ret;
     }
 
@@ -479,8 +520,10 @@ Variable visit(Node *node)
 
     if (node->astType.compare("FunctionDecl") == 0) {
         Variable temp = visit(node->child);
-        for (auto v = vVariable.begin(); v != vVariable.end(); v++) {
-            v->print();
+        for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+            for (auto itit = it->begin(); itit != it->end(); itit++) {
+                itit->print();
+            }
         }
         return temp;
     }
@@ -517,4 +560,35 @@ unsigned long long cast(std::string str, unsigned long long v)
     }
 
     std::cout << "Exception encountered\n";
+}
+
+void recurseVaribale(Variable* v,  Variable* ref, void (*fp)(Variable* , Variable* )) {
+    if (v->typeEnum == Variable::typeEnum_t::isRef) {
+        fp(v, ref);
+    }
+    if (v->typeEnum == Variable::typeEnum_t::isArray) {
+        for (auto it = v->array.begin(); it != v->array.end(); it++) {
+            recurseVaribale(&*it, ref, fp);
+        }
+    }
+    if (v->typeEnum == Variable::typeEnum_t::isStruct) {
+        for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
+            recurseVaribale(&*it, ref, fp);
+        }
+    }
+}
+
+void nullifyPointer(Variable* v, Variable* ref) {
+    if (v->pointsTo == ref) {
+        v->pointsTo = NULL;
+    }
+}
+
+void cleanTestStorage() {
+    VariableShadow::vVariable v;
+    vShadowedVar.shadows.clear();
+    vShadowedVar.shadows.push_back(v);
+    vStruct.clear();
+    vTypeDef.clear();
+    shadowLevel = 0;
 }

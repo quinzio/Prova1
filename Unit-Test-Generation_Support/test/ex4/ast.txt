@@ -1,0 +1,29 @@
+TranslationUnitDecl 0x1f77bf0f008 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1f77bf0f8a0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1f77bf0f5a0 '__int128'
+|-TypedefDecl 0x1f77bf0f910 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1f77bf0f5c0 'unsigned __int128'
+|-TypedefDecl 0x1f77bf0fc18 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1f77bf0f9f0 'struct __NSConstantString_tag'
+|   `-Record 0x1f77bf0f968 '__NSConstantString_tag'
+|-TypedefDecl 0x1f77bf0fcb0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1f77bf0fc70 'char *'
+|   `-BuiltinType 0x1f77bf0f0a0 'char'
+|-TypedefDecl 0x1f77bf0fd20 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1f77bf0fc70 'char *'
+|   `-BuiltinType 0x1f77bf0f0a0 'char'
+|-RecordDecl 0x1f77bf0fd78 <temp.c:1:1, line:6:1> line:1:8 struct a definition
+| |-RecordDecl 0x1f77bf0fe20 parent 0x1f77bf0f008 <line:2:5, line:5:5> line:2:12 struct b definition
+| | |-FieldDecl 0x1f77bf0fee8 <line:3:9, col:13> col:13 referenced f1 'int'
+| | `-FieldDecl 0x1f77bf0ff50 <line:4:9, col:14> col:14 f2 'char'
+| `-FieldDecl 0x1f77c081200 <line:2:5, line:5:6> col:6 referenced va 'struct b':'struct b'
+|-VarDecl 0x1f77c081308 <line:1:1, line:6:2> col:2 used vb 'struct a':'struct a'
+`-FunctionDecl 0x1f77c081420 <line:9:1, line:12:1> line:9:5 f1 'int ()'
+  `-CompoundStmt 0x1f77c081610 <col:9, line:12:1>
+    |-BinaryOperator 0x1f77c081568 <line:10:3, col:14> 'int' '='
+    | |-MemberExpr 0x1f77c081510 <col:3, col:9> 'int' lvalue .f1 0x1f77bf0fee8
+    | | `-MemberExpr 0x1f77c0814e0 <col:3, col:6> 'struct b':'struct b' lvalue .va 0x1f77c081200
+    | |   `-DeclRefExpr 0x1f77c0814c0 <col:3> 'struct a':'struct a' lvalue Var 0x1f77c081308 'vb' 'struct a':'struct a'
+    | `-IntegerLiteral 0x1f77c081540 <col:14> 'int' 111
+    `-ReturnStmt 0x1f77c081600 <line:11:3, col:10>
+      `-IntegerLiteral 0x1f77c0815d8 <col:10> 'int' 0

@@ -158,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CoreTypes.h" />
+    <ClInclude Include="src\main.h" />
     <ClInclude Include="src\RegexColl.h" />
     <ClInclude Include="src\Unit-Test-Generation-Support.h" />
     <ClInclude Include="src\Variabile.h" />

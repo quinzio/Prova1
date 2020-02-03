@@ -1,39 +1,17 @@
-int a, b;
-int c[3] = {1, 2, 3};
-int d[3];
-int* p;
-
-struct s {
-    int a;
-    char b;
-}s2;
-
-struct st {
-    int c;
-    char d;
-    struct s s3;
-}st1;
-
+int a_globalvariable = 2;
+int b_globalvariable = 2;
+struct ss{
+    int c_globalvariable;
+    int e_globalvariable;
+}ss1;
 
 int main() {
-    struct s* ps[4];
-    struct s s0[4];
-    struct s s1;
-    struct s s2;
-    struct s s3;
-    struct s s4;
-    ps[0] = &s1;
-    ps[1] = &s2;
-    ps[2] = &s3;
-    ps[3] = &s4;
-    s0[3].a = 1;
-    ps[0]->a = 1;
-    ps[0]->b = 2;
-    ps[1]->a = 3;
-    ps[1]->b = 4;
-    ps[2]->a = 5;
-    ps[2]->b = 6;
-    ps[3]->a = 7;
-    ps[3]->b = 8;
+    int d_localvariable = 10;
+    ss1.c_globalvariable = 2;
+    if ( a_globalvariable && b_globalvariable && ss1.c_globalvariable && d_localvariable) {
+        ss1.c_globalvariable = 1;
+        ss1.e_globalvariable = 3;
+    }
+    a_globalvariable = b_globalvariable;
     return 0;
 }

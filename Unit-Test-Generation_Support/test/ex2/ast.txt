@@ -1,0 +1,149 @@
+TranslationUnitDecl 0x24ef3c61348 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x24ef3c61be0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x24ef3c618e0 '__int128'
+|-TypedefDecl 0x24ef3c61c50 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x24ef3c61900 'unsigned __int128'
+|-TypedefDecl 0x24ef3c61f58 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x24ef3c61d30 'struct __NSConstantString_tag'
+|   `-Record 0x24ef3c61ca8 '__NSConstantString_tag'
+|-TypedefDecl 0x24ef3c61fc8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x24ef3c61520 'unsigned long long'
+|-TypedefDecl 0x24ef3c62060 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x24ef3c62020 'char *'
+|   `-BuiltinType 0x24ef3c613e0 'char'
+|-TypedefDecl 0x24ef3c620d0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x24ef3c62020 'char *'
+|   `-BuiltinType 0x24ef3c613e0 'char'
+|-VarDecl 0x24ef3c62140 <temp.c:1:1, col:5> col:5 a 'int'
+|-VarDecl 0x24ef3c62208 <col:1, col:8> col:8 b 'int'
+|-VarDecl 0x24ef3d07240 <line:2:1, col:20> col:5 c 'int [3]' cinit
+| `-InitListExpr 0x24ef3d07378 <col:12, col:20> 'int [3]'
+|   |-IntegerLiteral 0x24ef3d072a8 <col:13> 'int' 1
+|   |-IntegerLiteral 0x24ef3d072d0 <col:16> 'int' 2
+|   `-IntegerLiteral 0x24ef3d072f8 <col:19> 'int' 3
+|-VarDecl 0x24ef3d07438 <line:3:1, col:8> col:5 d 'int [3]'
+|-VarDecl 0x24ef3d074e0 <line:4:1, col:6> col:6 p 'int *'
+|-RecordDecl 0x24ef3d07548 <line:6:1, line:9:1> line:6:8 struct s definition
+| |-FieldDecl 0x24ef3d07608 <line:7:5, col:9> col:9 referenced a 'int'
+| `-FieldDecl 0x24ef3d07670 <line:8:5, col:10> col:10 referenced b 'char'
+|-VarDecl 0x24ef3d07728 <line:6:1, line:9:2> col:2 s2 'struct s':'struct s'
+|-RecordDecl 0x24ef3d077a8 <line:11:1, line:15:1> line:11:8 struct st definition
+| |-FieldDecl 0x24ef3d07868 <line:12:5, col:9> col:9 c 'int'
+| |-FieldDecl 0x24ef3d078d0 <line:13:5, col:10> col:10 d 'char'
+| `-FieldDecl 0x24ef3d07980 <line:14:5, col:14> col:14 s3 'struct s':'struct s'
+|-VarDecl 0x24ef3d07a38 <line:11:1, line:15:2> col:2 st1 'struct st':'struct st'
+|-VarDecl 0x24ef3d07c00 <line:17:1, col:15> col:11 used ps 'struct s *[4]'
+|-VarDecl 0x24ef3d07da8 <line:18:1, col:14> col:10 used s0 'struct s [4]'
+|-VarDecl 0x24ef3d07e30 <line:19:1, col:10> col:10 used s1 'struct s':'struct s'
+|-VarDecl 0x24ef3d07eb8 <line:20:1, col:10> col:10 used s3 'struct s':'struct s'
+|-VarDecl 0x24ef3d07f40 <line:21:1, col:10> col:10 used s4 'struct s':'struct s'
+`-FunctionDecl 0x24ef3d08000 <line:23:1, line:39:1> line:23:5 main 'int ()'
+  `-CompoundStmt 0x24ef3d08f20 <col:12, line:39:1>
+    |-DeclStmt 0x24ef3d08128 <line:24:5, col:16>
+    | `-VarDecl 0x24ef3d080c0 <col:5, col:14> col:14 used s2 'struct s':'struct s'
+    |-BinaryOperator 0x24ef3d08268 <line:25:5, col:14> 'struct s *' '='
+    | |-ArraySubscriptExpr 0x24ef3d08200 <col:5, col:9> 'struct s *' lvalue
+    | | |-ImplicitCastExpr 0x24ef3d081e8 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x24ef3d08140 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | | `-IntegerLiteral 0x24ef3d08160 <col:8> 'int' 0
+    | `-UnaryOperator 0x24ef3d08250 <col:13, col:14> 'struct s *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x24ef3d08220 <col:14> 'struct s':'struct s' lvalue Var 0x24ef3d07e30 's1' 'struct s':'struct s'
+    |-BinaryOperator 0x24ef3d08340 <line:26:5, col:14> 'struct s *' '='
+    | |-ArraySubscriptExpr 0x24ef3d082e8 <col:5, col:9> 'struct s *' lvalue
+    | | |-ImplicitCastExpr 0x24ef3d082d0 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x24ef3d08288 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | | `-IntegerLiteral 0x24ef3d082a8 <col:8> 'int' 1
+    | `-UnaryOperator 0x24ef3d08328 <col:13, col:14> 'struct s *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x24ef3d08308 <col:14> 'struct s':'struct s' lvalue Var 0x24ef3d080c0 's2' 'struct s':'struct s'
+    |-BinaryOperator 0x24ef3d08418 <line:27:5, col:14> 'struct s *' '='
+    | |-ArraySubscriptExpr 0x24ef3d083c0 <col:5, col:9> 'struct s *' lvalue
+    | | |-ImplicitCastExpr 0x24ef3d083a8 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x24ef3d08360 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | | `-IntegerLiteral 0x24ef3d08380 <col:8> 'int' 2
+    | `-UnaryOperator 0x24ef3d08400 <col:13, col:14> 'struct s *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x24ef3d083e0 <col:14> 'struct s':'struct s' lvalue Var 0x24ef3d07eb8 's3' 'struct s':'struct s'
+    |-BinaryOperator 0x24ef3d084f0 <line:28:5, col:14> 'struct s *' '='
+    | |-ArraySubscriptExpr 0x24ef3d08498 <col:5, col:9> 'struct s *' lvalue
+    | | |-ImplicitCastExpr 0x24ef3d08480 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x24ef3d08438 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | | `-IntegerLiteral 0x24ef3d08458 <col:8> 'int' 3
+    | `-UnaryOperator 0x24ef3d084d8 <col:13, col:14> 'struct s *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x24ef3d084b8 <col:14> 'struct s':'struct s' lvalue Var 0x24ef3d07f40 's4' 'struct s':'struct s'
+    |-BinaryOperator 0x24ef3d085e8 <line:29:5, col:15> 'int' '='
+    | |-MemberExpr 0x24ef3d08590 <col:5, col:11> 'int' lvalue .a 0x24ef3d07608
+    | | `-ArraySubscriptExpr 0x24ef3d08570 <col:5, col:9> 'struct s':'struct s' lvalue
+    | |   |-ImplicitCastExpr 0x24ef3d08558 <col:5> 'struct s *' <ArrayToPointerDecay>
+    | |   | `-DeclRefExpr 0x24ef3d08510 <col:5> 'struct s [4]' lvalue Var 0x24ef3d07da8 's0' 'struct s [4]'
+    | |   `-IntegerLiteral 0x24ef3d08530 <col:8> 'int' 3
+    | `-IntegerLiteral 0x24ef3d085c0 <col:15> 'int' 1
+    |-BinaryOperator 0x24ef3d086f8 <line:30:5, col:16> 'int' '='
+    | |-MemberExpr 0x24ef3d086a0 <col:5, col:12> 'int' lvalue ->a 0x24ef3d07608
+    | | `-ImplicitCastExpr 0x24ef3d08688 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d08668 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08650 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08608 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08628 <col:8> 'int' 0
+    | `-IntegerLiteral 0x24ef3d086d0 <col:16> 'int' 1
+    |-BinaryOperator 0x24ef3d08820 <line:31:5, col:16> 'char' '='
+    | |-MemberExpr 0x24ef3d087b0 <col:5, col:12> 'char' lvalue ->b 0x24ef3d07670
+    | | `-ImplicitCastExpr 0x24ef3d08798 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d08778 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08760 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08718 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08738 <col:8> 'int' 0
+    | `-ImplicitCastExpr 0x24ef3d08808 <col:16> 'char' <IntegralCast>
+    |   `-IntegerLiteral 0x24ef3d087e0 <col:16> 'int' 2
+    |-BinaryOperator 0x24ef3d08930 <line:32:5, col:16> 'int' '='
+    | |-MemberExpr 0x24ef3d088d8 <col:5, col:12> 'int' lvalue ->a 0x24ef3d07608
+    | | `-ImplicitCastExpr 0x24ef3d088c0 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d088a0 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08888 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08840 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08860 <col:8> 'int' 1
+    | `-IntegerLiteral 0x24ef3d08908 <col:16> 'int' 3
+    |-BinaryOperator 0x24ef3d08a58 <line:33:5, col:16> 'char' '='
+    | |-MemberExpr 0x24ef3d089e8 <col:5, col:12> 'char' lvalue ->b 0x24ef3d07670
+    | | `-ImplicitCastExpr 0x24ef3d089d0 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d089b0 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08998 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08950 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08970 <col:8> 'int' 1
+    | `-ImplicitCastExpr 0x24ef3d08a40 <col:16> 'char' <IntegralCast>
+    |   `-IntegerLiteral 0x24ef3d08a18 <col:16> 'int' 4
+    |-BinaryOperator 0x24ef3d08b68 <line:34:5, col:16> 'int' '='
+    | |-MemberExpr 0x24ef3d08b10 <col:5, col:12> 'int' lvalue ->a 0x24ef3d07608
+    | | `-ImplicitCastExpr 0x24ef3d08af8 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d08ad8 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08ac0 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08a78 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08a98 <col:8> 'int' 2
+    | `-IntegerLiteral 0x24ef3d08b40 <col:16> 'int' 5
+    |-BinaryOperator 0x24ef3d08c90 <line:35:5, col:16> 'char' '='
+    | |-MemberExpr 0x24ef3d08c20 <col:5, col:12> 'char' lvalue ->b 0x24ef3d07670
+    | | `-ImplicitCastExpr 0x24ef3d08c08 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d08be8 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08bd0 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08b88 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08ba8 <col:8> 'int' 2
+    | `-ImplicitCastExpr 0x24ef3d08c78 <col:16> 'char' <IntegralCast>
+    |   `-IntegerLiteral 0x24ef3d08c50 <col:16> 'int' 6
+    |-BinaryOperator 0x24ef3d08da0 <line:36:5, col:16> 'int' '='
+    | |-MemberExpr 0x24ef3d08d48 <col:5, col:12> 'int' lvalue ->a 0x24ef3d07608
+    | | `-ImplicitCastExpr 0x24ef3d08d30 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d08d10 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08cf8 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08cb0 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08cd0 <col:8> 'int' 3
+    | `-IntegerLiteral 0x24ef3d08d78 <col:16> 'int' 7
+    |-BinaryOperator 0x24ef3d08ec8 <line:37:5, col:16> 'char' '='
+    | |-MemberExpr 0x24ef3d08e58 <col:5, col:12> 'char' lvalue ->b 0x24ef3d07670
+    | | `-ImplicitCastExpr 0x24ef3d08e40 <col:5, col:9> 'struct s *' <LValueToRValue>
+    | |   `-ArraySubscriptExpr 0x24ef3d08e20 <col:5, col:9> 'struct s *' lvalue
+    | |     |-ImplicitCastExpr 0x24ef3d08e08 <col:5> 'struct s **' <ArrayToPointerDecay>
+    | |     | `-DeclRefExpr 0x24ef3d08dc0 <col:5> 'struct s *[4]' lvalue Var 0x24ef3d07c00 'ps' 'struct s *[4]'
+    | |     `-IntegerLiteral 0x24ef3d08de0 <col:8> 'int' 3
+    | `-ImplicitCastExpr 0x24ef3d08eb0 <col:16> 'char' <IntegralCast>
+    |   `-IntegerLiteral 0x24ef3d08e88 <col:16> 'int' 8
+    `-ReturnStmt 0x24ef3d08f10 <line:38:5, col:12>
+      `-IntegerLiteral 0x24ef3d08ee8 <col:12> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-9f597c.o : fatal error LNK1136: file danneggiato o non valido
