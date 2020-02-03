@@ -32,6 +32,9 @@
     <ClCompile Include="src\main.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\Node.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CoreTypes.h">
@@ -48,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="src\main.h">
       <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Node.h">
+      <Filter>File di origine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

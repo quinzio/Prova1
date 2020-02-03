@@ -20,42 +20,11 @@ std::regex eLineCol(
     /*D 2*/    "(\\d+)"
 );
 
-
-/*
-|-RecordDecl 0x1b57f115d98 <temp.c:1:1, line:9:1> line:1:1 struct definition
-A B         CD            E F         G H       I J       K
-*/
-std::regex eSourceRef(
-    /*A  */ "[^\\w<]*"
-    /*B 1*/ "([\\w<]+)"
-    /*C  */ "\\s"
-    /*D  */ "0x[\\da-f]{6,7}"
-    /*E  */ "\\s<"
-    /*F 2*/ "(col:\\d+|"
-    /*   */ "line:\\d+:\\d+|"
-    /*   */ "\\w+\\.\\w+:line:\\d+:\\d+)"
-    /*G  */ ",\\s"
-    /*H 3*/ "(col:\\d+|"
-    /*   */ "line:\\d+:\\d+|"
-    /*   */ "\\w+\\.\\w+:line:\\d+:\\d+)"
-    /*I  */ ">\\s"
-    /*J 4*/ "(col:\\d+|"
-    /*   */ "line:\\d+:\\d+|"
-    /*   */ "\\w+\\.\\w+:line:\\d+:\\d+)"
-    /*K  */ ".*"
-);
-
-std::regex eCatchGlobals(R"(([^\w<]*)([\w<]+).*)");
-
-std::regex eCatchGlobalName(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
-
-
-
 /*
 Extracts the source location complete with line source and column.
-1--- 2 3 4 
+1--- 2 3 4
 temp.c:1:1
-A   BCDEFG 
+A   BCDEFG
 */
 std::regex eFileLineCol(
     /*A 1*/    "([\\w\\d]+)"
@@ -66,6 +35,55 @@ std::regex eFileLineCol(
     /*F  */    ":"
     /*G 4*/    "(\\d+)"
 );
+
+/*
+Matches the following lines
+temp.c:1:1
+line:1:2
+col:1
+
+Captures:
+1 Col
+2 Col#
+3 Line:Col
+4 Line#
+5 Col#
+6 File:Line:Col
+7 File#
+8 Line#
+9 Col#
+*/
+std::regex eSourcePoint(
+    "(col:(\\d+))|(line:(\\d+):(\\d+))|((\\w+\\.\\w+):(\\d+):(\\d+))"
+);
+
+/*
+|-RecordDecl 0x1b57f115d98 <temp.c:1:1, line:9:1> line:1:1 struct definition
+A B         CD            E F         G H       I J       K
+*/
+std::regex eSourceRef(
+    /*A  */ "[^\\w<]*"
+    /*B 1*/ "([\\w<]+)"
+    /*C  */ "\\s"
+    /*D  */ "0x[\\da-f]{6,11}"
+    /*E  */ "\\s<"
+    /*F 2*/ "(col:\\d+|"
+    /*   */ "line:\\d+:\\d+|"
+    /*   */ "\\w+\\.\\w+:\\d+:\\d+)"
+    /*G  */ "(?:,\\s)?"
+    /*H 3*/ "(col:\\d+|"
+    /*   */ "line:\\d+:\\d+|"
+    /*   */ "\\w+\\.\\w+:\\d+:\\d+)?"
+    /*I  */ ">\\s"
+    /*J 4*/ "(col:\\d+|"
+    /*   */ "line:\\d+:\\d+|"
+    /*   */ "\\w+\\.\\w+:\\d+:\\d+|0)?"
+    /*K  */ ".*"
+);
+
+std::regex eCatchGlobals(R"(([^\w<]*)([\w<]+).*)");
+
+std::regex eCatchGlobalName(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
 
 std::regex eIntegralType(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s(\d+))###");
 

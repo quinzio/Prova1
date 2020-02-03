@@ -153,12 +153,14 @@
   <ItemGroup>
     <ClCompile Include="src\CoreTypes.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\Unit-Test-Generation-Support.cpp" />
     <ClCompile Include="src\Variable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CoreTypes.h" />
     <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\RegexColl.h" />
     <ClInclude Include="src\Unit-Test-Generation-Support.h" />
     <ClInclude Include="src\Variabile.h" />

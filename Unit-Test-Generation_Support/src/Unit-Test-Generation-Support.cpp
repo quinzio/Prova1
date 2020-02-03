@@ -16,39 +16,10 @@ debugging.
 
 #include "Unit-Test-Generation-Support.h"
 #include "Variabile.h"
+#include "Node.h"
 #include "CoreTypes.h"
 #include "RegexColl.h"
 
-struct SourceRef_s {
-    std::string fileName;
-    int line;
-    int col;
-};
-
-class Node
-{
-public:
-    Node();
-    ~Node();
-    Node* prevSib = NULL;
-    Node* nextSib = NULL;
-    Node* child = NULL;
-    Node* parent = NULL;
-    int depth;
-    std::string text;
-    int astFileRow;
-    std::string astType;
-    struct SourceRef_s sourceRef;
-};
-
-Node::Node()
-{
-    depth = 0;
-}
-
-Node::~Node()
-{
-}
 
 // vVariable contains all the global and local variables defined.
 VariableShadow vShadowedVar;
@@ -58,6 +29,7 @@ std::vector<Variable> vStruct;
 std::vector<Variable> vTypeDef;
 std::ofstream Variable::outputFile;
 int shadowLevel = 0;
+struct SourceRef_s::SourcePoint_s globalSource;
 
 Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
@@ -127,6 +99,9 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
             tempNode->text = str;
             tempNode->astFileRow = row++;
             tempNode->astType = smCatchGlobals[2];
+            // Get the source reference that is the first part of the string until 
+            // the location
+            setSourceLocations(tempNode, str);
             // Get the complete source location
             // Did I find a sibling (on the same indentation level) ?
             if (smCatchGlobals[1].length() <= depth) {
@@ -383,7 +358,14 @@ Variable visit(Node *node)
         Variable tStruct, vField;
         std::smatch smStructDefinition;
         std::regex_search(node->text, smStructDefinition, eStructDefinition);
+        // Anonimous structures will take name as file.ext:line:col
         tStruct.name = smStructDefinition[1];
+        if (tStruct.name.length() == 0) {
+            tStruct.name = 
+                node->sourceRef.Name.fileName +
+                ":" + std::to_string(node->sourceRef.Name.line) + 
+                ":" + std::to_string(node->sourceRef.Name.col);
+        }
         tStruct.typeEnum = Variable::typeEnum_t::isStruct;
         for (auto n = node->child; n != NULL; n = n->nextSib) {
             vField = visit(n);
@@ -592,3 +574,49 @@ void cleanTestStorage() {
     vTypeDef.clear();
     shadowLevel = 0;
 }
+
+void setSourceLocations(Node* tempNode, std::string str) {
+    std::smatch smSourceRef;
+    std::smatch smSourcePoint;
+    std::string temp;
+    std::regex_search(str, smSourceRef, eSourceRef);
+    if (smSourceRef.size() >= 3 && smSourceRef[2].matched) {
+        temp = smSourceRef[2];
+        std::regex_search(temp, smSourcePoint, eSourcePoint);
+        setGlobalLocation(smSourcePoint);
+    }
+    tempNode->sourceRef.ExtBegin.fileName = globalSource.fileName;
+    tempNode->sourceRef.ExtBegin.line = globalSource.line;
+    tempNode->sourceRef.ExtBegin.col = globalSource.col;
+    if (smSourceRef.size() >= 4 && smSourceRef[3].matched) {
+        temp = smSourceRef[3];
+        std::regex_search(temp, smSourcePoint, eSourcePoint);
+        setGlobalLocation(smSourcePoint);
+    }
+    tempNode->sourceRef.ExtEnd.fileName = globalSource.fileName;
+    tempNode->sourceRef.ExtEnd.line = globalSource.line;
+    tempNode->sourceRef.ExtEnd.col = globalSource.col;
+    if (smSourceRef.size() >= 5 && smSourceRef[4].matched) {
+        temp = smSourceRef[4];
+        std::regex_search(temp, smSourcePoint, eSourcePoint);
+        setGlobalLocation(smSourcePoint);
+    }
+    tempNode->sourceRef.Name.fileName = globalSource.fileName;
+    tempNode->sourceRef.Name.line = globalSource.line;
+    tempNode->sourceRef.Name.col = globalSource.col;
+}
+void setGlobalLocation(std::smatch smSourcePoint) {
+    if (smSourcePoint[6].matched) {
+        globalSource.fileName = smSourcePoint[7];
+        globalSource.line = std::stoi(smSourcePoint[8]);
+        globalSource.col = std::stoi(smSourcePoint[9]);
+    }
+    else if (smSourcePoint[3].matched) {
+        globalSource.line = std::stoi(smSourcePoint[4]);
+        globalSource.col = std::stoi(smSourcePoint[5]);
+    }
+    else if (smSourcePoint[1].matched) {
+        globalSource.col = std::stoi(smSourcePoint[2]);
+    }
+}
+    
