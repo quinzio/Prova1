@@ -1,12 +1,14 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <fstream>
 
 class Variable
 {
 public:
-    [[maybe_unused]] std::string print(std::string prefix);
+    [[maybe_unused]] std::string print(std::string prefix, std::string postfix);
     [[maybe_unused]] std::string print();
+    static std::ofstream outputFile;
 
     std::string name;
     unsigned long long value;

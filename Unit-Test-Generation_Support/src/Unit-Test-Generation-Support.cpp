@@ -14,6 +14,7 @@ debugging.
 #include <set>
 #include <utility>
 
+#include "Unit-Test-Generation-Support.h"
 #include "Variabile.h"
 #include "CoreTypes.h"
 #include "RegexColl.h"
@@ -35,6 +36,7 @@ public:
     Node* parent = NULL;
     int depth;
     std::string text;
+    int astFileRow;
     std::string astType;
     struct SourceRef_s sourceRef;
 };
@@ -54,14 +56,18 @@ std::vector<Variable> vVariable;
 std::vector<Variable> vStruct;
 // vTypeDef contains all the user defined types
 std::vector<Variable> vTypeDef;
+std::ofstream Variable::outputFile;
 
 
 Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
 
-int main()
+int inner_main(int argc, const char* argv[]) throw (const std::exception&)
 {
-    std::cout << "Hello World!\n";
+    if (argc != 3) {
+        throw std::exception("\n\n*** There must be 2 arguments: ast file name and output file name. ***\n\n");
+    }
+    std::cout << "Unit Test Generation Support!\n";
     if (std::regex_match("subject", std::regex("(sub)(.*)")))
         std::cout << "string literal matched\n";
     //std::string s("|-TypedefDecl 0xd2eaa8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag");
@@ -73,14 +79,15 @@ int main()
     std::cout << sm[1] << "\n";
     std::cout << sm[2] << "\n";
 
-    std::ofstream pippo("pippo.txt");
-    pippo << "pippo";
-    pippo.close();
+    Variable::outputFile.open(argv[2]);
+    if (!Variable::outputFile) throw std::exception("\n\n*** Cannot open output file. ***\n\n");
 
-    std::ifstream infile("ex1/ast.txt");
+    std::ifstream infile(argv[1]);
+    if (!infile) throw std::exception("\n\n*** Ast file not found. ***\n\n");
     std::string str;
 
     int depth = -2;
+    int row = 1;
     Node myRoot;
     Node* cursor;
     cursor = &myRoot;
@@ -116,6 +123,7 @@ int main()
             astTypesSet.insert(smCatchGlobals[2]);
             Node* tempNode = new Node();
             tempNode->text = str;
+            tempNode->astFileRow = row++;
             tempNode->astType = smCatchGlobals[2];
             // Get the complete source location
             // Did I find a sibling (on the same indentation level) ?
@@ -150,7 +158,11 @@ int main()
         Visit the AST
     */
     Variable t;
-    t = visit(&myRoot);
+    if (myRoot.child) 
+        t = visit(myRoot.child);
+     infile.close();
+     Variable::outputFile.close();
+    return 0;
 }
 
 Variable visit(Node *node)
@@ -258,6 +270,7 @@ Variable visit(Node *node)
         std::string refed = smTypeDef[1];
         std::string name  = smTypeDef[2];
         std::string utype = smTypeDef[3];
+        return Variable();
     }
 
     if (node->astType.compare("DeclRefExpr") == 0) {

@@ -1,0 +1,34 @@
+TranslationUnitDecl 0x23042655968 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x23042656200 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x23042655f00 '__int128'
+|-TypedefDecl 0x23042656270 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x23042655f20 'unsigned __int128'
+|-TypedefDecl 0x23042656598 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x23042656350 'struct __NSConstantString_tag'
+|   `-Record 0x230426562c8 '__NSConstantString_tag'
+|-TypedefDecl 0x23042656608 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x23042655b40 'unsigned long long'
+|-TypedefDecl 0x230426566a0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x23042656660 'char *'
+|   `-BuiltinType 0x23042655a00 'char'
+|-TypedefDecl 0x23042656710 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x23042656660 'char *'
+|   `-BuiltinType 0x23042655a00 'char'
+|-VarDecl 0x23042656780 <temp.c:1:1, col:9> col:5 used a 'int' cinit
+| `-IntegerLiteral 0x23042656830 <col:9> 'int' 2
+|-VarDecl 0x23042656870 <line:2:1, col:9> col:5 used b 'int' cinit
+| `-IntegerLiteral 0x230426568d8 <col:9> 'int' 2
+|-VarDecl 0x230426c9d90 <line:3:1, col:9> col:5 used c 'int' cinit
+| `-IntegerLiteral 0x230426c9df8 <col:9> 'int' 2
+`-FunctionDecl 0x230426c9e70 <line:5:1, line:8:1> line:5:5 main 'int ()'
+  `-CompoundStmt 0x230426ca018 <col:12, line:8:1>
+    |-BinaryOperator 0x230426c9fc0 <line:6:5, col:13> 'int' '='
+    | |-DeclRefExpr 0x230426c9f10 <col:5> 'int' lvalue Var 0x230426c9d90 'c' 'int'
+    | `-BinaryOperator 0x230426c9fa0 <col:9, col:13> 'int' '+'
+    |   |-ImplicitCastExpr 0x230426c9f70 <col:9> 'int' <LValueToRValue>
+    |   | `-DeclRefExpr 0x230426c9f30 <col:9> 'int' lvalue Var 0x23042656780 'a' 'int'
+    |   `-ImplicitCastExpr 0x230426c9f88 <col:13> 'int' <LValueToRValue>
+    |     `-DeclRefExpr 0x230426c9f50 <col:13> 'int' lvalue Var 0x23042656870 'b' 'int'
+    `-ReturnStmt 0x230426ca008 <line:7:5, col:12>
+      `-IntegerLiteral 0x230426c9fe0 <col:12> 'int' 0
+C:\Users\Davide\AppData\Local\Temp\temp-d91c47.o : fatal error LNK1136: invalid or corrupt file
