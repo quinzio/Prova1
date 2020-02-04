@@ -138,7 +138,7 @@ std::regex eStructType(
     R"###(struct\s([\w\d]+).*)###");
 
 std::regex eStructTypeAnonymous(
-    "\\(anonymous struct at\\s"    /*(anonymous struct at */
+    "\\(anonymous\\sstruct\\sat\\s"    /*(anonymous struct at */
     "([^\\)]+)"                    /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
     "\\)"                          /*)*/
 );
@@ -153,12 +153,12 @@ std::regex eStructDefinition(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s(\w+)\sdefinition)###");
 
 std::regex eFieldDeclaration(
-    /*
-    | `-FieldDecl 0x247143d8818 <line:12:5, line:15:6> col:6 fx2 'struct x2':'struct x2'
-
-    */
+/*
+| `-FieldDecl 0x247143d8818 <line:12:5, line:15:6> col:6 fx2 'struct x2':'struct x2'
+| `-FieldDecl 0x23a31f28250 <line:4:5, line:7:6> col:6 referenced va 'struct (anonymous struct at temp.c:4:5)':'struct (anonymous at temp.c:4:5)'
+*/
     "[^\\w<]*"                       /*| |-              */
-    "FieldDecl+"                     /*FieldDecl         */
+    "FieldDecl"                      /*FieldDecl         */
     "\\s"                            /*                  */
     "0x[\\da-f]{6,11}"               /*0x247143d8308     */
     "\\s"                            /*                  */
