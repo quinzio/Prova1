@@ -20,22 +20,23 @@ std:: string Variable::print(std::string prefix, std::string postfix) {
 	int ix = 0;
 	if (this->typeEnum == Variable::typeEnum_t::isArray) {
 		for (auto v = this->array.begin(); v != this->array.end(); v++) {
-			tempPrefix = prefix;
-			tempPostfix =  "[" + std::to_string(ix) + "\]" + postfix;
+			tempPrefix = prefix + this->name + "[" + std::to_string(ix) + "\]";
+			tempPostfix = postfix;
 			v->print(tempPrefix, tempPostfix);
 			ix++;
 		}
 	}
 	if (this->typeEnum == Variable::typeEnum_t::isStruct) {
 		for (auto v = this->intStruct.begin(); v != this->intStruct.end(); v++) {
-			tempPrefix = prefix + "member " + v->name + " ";
-			tempPostfix = "." + v->name + postfix;
+			tempPrefix = prefix + this->name + ".";
+			tempPostfix = postfix;
 			v->print(tempPrefix, tempPostfix);
 		}
 	}
 	if (this->typeEnum == Variable::typeEnum_t::isRef) {
 		if (this->pointsTo) {
-			tempPrefix = prefix + this->name + postfix + " -> ";
+			tempPrefix = prefix + this->name + "->";
+			tempPostfix = postfix;
 			this->pointsTo->print(tempPrefix, postfix);
 		}
 		else {

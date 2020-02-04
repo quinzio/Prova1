@@ -81,33 +81,116 @@ std::regex eSourceRef(
     /*K  */ ".*"
 );
 
-std::regex eCatchGlobals(R"(([^\w<]*)([\w<]+).*)");
+std::regex eCatchGlobals(
+    R"(([^\w<]*)([\w<]+).*)");
 
-std::regex eCatchGlobalName(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+std::regex eCatchGlobalName(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
 
-std::regex eIntegralType(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s(\d+))###");
+std::regex eIntegralType(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s(\d+))###");
 
-std::regex eVarDecl(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+std::regex eVarDecl(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+/*
+    | |   `-DeclRefExpr 0x23a31f28510 <col:3> 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)' lvalue Var 0x23a31f28358 'vb' 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)'
+*/
+std::regex eDeclRefExpr(
+    "[^\\w<]*"             /*    | |   `-                                                                     */
+    "[\\w<]+"              /*DeclRefExpr                                                                      */
+    "\\s"                  /*                                                                                 */
+    "0x[\\da-f]{6,11}"     /*0x23a31f28510                                                                    */
+    "\\s"                  /*                                                                                 */
+    "<[^>]*>"              /*<col:3>                                                                          */
+    "\\s"                  /*                                                                                 */
+    "'([^']+)'"            /*'struct (anonymous struct at temp.c:3:1)'                                        */
+    ":?"                   /*:                                                                                */
+    "(?:'(?:[^']+)')?"     /*'struct (anonymous at temp.c:3:1)'                                               */
+    "\\s"                  /*                                                                                 */
+    "lvalue"               /*lvalue                                                                           */
+    "\\s"                  /*                                                                                 */
+    "Var"                  /*Var                                                                              */
+    "\\s"                  /*                                                                                 */
+    "0x[\\da-f]{6,11}"     /*0x23a31f28358                                                                    */
+    "\\s"                  /*                                                                                 */
+    "'([\\w\\d]+)'"        /*'vb'                                                                             */
+);                         /* 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)'    */
 
-std::regex eDeclRefExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)':?(?:'(?:[^']+)')?\slvalue\sVar\s0x[\da-f]{6,11}\s'(\w+)')###");
+std::regex eImplicitCastExpr(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s<([^>]*)>)###");
 
-std::regex eImplicitCastExpr(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s<([^>]*)>)###");
+std::regex eBinaryOperator(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
 
-std::regex eBinaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
+std::regex eUnaryOperator(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
 
-std::regex eUnaryOperator(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
+std::regex eDeclStmt(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>)###");
 
-std::regex eDeclStmt(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>)###");
+std::regex eArrayDecl(
+    R"###((.*)\[(\d+)\])###");
 
-std::regex eArrayDecl(R"###((.*)\[(\d+)\])###");
+std::regex ePointerDecl(
+    R"###(.*\s\*)###");
 
-std::regex ePointerDecl(R"###(.*\s\*)###");
+std::regex eStructType(
+    R"###(struct\s([\w\d]+).*)###");
 
-std::regex eStructType(R"###(struct\s([\w\d]+).*)###");
+std::regex eStructTypeAnonymous(
+    "\\(anonymous struct at\\s"    /*(anonymous struct at */
+    "([^\\)]+)"                    /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
+    "\\)"                          /*)*/
+);
 
-std::regex eStructDefinition(R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s(\w+)\sdefinition)###");
+std::regex eStructTypeAnonymous2(
+    "struct\\s\\(anonymous\\sat\\s"   /*struct (anonymous struct at */
+    "([^\\)]+)"                         /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
+    "\\)"                               /*)*/
+);
 
-std::regex eFieldDeclaration(R"###([^\w<]*FieldDecl+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(\sreferenced)?\s(\w+)\s'([^']+)')###");
+std::regex eStructDefinition(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s(\w+)\sdefinition)###");
+
+std::regex eFieldDeclaration(
+    /*
+    | `-FieldDecl 0x247143d8818 <line:12:5, line:15:6> col:6 fx2 'struct x2':'struct x2'
+
+    */
+    "[^\\w<]*"                       /*| |-              */
+    "FieldDecl+"                     /*FieldDecl         */
+    "\\s"                            /*                  */
+    "0x[\\da-f]{6,11}"               /*0x247143d8308     */
+    "\\s"                            /*                  */
+    "<[^>]*>"                        /*<line:6:5>        */
+    "\\s"                            /*                  */
+    "(?:col:\\d+|line:\\d+:\\d+)"    /*col:5             */
+    "(\\sreferenced)?"               /* referenced       */
+    "\\s"                            /*                  */
+    "(\\w+)"                         /*                  */
+    "\\s"                            /*                  */
+    "'([^']+)'"                      /*'struct (anonymous at temp.c:6:5)'                  */
+);
+
+std::regex eFieldDeclarationImplicit(
+    /*
+    | |-FieldDecl 0x247143d8308 <line:6:5> col:5 implicit referenced 'struct (anonymous at temp.c:6:5)'
+
+    */
+    "[^\\w<]*"                       /*| |-                              */
+    "FieldDecl+"                     /*FieldDecl                         */
+    "\\s"                            /*                                  */
+    "0x[\\da-f]{6,11}"               /*0x247143d8308                     */
+    "\\s"                            /*                                  */
+    "<[^>]*>"                        /*<line:6:5>                        */
+    "\\s"                            /*                                  */
+    "(?:col:\\d+|line:\\d+:\\d+)"    /*col:5                             */
+    "\\simplicit"                    /* implicit                         */
+    "(\\sreferenced)?"               /* referenced                       */ /*capt 1*/
+    "\\s"                            /*                                  */
+    "'([^']+)'"                      /*'struct (anonymous at temp.c:6:5)'*/ /*capt 2*/
+);
+
 
 /*
     | |-MemberExpr 0x26114378700 <col:5, col:8> 'int':'int' lvalue .a 0x26114378368
@@ -147,14 +230,15 @@ struct abc *(abc)[5]
 A     BC  DEFG  H IL
 */
 std::regex eGenericType(
-    "(union|struct|)?"
-    "\\s?"
-    "([\\w\\d]+|)?"
-    "\\s?"
-    "(\\**)"
-    "("
-    "(?:\\(.+\\))?)"
-    "\\[?((?:\\d+)?)\\]?"
+    "(union|struct|)?"      /*struct OR union OR anonymous struct*/
+    "\\s?"                                  /* */
+    "([\\w\\d]+|\\([^\\)]+\\))?"            /*abc OR (anonymous struct at temp.c:3:1)*/
+    "\\s?"                                  /* */
+    "(\\**)"                                /***/ //an asterix *
+    "("                                     /**/  // open capturing group
+    "(?:\\(.+\\))?"                         /*abc*/
+    ")"                                     /**/  // close capturing group
+    "\\[?((?:\\d+)?)\\]?"                   /*[5]*/
 );
 
 /*

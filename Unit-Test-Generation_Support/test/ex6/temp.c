@@ -1,13 +1,23 @@
+// ex6
 // Testing anonimous nested structures
+// The nested structure doesn't declare a field
 
 struct {
-    unsigned char a:1;
-    unsigned char b:2;
-    unsigned char c:1;
+    struct {
+        int f1;
+        char f2;
+    };
 }vb;
+struct x1{
+    struct x2{
+        int f1;
+        char f2;
+    }fx2;
+}xvb;
 
 
 int f1(){
-  vb.a = 1;
+  vb.f1 = 111;
+  xvb.fx2.f1 = 112;
   return 0;
 }

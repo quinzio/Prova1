@@ -151,6 +151,7 @@
     <ResourceCompile Include="Unit-Test-Generation_Support.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AsciiArt.cpp" />
     <ClCompile Include="src\CoreTypes.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Node.cpp" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CoreTypes.h" />
+    <ClInclude Include="src\RegexCollCoreTypes.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\RegexColl.h" />

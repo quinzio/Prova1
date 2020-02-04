@@ -1,5 +1,5 @@
 a_globalvariable = 0
 b_globalvariable = 0
 ss1 = 0
-member c_globalvariable c_globalvariable.c_globalvariable = 2
-member e_globalvariable e_globalvariable.e_globalvariable = 0
+ss1.c_globalvariable = 2
+ss1.e_globalvariable = 0

@@ -1,3 +1,4 @@
+// ex5
 // Testing anonimous nested structures
 
 struct {

@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include <regex>
 #include "Variabile.h"
 #include "Node.h"

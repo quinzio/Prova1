@@ -30,6 +30,7 @@ std::vector<Variable> vTypeDef;
 std::ofstream Variable::outputFile;
 int shadowLevel = 0;
 struct SourceRef_s::SourcePoint_s globalSource;
+extern std::string splash;
 
 Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
@@ -40,6 +41,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
         throw std::exception("\n\n*** There must be 2 arguments: ast file name and output file name. ***\n\n");
     }
     std::cout << "Unit Test Generation Support!\n";
+    std::cout << splash;
+
     if (std::regex_match("subject", std::regex("(sub)(.*)")))
         std::cout << "string literal matched\n";
     //std::string s("|-TypedefDecl 0xd2eaa8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag");
@@ -144,26 +147,6 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
 
 Variable visit(Node *node)
 {
-
-    /*
-        <<<NULL  (>>>)
-        BinaryOperator
-        BuiltinType
-        CompoundStmt
-        DeclRefExpr
-        DeclStmt
-        FunctionDecl
-        IfStmt
-        ImplicitCastExpr
-        IntegerLiteral
-        PointerType
-        Record
-        RecordType
-        ReturnStmt
-        TranslationUnitDecl
-        TypedefDecl
-        VarDecl
-    */
     if (node->astType.compare("IntegerLiteral") == 0) {
         unsigned long long integral;
         Variable ret;
@@ -181,6 +164,7 @@ Variable visit(Node *node)
         struct coreType_str CoreTypes;
         std::smatch smVarDecl;
         std::smatch smGenericType;
+        std::smatch smStructTypeAnonymous;
         Variable* vback = NULL;
         std::regex_search(node->text, smVarDecl, eVarDecl);
         temp.name = smVarDecl[1];
@@ -207,8 +191,14 @@ Variable visit(Node *node)
             } 
             else if (smGenericType[1].compare("struct") == 0) {
                 // example: struct s[3], without the pointer
+                // Must take care of anonymous structs
+                std::string typeName = smGenericType[2];
+                if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+                {
+                    typeName = smStructTypeAnonymous[1];
+                }
                 for (auto t : vStruct) {
-                    if (t.name.compare(smGenericType[2]) == 0) { 
+                    if (t.name.compare(typeName) == 0) {
                         a = t;
                     }
                 }
@@ -225,8 +215,14 @@ Variable visit(Node *node)
         }
         else if (smGenericType[1].length() > 0) {
             // example: struct s, it's neither an array not a pointer, but a struct
+            // Must take care of anonymous structs
+            std::string typeName = smGenericType[2];
+            if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+            {
+                typeName = smStructTypeAnonymous[1];
+            }
             for (Variable v : vStruct) {
-                if (v.name.compare(smGenericType[2]) == 0) {
+                if (v.name.compare(typeName) == 0) {
                     temp = v;
                     break;
                 }
@@ -369,7 +365,9 @@ Variable visit(Node *node)
         tStruct.typeEnum = Variable::typeEnum_t::isStruct;
         for (auto n = node->child; n != NULL; n = n->nextSib) {
             vField = visit(n);
-            tStruct.intStruct.push_back(vField);
+            if (n->astType.compare("FieldDecl") == 0) {
+                tStruct.intStruct.push_back(vField);
+            }
         }
         vStruct.push_back(tStruct);
         return tStruct;
@@ -378,30 +376,57 @@ Variable visit(Node *node)
     if (node->astType.compare("FieldDecl") == 0) {
         Variable vField;
         std::smatch smFieldDeclaration;
+        std::smatch smFieldDeclarationImplicit;
+        std::smatch smStructTypeAnonymous2;
         std::smatch smStructType;
-        std::regex_search(node->text, smFieldDeclaration, eFieldDeclaration);
-        // Capture 1: "referenced" (or void)
-        // Capture 2: field name
-        // Capture 3: type
-        std::string rawType = smFieldDeclaration[3];
-        if (std::regex_search(rawType, smStructType, eStructType)) {
+        std::string rawType;
+        std::string name;
+        std::string referenced;
+        std::string refinedType = "";
+        if (std::regex_search(node->text, smFieldDeclarationImplicit, eFieldDeclarationImplicit)) {
+            // Capture 1: "referenced" (or void)
+            // Capture 2: type (will be anonymous)
+            referenced  = smFieldDeclarationImplicit[1];
+            rawType     = smFieldDeclarationImplicit[2];
+        }
+        else if (std::regex_search(node->text, smFieldDeclaration, eFieldDeclaration)) {
+            // Capture 1: "referenced" (or void)
+            // Capture 2: field name
+            // Capture 3: type
+            referenced  = smFieldDeclaration[1];
+            name        = smFieldDeclaration[2];
+            rawType     = smFieldDeclaration[3];
+        } 
+        if (std::regex_search(rawType, smStructTypeAnonymous2, eStructTypeAnonymous2)) {
+            refinedType = smStructTypeAnonymous2[1];
+        }
+        else if (std::regex_search(rawType, smStructType, eStructType)) {
+            refinedType = smStructType[1];
+        }
+        if (refinedType.length() > 0)
+        {
             // Field is a nested struct
             for (Variable v : vStruct) {
-                if (smStructType[1].compare(v.name) == 0) {
+                if (refinedType.compare(v.name) == 0) {
                     vField = v;
+                    break;
                 }
             }
         }
         else {
             vField.typeEnum = Variable::typeEnum_t::isValue;
-            vField.type = smFieldDeclaration[3];
+            vField.type = rawType;
         }
-        vField.name = smFieldDeclaration[2];
+        vField.name = name;
         // Note the blank space in " referenced"
         if (smFieldDeclaration[1].compare(" referenced") == 0) {
             vField.used = true;
         }
         return vField;
+    }
+
+    if (node->astType.compare("IndirectFieldDecl") == 0) {
+        return Variable();
     }
 
     if (node->astType.compare("MemberExpr") == 0) {

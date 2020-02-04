@@ -1,0 +1,8 @@
+vb = 0
+vb. = 0
+vb..f1 = 111
+vb..f2 = 0
+xvb = 0
+xvb.fx2 = 0
+xvb.fx2.f1 = 112
+xvb.fx2.f2 = 0
