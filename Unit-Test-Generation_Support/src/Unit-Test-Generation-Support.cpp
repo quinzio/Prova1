@@ -377,6 +377,7 @@ Variable visit(Node *node)
         Variable vField;
         std::smatch smFieldDeclaration;
         std::smatch smFieldDeclarationImplicit;
+        std::smatch smStructTypeAnonymous;
         std::smatch smStructTypeAnonymous2;
         std::smatch smStructType;
         std::string rawType;
@@ -397,7 +398,10 @@ Variable visit(Node *node)
             name        = smFieldDeclaration[2];
             rawType     = smFieldDeclaration[3];
         } 
-        if (std::regex_search(rawType, smStructTypeAnonymous2, eStructTypeAnonymous2)) {
+        if (std::regex_search(rawType, smStructTypeAnonymous, eStructTypeAnonymous)) {
+            refinedType = smStructTypeAnonymous[1];
+        }
+        else if (std::regex_search(rawType, smStructTypeAnonymous2, eStructTypeAnonymous2)) {
             refinedType = smStructTypeAnonymous2[1];
         }
         else if (std::regex_search(rawType, smStructType, eStructType)) {
