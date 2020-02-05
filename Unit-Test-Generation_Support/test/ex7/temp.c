@@ -1,8 +1,8 @@
-typedef int myint;
-typedef myint myint2;
+// ex7
+// Nested types on variable declaration
 
+int  ***(*(((*(*var[5]))[4])[3])[2])[1][2][3];
 
 int f1(){
-        
-        return 9;
+        return 0;
 }

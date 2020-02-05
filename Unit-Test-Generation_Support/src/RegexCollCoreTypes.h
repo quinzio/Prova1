@@ -10,24 +10,48 @@ std::regex eFinalType(
     "struct\\s\\([^\\)]+\\)"       "|"
     "void"                         "|"
     "char"                         "|"
-    "char16_t"                     "|"
-    "char32_t"                     "|"
-    "wchar_t"                      "|"
-    "signed char"                  "|"
-    "signed short int"             "|"
-    "signed int"                   "|"
-    "signed long int"              "|"
-    "signed long long int"         "|"
-    "unsigned char"                "|"
-    "unsigned short int"           "|"
-    "unsigned int"                 "|"
-    "unsigned long int"            "|"
-    "unsigned long long int"       "|"
+    "signed\\schar"                "|"
+    "unsigned\\schar"              "|"
+    "short"                        "|"
+    "short\\sint"                  "|"
+    "signed\\sshort"               "|"
+    "signed\\sshort\\sint"         "|"
+    "unsigned\\sshort"             "|"
+    "unsigned\\sshort\\sint"       "|"
+    "int"                          "|"
+    "signed"                       "|"
+    "signed\\sint"                 "|"
+    "unsigned"                     "|"
+    "unsigned\\sint"               "|"
+    "long"                         "|"
+    "long\\sint"                   "|"
+    "signed\\slong"                "|"
+    "signed\\slong\\sint"          "|"
+    "unsigned\\slong"              "|"
+    "unsigned\\slong\\sint"        "|"
+    "long\\slong"                  "|"
+    "long\\slong\\sint"            "|"
+    "signed\\slong\\slong"         "|"
+    "signed\\slong\\slong\\sint"   "|"
+    "unsigned\\slong\\slong"       "|"
+    "unsigned\\slong\\slong\\sint" "|"
     "float"                        "|"
     "double"                       "|"
-    "long double" 
+    "long\\sdouble"
     ")"
     "(.*)"
+);
+
+
+/*
+unsigned int ***
+*/
+std::regex eRoundBrack(
+    "(\\*)"                 /*Captures first  asterix*/
+);
+
+std::regex eRightBrack(
+    "(\\[\\d+\\])"          /*Captures first  [1]*/
 );
 
 

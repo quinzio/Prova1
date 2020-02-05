@@ -1,0 +1,22 @@
+TranslationUnitDecl 0x1421b7316e8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1421b731f80 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1421b731c80 '__int128'
+|-TypedefDecl 0x1421b731ff0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1421b731ca0 'unsigned __int128'
+|-TypedefDecl 0x1421b7322f8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1421b7320d0 'struct __NSConstantString_tag'
+|   `-Record 0x1421b732048 '__NSConstantString_tag'
+|-TypedefDecl 0x1421b732368 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x1421b7318c0 'unsigned long long'
+|-TypedefDecl 0x1421b732400 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1421b7323c0 'char *'
+|   `-BuiltinType 0x1421b731780 'char'
+|-TypedefDecl 0x1421b732470 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1421b7323c0 'char *'
+|   `-BuiltinType 0x1421b731780 'char'
+|-VarDecl 0x1421b7cf760 <temp.c:4:1, col:45> col:17 var 'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]'
+`-FunctionDecl 0x1421b7cf860 <line:6:1, line:8:1> line:6:5 f1 'int ()'
+  `-CompoundStmt 0x1421b7cf938 <col:9, line:8:1>
+    `-ReturnStmt 0x1421b7cf928 <line:7:9, col:16>
+      `-IntegerLiteral 0x1421b7cf900 <col:16> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-bfb775.o : fatal error LNK1136: file danneggiato o non valido

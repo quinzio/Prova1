@@ -242,24 +242,60 @@ std::regex eGenericType(
 );
 
 /*
-                                                     1---------- 2  3--------
+_____________________________________________________1---------- 2__3--------___4--------
 |-TypedefDecl 0x261143784f0 <line:8:1, col:19> col:19 referenced k 'struct st':'struct st'
-A-B----------CD------------EF-----------------GH-----I----------JKLM----------
+A-B----------CD------------EF-----------------GH-----I----------JKLM----------N-----------
 */
 std::regex eTypeDef(
-    "[^\\w<]*"                     /* A Lines connecting the tree nodes in the ast file  */ \
-    "TypedefDecl"                  /* B Matches what you see                             */ \
-    "\\s"                          /* C A space                                          */ \
-    "0x[\\da-f]{6,11}"             /* D The node hex identifier                          */ \
-    "\\s"                          /* E A space                                          */ \
-    "<[^>]*>"                      /* F Source file location                             */ \
-    "\\s"                          /* G A space                                          */ \
-    "(?:col:\\d+|line:\\d+:\\d+)"  /* H Source file exact location                       */ \
-    /*1*/  "(\\sreferenced|)?"     /* I Might match what you see                         */ \
-    "\\s"                          /* J A space                                          */ \
-    /*2*/  "(\\w+)"                /* K The typedef name                                 */ \
-    "\\s"                          /* L A space                                          */ \
-    /*3*/  "'([^']+)'"             /* M The referenced type                              */ \
+    /* */ "[^\\w<]*"                     /* A Lines connecting the tree nodes in the ast file  */ 
+    /* */ "TypedefDecl"                  /* B Matches what you see                             */ 
+    /* */ "\\s"                          /* C A space                                          */ 
+    /* */ "0x[\\da-f]{6,11}"             /* D The node hex identifier                          */ 
+    /* */ "\\s"                          /* E A space                                          */ 
+    /* */ "<[^>]*>"                      /* F Source file location                             */ 
+    /* */ "\\s"                          /* G A space                                          */ 
+    /* */ "(?:col:\\d+|line:\\d+:\\d+)"  /* H Source file exact location                       */ 
+    /*1*/ "(?:\\s(referenced|))?"        /* I Might match what you see                         */ 
+    /* */ "\\s"                          /* J A space                                          */ 
+    /*2*/ "(\\w+)"                       /* K The typedef name                                 */ 
+    /* */ "\\s"                          /* L A space                                          */ 
+    /*3*/ "'([^']+)'"                    /* M The referenced type                              */ 
+    /*4*/ "(?::'([^']+)')?"              /* N Unsugared type                                   */
+);
+
+/*
+Matches the C built-in types
+*/
+std::regex eBuiltinTypes(
+    "char"
+    "signed\\schar"                "|"
+    "unsigned\\schar"              "|"
+    "short"                        "|"
+    "short\\sint"                  "|"
+    "signed\\sshort"               "|"
+    "signed\\sshort\\sint"         "|"
+    "unsigned\\sshort"             "|"
+    "unsigned\\sshort\\sint"       "|"
+    "int"                          "|"
+    "signed"                       "|"
+    "signed\\sint"                 "|"
+    "unsigned"                     "|"
+    "unsigned\\sint"               "|"
+    "long"                         "|"
+    "long\\sint"                   "|"
+    "signed\\slong"                "|"
+    "signed\\slong\\sint"          "|"
+    "unsigned\\slong"              "|"
+    "unsigned\\slong\\sint"        "|"
+    "long\\slong"                  "|"
+    "long\\slong\\sint"            "|"
+    "signed\\slong\\slong"         "|"
+    "signed\\slong\\slong\\sint"   "|"
+    "unsigned\\slong\\slong"       "|"
+    "unsigned\\slong\\slong\\sint" "|"
+    "float"                        "|"
+    "double"                       "|"
+    "long\\sdouble"                        
 );
 
 

@@ -13,3 +13,4 @@ void nullifyPointer(Variable* v, Variable* ref);
 void cleanTestStorage();
 void setSourceLocations(Node* tempNode, std::string str);
 void setGlobalLocation(std::smatch smSourcePoint);
+Variable getTypDef(std::string uType);

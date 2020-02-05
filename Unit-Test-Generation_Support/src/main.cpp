@@ -8,12 +8,13 @@ int main(int argc, char* argv[]) {
 	std::string testFolder;
 	try
 	{
-		testCompare("ex1");
-		testCompare("ex2");
-		testCompare("ex3");
-		testCompare("ex4");
-		testCompare("ex5");
-		testCompare("ex6");
+		//testCompare("ex1");
+		//testCompare("ex2");
+		//testCompare("ex3");
+		//testCompare("ex4");
+		//testCompare("ex5");
+		//testCompare("ex6");
+		testCompare("ex7");
 	}
 	catch (const std::exception& e)
 	{

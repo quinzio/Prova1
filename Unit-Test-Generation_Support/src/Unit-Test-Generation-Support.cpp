@@ -160,7 +160,7 @@ Variable visit(Node *node)
 
     if (node->astType.compare("VarDecl") == 0) {
         Variable temp;
-        std::string rawType, coreType;
+        std::string rawType;
         struct coreType_str CoreTypes;
         std::smatch smVarDecl;
         std::smatch smGenericType;
@@ -177,7 +177,6 @@ Variable visit(Node *node)
         example: struct s (*(*[10])[3])[4]
         Core type is *[10]
         */
-        coreType = rawType;
         CoreTypes.coreType = rawType;
         findCoreType(CoreTypes);
         std::regex_search(CoreTypes.core, smGenericType, eGenericType);
@@ -246,11 +245,16 @@ Variable visit(Node *node)
     }
 
     if (node->astType.compare("TypedefDecl") == 0) {
+        Variable newTypeDef;
         std::smatch smTypeDef;
         std::regex_search(node->text, smTypeDef, eTypeDef);
         std::string refed = smTypeDef[1];
         std::string name  = smTypeDef[2];
-        std::string utype = smTypeDef[3];
+        std::string uType = smTypeDef[3];
+        std::string unSugaredType = smTypeDef[4];
+        newTypeDef = getTypDef(uType);
+
+
         return Variable();
     }
 
@@ -648,4 +652,27 @@ void setGlobalLocation(std::smatch smSourcePoint) {
         globalSource.col = std::stoi(smSourcePoint[2]);
     }
 }
-    
+
+Variable getTypDef(std::string uType) {
+    std::smatch smTypeDef;
+    std::smatch smStructType;
+    Variable ret;
+    if (std::regex_search(uType, smTypeDef, eBuiltinTypes)) {
+        // Built In type found
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    for (auto t : vTypeDef) {
+        if (t.name.compare(uType)) {
+            return t;
+        }
+    }
+    if (std::regex_search(uType, smStructType, eStructType)) {
+        for (auto s : vStruct) {
+            if (s.name.compare(smStructType[1])) {
+                return s;
+            }
+        }
+    }
+    return ret;
+}
