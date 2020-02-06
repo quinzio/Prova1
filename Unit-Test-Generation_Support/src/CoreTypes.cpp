@@ -6,14 +6,13 @@
 #include "CoreTypes.h"
 #include "RegexCollCoreTypes.h"
 
-std::vector<std::string> findCoreType(struct coreType_str& str, bool init)
+void findCoreType(struct coreType_str& str, bool init)
 {
     int bracket = 0;
     int brackPosCnt = 0;
     std::smatch smFinalType;
     std::smatch smRightBrack;
     std::smatch smRoundBrack;
-    std::vector<std::string> typeChainA;
     std::vector<std::string> typeChainB;
     std::string outCore;
     if (init)
@@ -59,14 +58,9 @@ std::vector<std::string> findCoreType(struct coreType_str& str, bool init)
             }
         }
     }
-    // lastBrackPos[0] is the 1st "^", str.brackPos[0] is the 2nd "^"
-    // lastBrackPos[1] is the 4th "^", str.brackPos[0] is the 3rd "^"
-    // int *(**(*[6])[5][5])[4]
-    //       ^ ^    ^      ^ 
     if (brackPosCnt > 0) {
-        outCore = str.core.substr(0, str.brackPos[0])
-            +
-            str.core.substr(str.brackPos[1]+1, str.core.length() - str.brackPos[1]);
+        outCore = str.core.substr(0, str.brackPos[0]) + 
+            str.core.substr((size_t)str.brackPos[1]+1, str.core.length() - str.brackPos[1]);
     }
     else {
         outCore = str.core;
@@ -94,20 +88,20 @@ std::vector<std::string> findCoreType(struct coreType_str& str, bool init)
         str.brackPos[1] = -1;
         str.brackPos[2] = -1;
         str.brackPos[3] = -1;
-        typeChainA = findCoreType(str, false);
+        findCoreType(str, false);
     }
     else if (brackPosCnt == 4) {
         str.fun = true;
     }
     for (auto tC : typeChainB) {
-        typeChainA.push_back(tC);
+        str.typeChainA.push_back(tC);
     }
     // If there was no parentheses in the type, we need to restore the final type
     // in front of the type, e.g. int, struct xxx, ecc..
     if (str.brackPos[0] == 0) {
         str.core = str.coreType;
     }
-    return typeChainA;
+    return;
 }
 /*
 int main() {

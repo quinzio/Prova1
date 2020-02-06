@@ -4,6 +4,7 @@
 
 #define BRACK_POS_LENGTH 6
 struct coreType_str {
+    std::vector<std::string> typeChainA;
     int brackPos[BRACK_POS_LENGTH] = { -1, -1 ,-1 ,-1, -1, -1 };
     std::string coreType;
     std::string finalType;
@@ -11,5 +12,5 @@ struct coreType_str {
     bool fun;
 };
 
-std::vector<std::string> findCoreType(struct coreType_str& str, bool init = true);
+void findCoreType(struct coreType_str& str, bool init = true);
 
