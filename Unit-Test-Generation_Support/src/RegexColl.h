@@ -92,6 +92,29 @@ std::regex eIntegralType(
 
 std::regex eVarDecl(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+
+/*
+_____________________________________________________1---------- 2__3--------___4--------
+|-TypedefDecl 0x261143784f0 <line:8:1, col:19> col:19 referenced k 'struct st':'struct st'
+A-B----------CD------------EF-----------------GH-----I----------JKLM----------N-----------
+*/
+std::regex eTypeDef(
+    /* */ "[^\\w<]*"                     /* A Lines connecting the tree nodes in the ast file  */
+    /* */ "TypedefDecl"                  /* B Matches what you see                             */
+    /* */ "\\s"                          /* C A space                                          */
+    /* */ "0x[\\da-f]{6,11}"             /* D The node hex identifier                          */
+    /* */ "\\s"                          /* E A space                                          */
+    /* */ "<[^>]*>"                      /* F Source file location                             */
+    /* */ "\\s"                          /* G A space                                          */
+    /* */ "(?:col:\\d+|line:\\d+:\\d+)"  /* H Source file exact location                       */
+    /*1*/ "(?:\\s(referenced|))?"        /* I Might match what you see                         */
+    /* */ "\\s"                          /* J A space                                          */
+    /*2*/ "(\\w+)"                       /* K The typedef name                                 */
+    /* */ "\\s"                          /* L A space                                          */
+    /*3*/ "'([^']+)'"                    /* M The referenced type                              */
+    /*4*/ "(?::'([^']+)')?"              /* N Unsugared type                                   */
+);
+
 /*
     | |   `-DeclRefExpr 0x23a31f28510 <col:3> 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)' lvalue Var 0x23a31f28358 'vb' 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)'
 */
@@ -138,9 +161,15 @@ std::regex eStructType(
     R"###(struct\s([\w\d]+).*)###");
 
 std::regex eStructTypeAnonymous(
-    "\\(anonymous\\sstruct\\sat\\s"    /*(anonymous struct at */
-    "([^\\)]+)"                    /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
-    "\\)"                          /*)*/
+    "\\(anonymous\\sstruct\\sat\\s" /*(anonymous struct at */
+    "([^\\)]+)"                     /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
+    "\\)"                           /*)*/
+);
+
+std::regex eUnionTypeAnonymous(
+    "\\(anonymous\\sunion\\sat\\s"  /*(anonymous struct at */
+    "([^\\)]+)"                     /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
+    "\\)"                           /*)*/
 );
 
 std::regex eStructTypeAnonymous2(
@@ -150,13 +179,13 @@ std::regex eStructTypeAnonymous2(
 );
 
 std::regex eStructDefinition(
-    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s(\w+)\sdefinition)###");
+    R"###([^\w<]*[\w<]+\s(0x[\da-f]{6,11})\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s?(\w+)?\sdefinition)###");
 
-std::regex eFieldDeclaration(
 /*
 | `-FieldDecl 0x247143d8818 <line:12:5, line:15:6> col:6 fx2 'struct x2':'struct x2'
 | `-FieldDecl 0x23a31f28250 <line:4:5, line:7:6> col:6 referenced va 'struct (anonymous struct at temp.c:4:5)':'struct (anonymous at temp.c:4:5)'
 */
+std::regex eFieldDeclaration(
     "[^\\w<]*"                       /*| |-              */
     "FieldDecl"                      /*FieldDecl         */
     "\\s"                            /*                  */
@@ -242,32 +271,10 @@ std::regex eGenericType(
 );
 
 /*
-_____________________________________________________1---------- 2__3--------___4--------
-|-TypedefDecl 0x261143784f0 <line:8:1, col:19> col:19 referenced k 'struct st':'struct st'
-A-B----------CD------------EF-----------------GH-----I----------JKLM----------N-----------
-*/
-std::regex eTypeDef(
-    /* */ "[^\\w<]*"                     /* A Lines connecting the tree nodes in the ast file  */ 
-    /* */ "TypedefDecl"                  /* B Matches what you see                             */ 
-    /* */ "\\s"                          /* C A space                                          */ 
-    /* */ "0x[\\da-f]{6,11}"             /* D The node hex identifier                          */ 
-    /* */ "\\s"                          /* E A space                                          */ 
-    /* */ "<[^>]*>"                      /* F Source file location                             */ 
-    /* */ "\\s"                          /* G A space                                          */ 
-    /* */ "(?:col:\\d+|line:\\d+:\\d+)"  /* H Source file exact location                       */ 
-    /*1*/ "(?:\\s(referenced|))?"        /* I Might match what you see                         */ 
-    /* */ "\\s"                          /* J A space                                          */ 
-    /*2*/ "(\\w+)"                       /* K The typedef name                                 */ 
-    /* */ "\\s"                          /* L A space                                          */ 
-    /*3*/ "'([^']+)'"                    /* M The referenced type                              */ 
-    /*4*/ "(?::'([^']+)')?"              /* N Unsugared type                                   */
-);
-
-/*
 Matches the C built-in types
 */
 std::regex eBuiltinTypes(
-    "char"
+    "char"                         "|"
     "signed\\schar"                "|"
     "unsigned\\schar"              "|"
     "short"                        "|"

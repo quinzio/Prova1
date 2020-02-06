@@ -25,6 +25,8 @@ debugging.
 VariableShadow vShadowedVar;
 // vStruct contains all the struct definition
 std::vector<Variable> vStruct;
+// vStruct contains all the union definition
+std::vector<Variable> vUnion;
 // vTypeDef contains all the user defined types
 std::vector<Variable> vTypeDef;
 std::ofstream Variable::outputFile;
@@ -342,14 +344,9 @@ Variable fVarDecl(Node* node) {
     std::string rawType;
     struct coreType_str CoreTypes;
     std::smatch smVarDecl;
-    std::smatch smGenericType;
-    std::smatch smStructTypeAnonymous;
     Variable* vback = NULL;
     std::regex_search(node->text, smVarDecl, eVarDecl);
-    temp.name = smVarDecl[1];
     rawType = smVarDecl[2];
-    temp.type = rawType;
-    temp.used = true;
     /*
     Must extract the core type, example: struct s (*[3])[4]
     Core type is *[3]
@@ -358,68 +355,81 @@ Variable fVarDecl(Node* node) {
     */
     CoreTypes.coreType = rawType;
     findCoreType(CoreTypes);
-    std::regex_search(CoreTypes.core, smGenericType, eGenericType);
-    if (smGenericType[5].length() > 0) {
-        int arrSize = std::stoi(smGenericType[5]);
-        Variable a;
-        a.typeEnum = Variable::typeEnum_t::isValue;
-        if (smGenericType[3].length() > 0) {
-            // example: int *[3], can be a struct or not
-            a.typeEnum = Variable::typeEnum_t::isRef;
-        }
-        else if (smGenericType[1].compare("struct") == 0) {
-            // example: struct s[3], without the pointer
-            // Must take care of anonymous structs
-            std::string typeName = smGenericType[2];
-            if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
-            {
-                typeName = smStructTypeAnonymous[1];
-            }
-            for (auto t : vStruct) {
-                if (t.name.compare(typeName) == 0) {
-                    a = t;
-                }
-            }
-        }
-        temp.typeEnum = Variable::typeEnum_t::isArray;
-        for (int i = 0; i < arrSize; i++) {
-            a.value = i;
-            temp.array.push_back(a);
-        }
-    }
-    else if (smGenericType[3].length() > 0) {
-        // example: int *, it's not an array, but a pointer
-        temp.typeEnum = Variable::typeEnum_t::isRef;
-    }
-    else if (smGenericType[1].length() > 0) {
-        // example: struct s, it's neither an array not a pointer, but a struct
+    /* In CoreTypes.typeChainA there's now the vector of the types. 
+       An array is made as of [11], a pointer is written as *, 
+      (Function pointers are not implemented)
+      In CoreTypes.finalType there is the final, the "real" type. 
+      Can be an inbuilt type, as int or char, or void(must be preceded by a pointer), 
+      struct, union, or a typedef.
+      We allocate new Variables only to the first pointer. The correctness of the code
+      has already been checked by the compiler. */
+
+    temp = buildVariable(CoreTypes);
+    temp.name = smVarDecl[1];
+    temp.type = rawType;
+    temp.used = true;
+
+/*
+//    if (smGenericType[5].length() > 0) {
+//        int arrSize = std::stoi(smGenericType[5]);
+//        Variable a;
+//        a.typeEnum = Variable::typeEnum_t::isValue;
+//        if (smGenericType[3].length() > 0) {
+//            // example: int *[3], can be a struct or not
+//            a.typeEnum = Variable::typeEnum_t::isRef;
+//        }
+//        else if (smGenericType[1].compare("struct") == 0) {
+//            // example: struct s[3], without the pointer
+//            // Must take care of anonymous structs
+//            std::string typeName = smGenericType[2];
+//            if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+//            {
+//                typeName = smStructTypeAnonymous[1];
+//            }
+//            for (auto t : vStruct) {
+//                if (t.name.compare(typeName) == 0) {
+//                    a = t;
+//                }
+//            }
+//        }
+//        temp.typeEnum = Variable::typeEnum_t::isArray;
+//        for (int i = 0; i < arrSize; i++) {
+//            a.value = i;
+//            temp.array.push_back(a);
+//        }
+//    }
+//    else if (smGenericType[3].length() > 0) {
+//        // example: int *, it's not an array, but a pointer
+//        temp.typeEnum = Variable::typeEnum_t::isRef;
+//    }
+//    else if (smGenericType[1].length() > 0) {
+//        // example: struct s, it's neither an array not a pointer, but a struct
         // Must take care of anonymous structs
-        std::string typeName = smGenericType[2];
-        if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
-        {
-            typeName = smStructTypeAnonymous[1];
-        }
-        for (Variable v : vStruct) {
-            if (v.name.compare(typeName) == 0) {
-                temp = v;
-                break;
-            }
-        }
-        temp.typeEnum = Variable::typeEnum_t::isStruct;
-        temp.name = smVarDecl[1];
-    }
-    else {
-        // example: int, it's neither an array nor a pointer nor a struct, but a basic type
-        temp.typeEnum = Variable::typeEnum_t::isValue;
-        temp.value = 0;
-    }
+//        std::string typeName = smGenericType[2];
+//        if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+//        {
+//            typeName = smStructTypeAnonymous[1];
+//        }
+//        for (Variable v : vStruct) {
+//            if (v.name.compare(typeName) == 0) {
+//                temp = v;
+//                break;
+//            }
+//        }
+//        temp.typeEnum = Variable::typeEnum_t::isStruct;
+//        temp.name = smVarDecl[1];
+//    }
+//    else {
+//        // example: int, it's neither an array nor a pointer nor a struct, but a basic type
+//        temp.typeEnum = Variable::typeEnum_t::isValue;
+//        temp.value = 0;
+//    }
+*/
+
     // Add Variable to store
     vShadowedVar.shadows[shadowLevel].push_back(temp);
     vback = &vShadowedVar.shadows[shadowLevel].back();
     vback->myAddressDebug = vback;
-    std::cout << "Value of variable " << temp.name << "\n";
-    //std::cin >> temp.value;
-    temp.value = 1;
     return temp;
 }
 Variable fIntegerLiteral(Node* node) {
@@ -433,15 +443,106 @@ Variable fIntegerLiteral(Node* node) {
     return ret;
 }
 Variable fTypedefDecl(Node* node) {
-    Variable newTypeDef;
+    /* This is virtually the same as fVarDecl. 
+    I prefer to keep it separated. */
+    Variable temp;
+    std::string rawType;
+    struct coreType_str CoreTypes;
     std::smatch smTypeDef;
+    std::smatch smInvalidSloc;
+    Variable* vback = NULL;
+    /* First try to filter all those <<invalid sloc>>
+    which are added by the compiler itself.
+    */
+    if (std::regex_search(node->text, smInvalidSloc, std::regex("<<invalid\\ssloc>>"))) {
+        return temp;
+    }
     std::regex_search(node->text, smTypeDef, eTypeDef);
-    std::string refed = smTypeDef[1];
-    std::string name = smTypeDef[2];
-    std::string uType = smTypeDef[3];
-    std::string unSugaredType = smTypeDef[4];
-    newTypeDef = getTypDef(uType);
-    return Variable();
+    rawType = smTypeDef[3];
+    /*
+    Must extract the core type, example: struct s (*[3])[4]
+    Core type is *[3]
+    example: struct s (*(*[10])[3])[4]
+    Core type is *[10]
+    */
+    CoreTypes.coreType = rawType;
+    findCoreType(CoreTypes);
+    /* In CoreTypes.typeChainA there's now the vector of the types.
+       An array is made as of [11], a pointer is written as *,
+      (Function pointers are not implemented)
+      In CoreTypes.finalType there is the final, the "real" type.
+      Can be an inbuilt type, as int or char, or void(must be preceded by a pointer),
+      struct, union, or a typedef.
+      We allocate new Variables only to the first pointer. The correctness of the code
+      has already been checked by the compiler. */
+
+    temp = buildVariable(CoreTypes, node);
+    temp.name = smTypeDef[2];
+    temp.type = rawType;
+    temp.used = true;
+
+    /*
+    //    if (smGenericType[5].length() > 0) {
+    //        int arrSize = std::stoi(smGenericType[5]);
+    //        Variable a;
+    //        a.typeEnum = Variable::typeEnum_t::isValue;
+    //        if (smGenericType[3].length() > 0) {
+    //            // example: int *[3], can be a struct or not
+    //            a.typeEnum = Variable::typeEnum_t::isRef;
+    //        }
+    //        else if (smGenericType[1].compare("struct") == 0) {
+    //            // example: struct s[3], without the pointer
+    //            // Must take care of anonymous structs
+    //            std::string typeName = smGenericType[2];
+    //            if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+    //            {
+    //                typeName = smStructTypeAnonymous[1];
+    //            }
+    //            for (auto t : vStruct) {
+    //                if (t.name.compare(typeName) == 0) {
+    //                    a = t;
+    //                }
+    //            }
+    //        }
+    //        temp.typeEnum = Variable::typeEnum_t::isArray;
+    //        for (int i = 0; i < arrSize; i++) {
+    //            a.value = i;
+    //            temp.array.push_back(a);
+    //        }
+    //    }
+    //    else if (smGenericType[3].length() > 0) {
+    //        // example: int *, it's not an array, but a pointer
+    //        temp.typeEnum = Variable::typeEnum_t::isRef;
+    //    }
+    //    else if (smGenericType[1].length() > 0) {
+    //        // example: struct s, it's neither an array not a pointer, but a struct
+            // Must take care of anonymous structs
+    //        std::string typeName = smGenericType[2];
+    //        if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+    //        {
+    //            typeName = smStructTypeAnonymous[1];
+    //        }
+    //        for (Variable v : vStruct) {
+    //            if (v.name.compare(typeName) == 0) {
+    //                temp = v;
+    //                break;
+    //            }
+    //        }
+    //        temp.typeEnum = Variable::typeEnum_t::isStruct;
+    //        temp.name = smVarDecl[1];
+    //    }
+    //    else {
+    //        // example: int, it's neither an array nor a pointer nor a struct, but a basic type
+    //        temp.typeEnum = Variable::typeEnum_t::isValue;
+    //        temp.value = 0;
+    //    }
+    */
+
+    // Add TypeDef to store
+    vTypeDef.push_back(temp);
+    vback = &vTypeDef.back();
+    vback->myAddressDebug = vback;
+    return temp;
 }
 Variable fDeclRefExpr(Node* node) {
     std::smatch smDeclRefExpr;
@@ -596,7 +697,12 @@ Variable fRecordDecl(Node* node) {
     std::smatch smStructDefinition;
     std::regex_search(node->text, smStructDefinition, eStructDefinition);
     // Anonimous structures will take name as file.ext:line:col
-    tStruct.name = smStructDefinition[1];
+    tStruct.name = smStructDefinition[2];
+    /* The hexID will take a hexadecimal value
+    It is necessary because when you make a typedef out of an 
+    anonymous struct, the only way to find the struct is by its
+    hexID */
+    tStruct.hexID = smStructDefinition[1]; 
     if (tStruct.name.length() == 0) {
         tStruct.name =
             node->sourceRef.Name.fileName +
@@ -724,4 +830,117 @@ Variable fDeclStmt(Node* node) {
 }
 Variable fNULL(Node* node) {
     return Variable();
+}
+Variable buildVariable(struct coreType_str& CoreTypes, Node *node) {
+    bool found;
+    std::smatch smTemp;
+    std::smatch smStructTypeAnonymous;
+    std::smatch smUnionTypeAnonymous;
+    Variable temp;
+
+    found = false;
+    if (std::regex_search(CoreTypes.finalType, smTemp, std::regex("^struct\\s(.*)"))) {
+        // Must take care of anonymous structs
+        std::string typeName = smTemp[1];
+        if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+        {
+            typeName = smStructTypeAnonymous[1];
+        }
+        for (auto t : vStruct) {
+            if (t.name.compare(typeName) == 0) {
+                temp = t;
+                found = true;
+            }
+        }
+    }
+    else if (std::regex_search(CoreTypes.finalType, smTemp, std::regex("^union\\s(.*)"))) {
+        // Must take care of anonymous unions ?
+        std::string typeName = smTemp[1];
+        if (std::regex_search(typeName, smUnionTypeAnonymous, eUnionTypeAnonymous))
+        {
+            typeName = smStructTypeAnonymous[1];
+        }
+        for (auto t : vUnion) {
+            if (t.name.compare(typeName) == 0) {
+                temp = t;
+                found = true;
+            }
+        }
+    }
+    else if (std::regex_search(CoreTypes.finalType, smTemp, eBuiltinTypes)) {
+        temp.type = CoreTypes.finalType;
+        temp.typeEnum = Variable::typeEnum_t::isValue;
+        found = true;
+    }
+    else {
+        // Search into typedefs
+        for (auto t : vTypeDef) {
+            if (t.name.compare(CoreTypes.finalType) == 0) {
+                temp = t;
+                found = true;
+            }
+        }
+    }
+    if (found == false) {
+        /* Try to find the typedef with the hexID in the (anon structs) */
+        /* To understand the following just look at how a typedef
+        ast node is made. It must refer to other typedefs.
+        */
+        node = node->child;
+        while (node) {
+            std::smatch smTemp;
+            if (std::regex_search(node->text, smTemp, std::regex(
+                "[^\\w<]*"                       /*| |-              */
+                "Record"                         /*Record            */
+                "\\s"                            /*                  */
+                "(0x[\\da-f]{6,11})"             /*0x247143d8308     */
+            ))) {
+                for (auto t : vStruct) {
+                    if (t.hexID.compare(smTemp[1]) == 0) {
+                        temp = t;
+                        found = true;
+                    }
+                }
+            }
+            while (node->nextSib) {
+
+                node = node->nextSib;
+            }
+            node = node->child;
+        }
+    }
+    if (found == false) {
+            throw std::exception("VarDecl: cannot find final type.");
+    }
+
+
+    int i;
+    for (i = 0; i < CoreTypes.typeChainA.size(); i++) {
+        if (CoreTypes.typeChainA.at(i).compare("*") == 0) {
+            // It's omogeneous with the scan that end at i = CoreTypes.typeChainA.size()
+            i++;
+            break; // On the first pointer
+        }
+    }
+    i--;
+    for (; i >= 0; i--) {
+        Variable vIt;
+        if (std::regex_search(CoreTypes.typeChainA.at(i), smTemp, std::regex("\\[(\\d+)\\]"))) {
+            /* An array */
+            for (int ix = 0; ix < std::stoi(smTemp[1]); ix++) {
+                vIt.typeEnum = Variable::typeEnum_t::isArray;
+                vIt.array.push_back(temp);
+            }
+            temp = vIt;
+        }
+        else if (std::regex_search(CoreTypes.typeChainA.at(i), smTemp, std::regex("\\*"))) {
+            /* A pointer
+               so the final type will be this pointer and not the previously found
+               finalType. Reinitialize temp */
+            temp = Variable();
+            temp.typeEnum = Variable::typeEnum_t::isRef;
+            temp.value = 0;
+        }
+    }
+    return temp;
 }

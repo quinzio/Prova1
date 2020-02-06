@@ -12,6 +12,7 @@ public:
     static std::ofstream outputFile;
 
     std::string name;
+    std::string hexID;
     unsigned long long value;
     int braceNested;
     int used = false;

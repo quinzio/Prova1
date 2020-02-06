@@ -12,6 +12,7 @@ void nullifyPointer(Variable* v, Variable* ref);
 void cleanTestStorage();
 void setSourceLocations(Node* tempNode, std::string str);
 void setGlobalLocation(std::smatch smSourcePoint);
+Variable buildVariable(struct coreType_str& CoreTypes, Node* node = NULL);
 Variable getTypDef(std::string uType);
 Variable fVarDecl(Node* node);
 Variable fIntegerLiteral(Node* node);

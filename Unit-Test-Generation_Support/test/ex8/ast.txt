@@ -1,0 +1,124 @@
+TranslationUnitDecl 0x1c414590cf8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1c414591590 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1c414591290 '__int128'
+|-TypedefDecl 0x1c414591600 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1c4145912b0 'unsigned __int128'
+|-TypedefDecl 0x1c414591908 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1c4145916e0 'struct __NSConstantString_tag'
+|   `-Record 0x1c414591658 '__NSConstantString_tag'
+|-TypedefDecl 0x1c414591978 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x1c414590ed0 'unsigned long long'
+|-TypedefDecl 0x1c414591a10 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1c4145919d0 'char *'
+|   `-BuiltinType 0x1c414590d90 'char'
+|-TypedefDecl 0x1c414591a80 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1c4145919d0 'char *'
+|   `-BuiltinType 0x1c414590d90 'char'
+|-RecordDecl 0x1c414591ad8 <temp.c:7:1, line:9:1> line:7:8 struct a definition
+| `-FieldDecl 0x1c414591b98 <line:8:5, col:9> col:9 referenced fa 'int'
+|-RecordDecl 0x1c414591bf0 <line:10:9, line:12:1> line:10:9 struct definition
+| `-FieldDecl 0x1c414635220 <line:11:5, col:9> col:9 fb 'int'
+|-TypedefDecl 0x1c414635290 <line:13:1, col:13> col:13 referenced myint 'int'
+| `-BuiltinType 0x1c414590df0 'int'
+|-TypedefDecl 0x1c414635320 <line:14:1, col:15> col:15 referenced myint2 'myint':'int'
+| `-TypedefType 0x1c4146352f0 'myint' sugar
+|   |-Typedef 0x1c414635290 'myint'
+|   `-BuiltinType 0x1c414590df0 'int'
+|-TypedefDecl 0x1c4146353d0 <line:15:1, col:18> col:18 referenced sa 'struct a':'struct a'
+| `-ElaboratedType 0x1c414635380 'struct a' sugar
+|   `-RecordType 0x1c414591b60 'struct a'
+|     `-Record 0x1c414591ad8 'a'
+|-TypedefDecl 0x1c414635460 <line:16:1, col:12> col:12 referenced tsa 'sa':'struct a'
+| `-TypedefType 0x1c414635430 'sa' sugar
+|   |-Typedef 0x1c4146353d0 'sa'
+|   `-ElaboratedType 0x1c414635380 'struct a' sugar
+|     `-RecordType 0x1c414591b60 'struct a'
+|       `-Record 0x1c414591ad8 'a'
+|-RecordDecl 0x1c4146354b8 <line:17:9, line:19:1> line:17:9 struct definition
+| `-FieldDecl 0x1c414635578 <line:18:5, col:9> col:9 referenced fb 'int'
+|-TypedefDecl 0x1c414635628 <line:17:1, line:19:2> col:2 referenced sb 'struct sb':'sb'
+| `-ElaboratedType 0x1c4146355d0 'struct sb' sugar
+|   `-RecordType 0x1c414635540 'sb'
+|     `-Record 0x1c4146354b8 ''
+|-TypedefDecl 0x1c4146356a0 <line:17:1, line:19:6> col:6 sb2 'struct sb':'sb'
+| `-ElaboratedType 0x1c4146355d0 'struct sb' sugar
+|   `-RecordType 0x1c414635540 'sb'
+|     `-Record 0x1c4146354b8 ''
+|-TypedefDecl 0x1c414635750 <line:20:1, col:12> col:12 tsb 'sb':'sb'
+| `-TypedefType 0x1c414635720 'sb' sugar
+|   |-Typedef 0x1c414635628 'sb'
+|   `-ElaboratedType 0x1c4146355d0 'struct sb' sugar
+|     `-RecordType 0x1c414635540 'sb'
+|       `-Record 0x1c4146354b8 ''
+|-TypedefDecl 0x1c414635850 <line:21:1, col:17> col:13 referenced a1 'int [3]'
+| `-ConstantArrayType 0x1c4146357f0 'int [3]' 3 
+|   `-BuiltinType 0x1c414590df0 'int'
+|-TypedefDecl 0x1c414635938 <line:22:1, col:13> col:13 referenced a2 'a1 *'
+| `-PointerType 0x1c414635900 'a1 *'
+|   `-TypedefType 0x1c4146358b0 'a1' sugar
+|     |-Typedef 0x1c414635850 'a1'
+|     `-ConstantArrayType 0x1c4146357f0 'int [3]' 3 
+|       `-BuiltinType 0x1c414590df0 'int'
+|-TypedefDecl 0x1c414635a88 <line:23:1, col:16> col:12 referenced a3 'a2 [5]'
+| `-ConstantArrayType 0x1c414635a30 'a2 [5]' 5 
+|   `-TypedefType 0x1c414635990 'a2' sugar
+|     |-Typedef 0x1c414635938 'a2'
+|     `-PointerType 0x1c414635900 'a1 *'
+|       `-TypedefType 0x1c4146358b0 'a1' sugar
+|         |-Typedef 0x1c414635850 'a1'
+|         `-ConstantArrayType 0x1c4146357f0 'int [3]' 3 
+|           `-BuiltinType 0x1c414590df0 'int'
+|-VarDecl 0x1c414635b10 <line:24:1, col:4> col:4 va3 'a3':'a2 [5]'
+|-TypedefDecl 0x1c414635e40 <line:25:1, col:29> col:22 a4 'int *(*(*([5]))'
+| `-ConstantArrayType 0x1c414635dc0 'int *(*(*([5]))' 5 
+|   `-ParenType 0x1c414635d40 'int *(*(*))' sugar
+|     `-PointerType 0x1c414635d10 'int *(*(*))'
+|       `-ParenType 0x1c414635cb0 'int *(*)' sugar
+|         `-PointerType 0x1c414635c80 'int *(*)'
+|           `-ParenType 0x1c414635c20 'int *' sugar
+|             `-PointerType 0x1c414635bf0 'int *'
+|               `-BuiltinType 0x1c414590df0 'int'
+`-FunctionDecl 0x1c414635ef0 <line:26:1, line:41:1> line:26:5 f1 'int ()'
+  `-CompoundStmt 0x1c4146307b0 <col:9, line:41:1>
+    |-DeclStmt 0x1c414636008 <line:27:5, col:14>
+    | `-VarDecl 0x1c414635fa0 <col:5, col:11> col:11 used vv1 'myint':'int'
+    |-DeclStmt 0x1c4146360b8 <line:28:5, col:15>
+    | `-VarDecl 0x1c414636050 <col:5, col:12> col:12 used vv2 'myint2':'int'
+    |-DeclStmt 0x1c414636168 <line:29:5, col:12>
+    | `-VarDecl 0x1c414636100 <col:5, col:9> col:9 used vv3 'tsa':'struct a'
+    |-DeclStmt 0x1c4146361f8 <line:30:5, col:11>
+    | `-VarDecl 0x1c414636190 <col:5, col:8> col:8 used vv4 'sb':'sb'
+    |-DeclStmt 0x1c414630238 <line:31:5, col:11>
+    | `-VarDecl 0x1c4146301d0 <col:5, col:8> col:8 used vv5 'a1':'int [3]'
+    |-DeclStmt 0x1c4146302c8 <line:32:5, col:11>
+    | `-VarDecl 0x1c414630260 <col:5, col:8> col:8 used vv6 'a3':'a2 [5]'
+    |-BinaryOperator 0x1c414630328 <line:33:5, col:11> 'myint':'int' '='
+    | |-DeclRefExpr 0x1c4146302e0 <col:5> 'myint':'int' lvalue Var 0x1c414635fa0 'vv1' 'myint':'int'
+    | `-IntegerLiteral 0x1c414630300 <col:11> 'int' 1
+    |-BinaryOperator 0x1c414630390 <line:34:5, col:11> 'myint2':'int' '='
+    | |-DeclRefExpr 0x1c414630348 <col:5> 'myint2':'int' lvalue Var 0x1c414636050 'vv2' 'myint2':'int'
+    | `-IntegerLiteral 0x1c414630368 <col:11> 'int' 2
+    |-BinaryOperator 0x1c414630428 <line:35:5, col:14> 'int' '='
+    | |-MemberExpr 0x1c4146303d0 <col:5, col:9> 'int' lvalue .fa 0x1c414591b98
+    | | `-DeclRefExpr 0x1c4146303b0 <col:5> 'tsa':'struct a' lvalue Var 0x1c414636100 'vv3' 'tsa':'struct a'
+    | `-IntegerLiteral 0x1c414630400 <col:14> 'int' 3
+    |-BinaryOperator 0x1c414630510 <line:36:5, col:14> 'int' '='
+    | |-MemberExpr 0x1c4146304b8 <col:5, col:9> 'int' lvalue .fb 0x1c414635578
+    | | `-DeclRefExpr 0x1c414630498 <col:5> 'sb':'sb' lvalue Var 0x1c414636190 'vv4' 'sb':'sb'
+    | `-IntegerLiteral 0x1c4146304e8 <col:14> 'int' 4
+    |-BinaryOperator 0x1c414630628 <line:37:5, col:14> 'int' '='
+    | |-ArraySubscriptExpr 0x1c4146305e0 <col:5, col:10> 'int' lvalue
+    | | |-ImplicitCastExpr 0x1c4146305c8 <col:5> 'int *' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x1c414630580 <col:5> 'a1':'int [3]' lvalue Var 0x1c4146301d0 'vv5' 'a1':'int [3]'
+    | | `-IntegerLiteral 0x1c4146305a0 <col:9> 'int' 2
+    | `-IntegerLiteral 0x1c414630600 <col:14> 'int' 5
+    |-BinaryOperator 0x1c414630758 <line:38:5, col:15> 'a2':'a1 *' '='
+    | |-ArraySubscriptExpr 0x1c414630700 <col:5, col:10> 'a2':'a1 *' lvalue
+    | | |-ImplicitCastExpr 0x1c4146306e8 <col:5> 'a2 *' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x1c414630648 <col:5> 'a3':'a2 [5]' lvalue Var 0x1c414630260 'vv6' 'a3':'a2 [5]'
+    | | `-IntegerLiteral 0x1c414630668 <col:9> 'int' 4
+    | `-UnaryOperator 0x1c414630740 <col:14, col:15> 'a1 *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x1c414630720 <col:15> 'a1':'int [3]' lvalue Var 0x1c4146301d0 'vv5' 'a1':'int [3]'
+    `-ReturnStmt 0x1c4146307a0 <line:40:4, col:11>
+      `-IntegerLiteral 0x1c414630778 <col:11> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-94aaef.o : fatal error LNK1136: file danneggiato o non valido

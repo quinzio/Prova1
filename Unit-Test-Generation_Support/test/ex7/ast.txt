@@ -1,22 +1,74 @@
-TranslationUnitDecl 0x1421b7316e8 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x1421b731f80 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x1421b731c80 '__int128'
-|-TypedefDecl 0x1421b731ff0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x1421b731ca0 'unsigned __int128'
-|-TypedefDecl 0x1421b7322f8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x1421b7320d0 'struct __NSConstantString_tag'
-|   `-Record 0x1421b732048 '__NSConstantString_tag'
-|-TypedefDecl 0x1421b732368 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x1421b7318c0 'unsigned long long'
-|-TypedefDecl 0x1421b732400 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x1421b7323c0 'char *'
-|   `-BuiltinType 0x1421b731780 'char'
-|-TypedefDecl 0x1421b732470 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x1421b7323c0 'char *'
-|   `-BuiltinType 0x1421b731780 'char'
-|-VarDecl 0x1421b7cf760 <temp.c:4:1, col:45> col:17 var 'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]'
-`-FunctionDecl 0x1421b7cf860 <line:6:1, line:8:1> line:6:5 f1 'int ()'
-  `-CompoundStmt 0x1421b7cf938 <col:9, line:8:1>
-    `-ReturnStmt 0x1421b7cf928 <line:7:9, col:16>
-      `-IntegerLiteral 0x1421b7cf900 <col:16> 'int' 0
-C:\Users\munarid\AppData\Local\Temp\temp-bfb775.o : fatal error LNK1136: file danneggiato o non valido
+TranslationUnitDecl 0x2a205ba4688 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x2a205ba4f20 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x2a205ba4c20 '__int128'
+|-TypedefDecl 0x2a205ba4f90 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x2a205ba4c40 'unsigned __int128'
+|-TypedefDecl 0x2a205ba5298 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x2a205ba5070 'struct __NSConstantString_tag'
+|   `-Record 0x2a205ba4fe8 '__NSConstantString_tag'
+|-TypedefDecl 0x2a205ba5308 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x2a205ba4860 'unsigned long long'
+|-TypedefDecl 0x2a205ba53a0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x2a205ba5360 'char *'
+|   `-BuiltinType 0x2a205ba4720 'char'
+|-TypedefDecl 0x2a205ba5410 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x2a205ba5360 'char *'
+|   `-BuiltinType 0x2a205ba4720 'char'
+|-VarDecl 0x2a205d177e0 <temp.c:4:1, col:46> col:17 used var1 'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]'
+|-VarDecl 0x2a205d17ac0 <line:5:1, col:46> col:17 used var2 'int ***(*(((*)[4])[3])[2])[1][2][3]'
+|-VarDecl 0x2a205d17d48 <line:6:1, col:46> col:17 used var3 'int ***(*(([4][3][2])[1][2][3]'
+|-VarDecl 0x2a205d10570 <line:7:1, col:52> col:18 var3B 'int (***(*(([4][3][2])[1][2][3])(int)'
+|-VarDecl 0x2a205d106e8 <line:8:1, col:46> col:17 used var4 'int ***[1][2][3]'
+|-VarDecl 0x2a205d10770 <line:9:1, col:17> col:17 used var5 'int **'
+|-VarDecl 0x2a205d107f0 <line:10:1, col:17> col:17 used var6 'int *'
+|-VarDecl 0x2a205d10870 <line:11:1, col:17> col:17 used var7 'int'
+`-FunctionDecl 0x2a205d10930 <line:13:1, line:21:1> line:13:5 f1 'int ()'
+  `-CompoundStmt 0x2a205d18250 <col:9, line:21:1>
+    |-BinaryOperator 0x2a205d10b10 <line:14:5, col:24> 'int ***(*(((*(*))[4])[3])[2])[1][2][3]' '='
+    | |-ArraySubscriptExpr 0x2a205d10a90 <col:5, col:11> 'int ***(*(((*(*))[4])[3])[2])[1][2][3]' lvalue
+    | | |-ImplicitCastExpr 0x2a205d10a78 <col:5> 'int ***(*(((*(**))[4])[3])[2])[1][2][3]' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x2a205d109d0 <col:5> 'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]' lvalue Var 0x2a205d177e0 'var1' 'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]'
+    | | `-IntegerLiteral 0x2a205d109f0 <col:10> 'int' 1
+    | `-UnaryOperator 0x2a205d10af8 <col:23, col:24> 'int ***(*(((**)[4])[3])[2])[1][2][3]' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2a205d10ab0 <col:24> 'int ***(*(((*)[4])[3])[2])[1][2][3]' lvalue Var 0x2a205d17ac0 'var2' 'int ***(*(((*)[4])[3])[2])[1][2][3]'
+    |-BinaryOperator 0x2a205d10bb0 <line:15:5, col:24> 'int ***(*(((*)[4])[3])[2])[1][2][3]' '='
+    | |-DeclRefExpr 0x2a205d10b30 <col:5> 'int ***(*(((*)[4])[3])[2])[1][2][3]' lvalue Var 0x2a205d17ac0 'var2' 'int ***(*(((*)[4])[3])[2])[1][2][3]'
+    | `-UnaryOperator 0x2a205d10b98 <col:23, col:24> 'int ***(*(((*)[4])[3])[2])[1][2][3]' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2a205d10b50 <col:24> 'int ***(*(([4][3][2])[1][2][3]' lvalue Var 0x2a205d17d48 'var3' 'int ***(*(([4][3][2])[1][2][3]'
+    |-BinaryOperator 0x2a205d10e68 <line:16:5, col:24> 'int ***(*)[1][2][3]' '='
+    | |-ArraySubscriptExpr 0x2a205d10e10 <col:5, col:17> 'int ***(*)[1][2][3]' lvalue
+    | | |-ImplicitCastExpr 0x2a205d10df8 <col:5, col:14> 'int ***(**)[1][2][3]' <ArrayToPointerDecay>
+    | | | `-ArraySubscriptExpr 0x2a205d10d50 <col:5, col:14> 'int ***(*[2])[1][2][3]':'int ***(*[2])[1][2][3]' lvalue
+    | | |   |-ImplicitCastExpr 0x2a205d10d38 <col:5, col:11> 'int ***(*(*)[2])[1][2][3]' <ArrayToPointerDecay>
+    | | |   | `-ArraySubscriptExpr 0x2a205d10c90 <col:5, col:11> 'int ***(*([3][2])[1][2][3]':'int ***(*([3][2])[1][2][3]' lvalue
+    | | |   |   |-ImplicitCastExpr 0x2a205d10c78 <col:5> 'int ***(*((*)[3])[2])[1][2][3]' <ArrayToPointerDecay>
+    | | |   |   | `-DeclRefExpr 0x2a205d10bd0 <col:5> 'int ***(*(([4][3][2])[1][2][3]' lvalue Var 0x2a205d17d48 'var3' 'int ***(*(([4][3][2])[1][2][3]'
+    | | |   |   `-IntegerLiteral 0x2a205d10bf0 <col:10> 'int' 1
+    | | |   `-IntegerLiteral 0x2a205d10cb0 <col:13> 'int' 1
+    | | `-IntegerLiteral 0x2a205d10d70 <col:16> 'int' 1
+    | `-UnaryOperator 0x2a205d10e50 <col:23, col:24> 'int ***(*)[1][2][3]' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2a205d10e30 <col:24> 'int ***[1][2][3]' lvalue Var 0x2a205d106e8 'var4' 'int ***[1][2][3]'
+    |-BinaryOperator 0x2a205d11088 <line:17:5, col:24> 'int ***' '='
+    | |-ArraySubscriptExpr 0x2a205d11030 <col:5, col:17> 'int ***' lvalue
+    | | |-ImplicitCastExpr 0x2a205d11018 <col:5, col:14> 'int ****' <ArrayToPointerDecay>
+    | | | `-ArraySubscriptExpr 0x2a205d10fa0 <col:5, col:14> 'int ***[3]' lvalue
+    | | |   |-ImplicitCastExpr 0x2a205d10f88 <col:5, col:11> 'int ***(*)[3]' <ArrayToPointerDecay>
+    | | |   | `-ArraySubscriptExpr 0x2a205d10f10 <col:5, col:11> 'int ***[2][3]' lvalue
+    | | |   |   |-ImplicitCastExpr 0x2a205d10ef8 <col:5> 'int ***(*)[2][3]' <ArrayToPointerDecay>
+    | | |   |   | `-DeclRefExpr 0x2a205d10e88 <col:5> 'int ***[1][2][3]' lvalue Var 0x2a205d106e8 'var4' 'int ***[1][2][3]'
+    | | |   |   `-IntegerLiteral 0x2a205d10ea8 <col:10> 'int' 0
+    | | |   `-IntegerLiteral 0x2a205d10f30 <col:13> 'int' 1
+    | | `-IntegerLiteral 0x2a205d10fc0 <col:16> 'int' 1
+    | `-UnaryOperator 0x2a205d11070 <col:23, col:24> 'int ***' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2a205d11050 <col:24> 'int **' lvalue Var 0x2a205d10770 'var5' 'int **'
+    |-BinaryOperator 0x2a205d11100 <line:18:5, col:24> 'int **' '='
+    | |-DeclRefExpr 0x2a205d110a8 <col:5> 'int **' lvalue Var 0x2a205d10770 'var5' 'int **'
+    | `-UnaryOperator 0x2a205d110e8 <col:23, col:24> 'int **' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2a205d110c8 <col:24> 'int *' lvalue Var 0x2a205d107f0 'var6' 'int *'
+    |-BinaryOperator 0x2a205d11178 <line:19:5, col:24> 'int *' '='
+    | |-DeclRefExpr 0x2a205d11120 <col:5> 'int *' lvalue Var 0x2a205d107f0 'var6' 'int *'
+    | `-UnaryOperator 0x2a205d11160 <col:23, col:24> 'int *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2a205d11140 <col:24> 'int' lvalue Var 0x2a205d10870 'var7' 'int'
+    `-ReturnStmt 0x2a205d111c0 <line:20:13, col:20>
+      `-IntegerLiteral 0x2a205d11198 <col:20> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-dd02f8.o : fatal error LNK1136: file danneggiato o non valido

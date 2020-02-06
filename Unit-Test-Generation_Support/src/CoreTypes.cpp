@@ -44,19 +44,75 @@ void findCoreType(struct coreType_str& str, bool init)
         str.fun = false;
     }
     if (str.core.length() > 0) {
-        for (auto c = str.core.begin(); c < str.core.end(); c++) {
+        /* Due to a bug in clang ast output, you can see type declarations as this:
+        'int ***(*(([4][3][2])[1][2][3]'
+        If you watch carefully, you'll see that the parenthesis are not matched.
+        To try to guess the balanced parenthesis, the following algorithm is implemented:
+        1. Search for the first '(', this is the opening parenthesis
+        2. Advance until the first ')', mark this as closing par.
+        3. Continue scanning until another '(', mark every ')' as closing
+        4. Repeat to find the matching '()' for the function calls parameters.
+        */
+        auto c = str.core.begin();
+        for (; c < str.core.end(); c++) {
             if (*c == '(') {
+                brackPosCnt = 1;
+                if (bracket == 0) {
+                    str.brackPos[0] = c - str.core.begin();
+                }
                 bracket++;
-                if (bracket == 1) str.brackPos[brackPosCnt++] = c - str.core.begin();
             }
             else if (*c == ')') {
-                bracket--;
-                if (bracket == 0) str.brackPos[brackPosCnt++] = c - str.core.begin();
-            }
-            if (brackPosCnt == 5) {
                 break;
             }
         }
+        for (; c < str.core.end(); c++) {
+            if (*c == ')') {
+                brackPosCnt = 2;
+                bracket--;
+                if (bracket >= 0) {
+                    str.brackPos[1] = c - str.core.begin();
+                }
+            }
+            else if (*c == '(') {
+                break;
+            }
+        }
+        bracket = 0;
+        for (; c < str.core.end(); c++) {
+            if (*c == '(') {
+                brackPosCnt = 3;
+                if (bracket == 0) {
+                    str.brackPos[2] = c - str.core.begin();
+                }
+                bracket++;
+            }
+            else if (*c == ')') {
+                break;
+            }
+        }
+        for (; c < str.core.end(); c++) {
+            if (*c == ')') {
+                brackPosCnt = 4;
+                bracket--;
+                if (bracket >= 0) {
+                    str.brackPos[3] = c - str.core.begin();
+                }
+            }
+            else if (*c == '(') {
+                break;
+            }
+        }
+    }
+    // adjust result in case the parenthesis are not balanced.
+    if (str.brackPos[0] > 0 && str.brackPos[1] == -1 && str.brackPos[2] == -1) {
+        str.brackPos[1] = str.core.length();
+        str.core += ")"; // Add the missing bracket
+        brackPosCnt = 2;
+    }
+    if (str.brackPos[0] > 0 && str.brackPos[1] == -1 && str.brackPos[2] > 0) {
+        str.brackPos[1] = str.brackPos[2] - 1;
+        brackPosCnt = 4;
     }
     if (brackPosCnt > 0) {
         outCore = str.core.substr(0, str.brackPos[0]) + 
@@ -91,7 +147,12 @@ void findCoreType(struct coreType_str& str, bool init)
         findCoreType(str, false);
     }
     else if (brackPosCnt == 4) {
+        str.brackPos[0] = -1;
+        str.brackPos[1] = -1;
+        str.brackPos[2] = -1;
+        str.brackPos[3] = -1;
         str.fun = true;
+        findCoreType(str, false);
     }
     for (auto tC : typeChainB) {
         str.typeChainA.push_back(tC);

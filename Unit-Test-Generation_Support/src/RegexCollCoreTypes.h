@@ -37,7 +37,8 @@ std::regex eFinalType(
     "unsigned\\slong\\slong\\sint" "|"
     "float"                        "|"
     "double"                       "|"
-    "long\\sdouble"
+    "long\\sdouble"                "|"
+    "[\\w\\d]+"  // A typedef
     ")"
     "(.*)"
 );

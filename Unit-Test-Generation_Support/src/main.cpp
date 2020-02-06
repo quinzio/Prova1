@@ -14,7 +14,8 @@ int main(int argc, char* argv[]) {
 		//testCompare("ex4");
 		//testCompare("ex5");
 		//testCompare("ex6");
-		testCompare("ex7");
+		//testCompare("ex7");
+		testCompare("ex8");
 	}
 	catch (const std::exception& e)
 	{

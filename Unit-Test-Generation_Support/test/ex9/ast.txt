@@ -1,0 +1,160 @@
+TranslationUnitDecl 0x291bf830478 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x291bf830d10 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x291bf830a10 '__int128'
+|-TypedefDecl 0x291bf830d80 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x291bf830a30 'unsigned __int128'
+|-TypedefDecl 0x291bf831088 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x291bf830e60 'struct __NSConstantString_tag'
+|   `-Record 0x291bf830dd8 '__NSConstantString_tag'
+|-TypedefDecl 0x291bf8310f8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x291bf830650 'unsigned long long'
+|-TypedefDecl 0x291bf831190 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x291bf831150 'char *'
+|   `-BuiltinType 0x291bf830510 'char'
+|-TypedefDecl 0x291bf831200 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x291bf831150 'char *'
+|   `-BuiltinType 0x291bf830510 'char'
+|-TypedefDecl 0x291bf8d67d0 <temp.c:7:1, col:55> col:25 referenced tvar1 'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]'
+| `-ConstantArrayType 0x291bf8d66d0 'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]' 5 
+|   `-PointerType 0x291bf8d6650 'int ***(*(((*(*))[4])[3])[2])[1][2][3]'
+|     `-ParenType 0x291bf8d65f0 'int ***(*(((*)[4])[3])[2])[1][2][3]' sugar
+|       `-PointerType 0x291bf8d65c0 'int ***(*(((*)[4])[3])[2])[1][2][3]'
+|         `-ParenType 0x291bf8d6560 'int ***(*(([4][3][2])[1][2][3]' sugar
+|           `-ConstantArrayType 0x291bf8d6520 'int ***(*(([4][3][2])[1][2][3]' 4 
+|             `-ParenType 0x291bf8d64a0 'int ***(*([3][2])[1][2][3]' sugar
+|               `-ConstantArrayType 0x291bf8d6460 'int ***(*([3][2])[1][2][3]' 3 
+|                 `-ParenType 0x291bf8d63e0 'int ***(*[2])[1][2][3]' sugar
+|                   `-ConstantArrayType 0x291bf8d63a0 'int ***(*[2])[1][2][3]' 2 
+|                     `-PointerType 0x291bf8d6320 'int ***(*)[1][2][3]'
+|                       `-ParenType 0x291bf8d62c0 'int ***[1][2][3]' sugar
+|                         `-ConstantArrayType 0x291bf8d6280 'int ***[1][2][3]' 1 
+|                           `-ConstantArrayType 0x291bf8d6230 'int ***[2][3]' 2 
+|                             `-ConstantArrayType 0x291bf831410 'int ***[3]' 3 
+|                               `-PointerType 0x291bf8313d0 'int ***'
+|                                 `-PointerType 0x291bf8313a0 'int **'
+|                                   `-PointerType 0x291bf831370 'int *'
+|                                     `-BuiltinType 0x291bf830570 'int'
+|-TypedefDecl 0x291bf8d6a58 <line:8:1, col:55> col:25 referenced tvar2 'int ***(*(((*)[4])[3])[2])[1][2][3]'
+| `-PointerType 0x291bf8d65c0 'int ***(*(((*)[4])[3])[2])[1][2][3]'
+|   `-ParenType 0x291bf8d6560 'int ***(*(([4][3][2])[1][2][3]' sugar
+|     `-ConstantArrayType 0x291bf8d6520 'int ***(*(([4][3][2])[1][2][3]' 4 
+|       `-ParenType 0x291bf8d64a0 'int ***(*([3][2])[1][2][3]' sugar
+|         `-ConstantArrayType 0x291bf8d6460 'int ***(*([3][2])[1][2][3]' 3 
+|           `-ParenType 0x291bf8d63e0 'int ***(*[2])[1][2][3]' sugar
+|             `-ConstantArrayType 0x291bf8d63a0 'int ***(*[2])[1][2][3]' 2 
+|               `-PointerType 0x291bf8d6320 'int ***(*)[1][2][3]'
+|                 `-ParenType 0x291bf8d62c0 'int ***[1][2][3]' sugar
+|                   `-ConstantArrayType 0x291bf8d6280 'int ***[1][2][3]' 1 
+|                     `-ConstantArrayType 0x291bf8d6230 'int ***[2][3]' 2 
+|                       `-ConstantArrayType 0x291bf831410 'int ***[3]' 3 
+|                         `-PointerType 0x291bf8313d0 'int ***'
+|                           `-PointerType 0x291bf8313a0 'int **'
+|                             `-PointerType 0x291bf831370 'int *'
+|                               `-BuiltinType 0x291bf830570 'int'
+|-TypedefDecl 0x291bf8d6cd0 <line:9:1, col:55> col:25 referenced tvar3 'int ***(*(([4][3][2])[1][2][3]'
+| `-ConstantArrayType 0x291bf8d6520 'int ***(*(([4][3][2])[1][2][3]' 4 
+|   `-ParenType 0x291bf8d64a0 'int ***(*([3][2])[1][2][3]' sugar
+|     `-ConstantArrayType 0x291bf8d6460 'int ***(*([3][2])[1][2][3]' 3 
+|       `-ParenType 0x291bf8d63e0 'int ***(*[2])[1][2][3]' sugar
+|         `-ConstantArrayType 0x291bf8d63a0 'int ***(*[2])[1][2][3]' 2 
+|           `-PointerType 0x291bf8d6320 'int ***(*)[1][2][3]'
+|             `-ParenType 0x291bf8d62c0 'int ***[1][2][3]' sugar
+|               `-ConstantArrayType 0x291bf8d6280 'int ***[1][2][3]' 1 
+|                 `-ConstantArrayType 0x291bf8d6230 'int ***[2][3]' 2 
+|                   `-ConstantArrayType 0x291bf831410 'int ***[3]' 3 
+|                     `-PointerType 0x291bf8313d0 'int ***'
+|                       `-PointerType 0x291bf8313a0 'int **'
+|                         `-PointerType 0x291bf831370 'int *'
+|                           `-BuiltinType 0x291bf830570 'int'
+|-TypedefDecl 0x291bf8d04d0 <line:10:1, col:61> col:26 tvar3B 'int (***(*(([4][3][2])[1][2][3])(int)'
+| `-ConstantArrayType 0x291bf8d03d0 'int (***(*(([4][3][2])[1][2][3])(int)' 4 
+|   `-ParenType 0x291bf8d0350 'int (***(*([3][2])[1][2][3])(int)' sugar
+|     `-ConstantArrayType 0x291bf8d0310 'int (***(*([3][2])[1][2][3])(int)' 3 
+|       `-ParenType 0x291bf8d0290 'int (***(*[2])[1][2][3])(int)' sugar
+|         `-ConstantArrayType 0x291bf8d0250 'int (***(*[2])[1][2][3])(int)' 2 
+|           `-PointerType 0x291bf8d01d0 'int (***(*)[1][2][3])(int)'
+|             `-ParenType 0x291bf8d71d0 'int (***[1][2][3])(int)' sugar
+|               `-ConstantArrayType 0x291bf8d7190 'int (***[1][2][3])(int)' 1 
+|                 `-ConstantArrayType 0x291bf8d7100 'int (***[2][3])(int)' 2 
+|                   `-ConstantArrayType 0x291bf8d7070 'int (***[3])(int)' 3 
+|                     `-PointerType 0x291bf8d6ff0 'int (***)(int)'
+|                       `-PointerType 0x291bf8d6f90 'int (**)(int)'
+|                         `-PointerType 0x291bf8d6f30 'int (*)(int)'
+|                           `-ParenType 0x291bf8d6ed0 'int (int)' sugar
+|                             `-FunctionProtoType 0x291bf8d6ea0 'int (int)' cdecl
+|                               |-BuiltinType 0x291bf830570 'int'
+|                               `-BuiltinType 0x291bf830570 'int'
+|-TypedefDecl 0x291bf8d0638 <line:11:1, col:55> col:25 referenced tvar4 'int ***[1][2][3]'
+| `-ConstantArrayType 0x291bf8d6280 'int ***[1][2][3]' 1 
+|   `-ConstantArrayType 0x291bf8d6230 'int ***[2][3]' 2 
+|     `-ConstantArrayType 0x291bf831410 'int ***[3]' 3 
+|       `-PointerType 0x291bf8313d0 'int ***'
+|         `-PointerType 0x291bf8313a0 'int **'
+|           `-PointerType 0x291bf831370 'int *'
+|             `-BuiltinType 0x291bf830570 'int'
+|-TypedefDecl 0x291bf8d06b0 <line:12:1, col:25> col:25 referenced tvar5 'int **'
+| `-PointerType 0x291bf8313a0 'int **'
+|   `-PointerType 0x291bf831370 'int *'
+|     `-BuiltinType 0x291bf830570 'int'
+|-TypedefDecl 0x291bf8d0720 <line:13:1, col:25> col:25 referenced tvar6 'int *'
+| `-PointerType 0x291bf831370 'int *'
+|   `-BuiltinType 0x291bf830570 'int'
+|-TypedefDecl 0x291bf8d0790 <line:14:1, col:25> col:25 referenced tvar7 'int'
+| `-BuiltinType 0x291bf830570 'int'
+|-VarDecl 0x291bf8d0820 <line:16:1, col:7> col:7 used var1 'tvar1':'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]'
+|-VarDecl 0x291bf8d0900 <line:17:1, col:7> col:7 used var2 'tvar2':'int ***(*(((*)[4])[3])[2])[1][2][3]'
+|-VarDecl 0x291bf8d09a0 <line:18:1, col:7> col:7 used var3 'tvar3':'int ***(*(([4][3][2])[1][2][3]'
+|-VarDecl 0x291bf8d0a40 <line:19:1, col:7> col:7 used var4 'tvar4':'int ***[1][2][3]'
+|-VarDecl 0x291bf8d0ae0 <line:20:1, col:7> col:7 used var5 'tvar5':'int **'
+|-VarDecl 0x291bf8d0b80 <line:21:1, col:7> col:7 used var6 'tvar6':'int *'
+|-VarDecl 0x291bf8d0c20 <line:22:1, col:7> col:7 used var7 'tvar7':'int'
+`-FunctionDecl 0x291bf8d0ce0 <line:24:1, line:32:1> line:24:5 f1 'int ()'
+  `-CompoundStmt 0x291bf8d86b8 <col:9, line:32:1>
+    |-BinaryOperator 0x291bf8d0ec0 <line:25:5, col:24> 'int ***(*(((*(*))[4])[3])[2])[1][2][3]' '='
+    | |-ArraySubscriptExpr 0x291bf8d0e40 <col:5, col:11> 'int ***(*(((*(*))[4])[3])[2])[1][2][3]' lvalue
+    | | |-ImplicitCastExpr 0x291bf8d0e28 <col:5> 'int ***(*(((*(**))[4])[3])[2])[1][2][3]' <ArrayToPointerDecay>
+    | | | `-DeclRefExpr 0x291bf8d0d80 <col:5> 'tvar1':'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]' lvalue Var 0x291bf8d0820 'var1' 'tvar1':'int ***(*(((*(*[5]))[4])[3])[2])[1][2][3]'
+    | | `-IntegerLiteral 0x291bf8d0da0 <col:10> 'int' 1
+    | `-UnaryOperator 0x291bf8d0ea8 <col:23, col:24> 'tvar2 *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x291bf8d0e60 <col:24> 'tvar2':'int ***(*(((*)[4])[3])[2])[1][2][3]' lvalue Var 0x291bf8d0900 'var2' 'tvar2':'int ***(*(((*)[4])[3])[2])[1][2][3]'
+    |-BinaryOperator 0x291bf8d0f60 <line:26:5, col:24> 'tvar2':'int ***(*(((*)[4])[3])[2])[1][2][3]' '='
+    | |-DeclRefExpr 0x291bf8d0ee0 <col:5> 'tvar2':'int ***(*(((*)[4])[3])[2])[1][2][3]' lvalue Var 0x291bf8d0900 'var2' 'tvar2':'int ***(*(((*)[4])[3])[2])[1][2][3]'
+    | `-UnaryOperator 0x291bf8d0f48 <col:23, col:24> 'tvar3 *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x291bf8d0f00 <col:24> 'tvar3':'int ***(*(([4][3][2])[1][2][3]' lvalue Var 0x291bf8d09a0 'var3' 'tvar3':'int ***(*(([4][3][2])[1][2][3]'
+    |-BinaryOperator 0x291bf8d82d0 <line:27:5, col:24> 'int ***(*)[1][2][3]' '='
+    | |-ArraySubscriptExpr 0x291bf8d8250 <col:5, col:17> 'int ***(*)[1][2][3]' lvalue
+    | | |-ImplicitCastExpr 0x291bf8d11a8 <col:5, col:14> 'int ***(**)[1][2][3]' <ArrayToPointerDecay>
+    | | | `-ArraySubscriptExpr 0x291bf8d1100 <col:5, col:14> 'int ***(*[2])[1][2][3]':'int ***(*[2])[1][2][3]' lvalue
+    | | |   |-ImplicitCastExpr 0x291bf8d10e8 <col:5, col:11> 'int ***(*(*)[2])[1][2][3]' <ArrayToPointerDecay>
+    | | |   | `-ArraySubscriptExpr 0x291bf8d1040 <col:5, col:11> 'int ***(*([3][2])[1][2][3]':'int ***(*([3][2])[1][2][3]' lvalue
+    | | |   |   |-ImplicitCastExpr 0x291bf8d1028 <col:5> 'int ***(*((*)[3])[2])[1][2][3]' <ArrayToPointerDecay>
+    | | |   |   | `-DeclRefExpr 0x291bf8d0f80 <col:5> 'tvar3':'int ***(*(([4][3][2])[1][2][3]' lvalue Var 0x291bf8d09a0 'var3' 'tvar3':'int ***(*(([4][3][2])[1][2][3]'
+    | | |   |   `-IntegerLiteral 0x291bf8d0fa0 <col:10> 'int' 1
+    | | |   `-IntegerLiteral 0x291bf8d1060 <col:13> 'int' 1
+    | | `-IntegerLiteral 0x291bf8d1120 <col:16> 'int' 1
+    | `-UnaryOperator 0x291bf8d82b8 <col:23, col:24> 'tvar4 *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x291bf8d8270 <col:24> 'tvar4':'int ***[1][2][3]' lvalue Var 0x291bf8d0a40 'var4' 'tvar4':'int ***[1][2][3]'
+    |-BinaryOperator 0x291bf8d8520 <line:28:5, col:24> 'int ***' '='
+    | |-ArraySubscriptExpr 0x291bf8d84a0 <col:5, col:17> 'int ***' lvalue
+    | | |-ImplicitCastExpr 0x291bf8d8488 <col:5, col:14> 'int ****' <ArrayToPointerDecay>
+    | | | `-ArraySubscriptExpr 0x291bf8d8410 <col:5, col:14> 'int ***[3]' lvalue
+    | | |   |-ImplicitCastExpr 0x291bf8d83f8 <col:5, col:11> 'int ***(*)[3]' <ArrayToPointerDecay>
+    | | |   | `-ArraySubscriptExpr 0x291bf8d8380 <col:5, col:11> 'int ***[2][3]' lvalue
+    | | |   |   |-ImplicitCastExpr 0x291bf8d8368 <col:5> 'int ***(*)[2][3]' <ArrayToPointerDecay>
+    | | |   |   | `-DeclRefExpr 0x291bf8d82f0 <col:5> 'tvar4':'int ***[1][2][3]' lvalue Var 0x291bf8d0a40 'var4' 'tvar4':'int ***[1][2][3]'
+    | | |   |   `-IntegerLiteral 0x291bf8d8310 <col:10> 'int' 0
+    | | |   `-IntegerLiteral 0x291bf8d83a0 <col:13> 'int' 1
+    | | `-IntegerLiteral 0x291bf8d8430 <col:16> 'int' 1
+    | `-UnaryOperator 0x291bf8d8508 <col:23, col:24> 'tvar5 *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x291bf8d84c0 <col:24> 'tvar5':'int **' lvalue Var 0x291bf8d0ae0 'var5' 'tvar5':'int **'
+    |-BinaryOperator 0x291bf8d85c0 <line:29:5, col:24> 'tvar5':'int **' '='
+    | |-DeclRefExpr 0x291bf8d8540 <col:5> 'tvar5':'int **' lvalue Var 0x291bf8d0ae0 'var5' 'tvar5':'int **'
+    | `-UnaryOperator 0x291bf8d85a8 <col:23, col:24> 'tvar6 *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x291bf8d8560 <col:24> 'tvar6':'int *' lvalue Var 0x291bf8d0b80 'var6' 'tvar6':'int *'
+    |-BinaryOperator 0x291bf8d8660 <line:30:5, col:24> 'tvar6':'int *' '='
+    | |-DeclRefExpr 0x291bf8d85e0 <col:5> 'tvar6':'int *' lvalue Var 0x291bf8d0b80 'var6' 'tvar6':'int *'
+    | `-UnaryOperator 0x291bf8d8648 <col:23, col:24> 'tvar7 *' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x291bf8d8600 <col:24> 'tvar7':'int' lvalue Var 0x291bf8d0c20 'var7' 'tvar7':'int'
+    `-ReturnStmt 0x291bf8d86a8 <line:31:5, col:12>
+      `-IntegerLiteral 0x291bf8d8680 <col:12> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-3c9e2a.o : fatal error LNK1136: file danneggiato o non valido
