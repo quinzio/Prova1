@@ -36,6 +36,7 @@ int f1(){
     vv4.fb = 4;
     vv5[2] = 5;
     vv6[4] = &vv5;
+    a3[4] = &vv5;
     
    return 0;
 }
