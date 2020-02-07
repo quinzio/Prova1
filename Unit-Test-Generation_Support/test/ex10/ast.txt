@@ -1,0 +1,29 @@
+TranslationUnitDecl 0x16facdb0928 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x16facdb11c0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x16facdb0ec0 '__int128'
+|-TypedefDecl 0x16facdb1230 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x16facdb0ee0 'unsigned __int128'
+|-TypedefDecl 0x16facdb1538 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x16facdb1310 'struct __NSConstantString_tag'
+|   `-Record 0x16facdb1288 '__NSConstantString_tag'
+|-TypedefDecl 0x16facdb15a8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x16facdb0b00 'unsigned long long'
+|-TypedefDecl 0x16facdb1640 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x16facdb1600 'char *'
+|   `-BuiltinType 0x16facdb09c0 'char'
+|-TypedefDecl 0x16facdb16b0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x16facdb1600 'char *'
+|   `-BuiltinType 0x16facdb09c0 'char'
+|-RecordDecl 0x16facdb1708 <temp.c:4:1, line:7:1> line:4:7 union u1 definition
+| |-FieldDecl 0x16facdb17c8 <line:5:2, col:6> col:6 referenced a 'int'
+| `-FieldDecl 0x16facdb1838 <line:6:2, col:7> col:7 b 'long'
+|-VarDecl 0x16facf76230 <line:4:1, line:7:2> col:2 used vu1 'union u1':'union u1'
+`-FunctionDecl 0x16facf76350 <line:15:1, line:20:1> line:15:5 main 'int ()'
+  `-CompoundStmt 0x16facf76518 <line:16:1, line:20:1>
+    |-BinaryOperator 0x16facf76468 <line:17:2, col:10> 'int' '='
+    | |-MemberExpr 0x16facf76410 <col:2, col:6> 'int' lvalue .a 0x16facdb17c8
+    | | `-DeclRefExpr 0x16facf763f0 <col:2> 'union u1':'union u1' lvalue Var 0x16facf76230 'vu1' 'union u1':'union u1'
+    | `-IntegerLiteral 0x16facf76440 <col:10> 'int' 1111
+    `-ReturnStmt 0x16facf76508 <line:19:2, col:9>
+      `-IntegerLiteral 0x16facf764e0 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-6693ba.o : fatal error LNK1136: file danneggiato o non valido

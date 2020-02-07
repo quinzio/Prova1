@@ -1,0 +1,63 @@
+int v_char                  ;
+int v_signed_char           ;
+int v_unsigned_char         ;
+int v_short                 ;
+int v_short_int             ;
+int v_signed_short          ;
+int v_signed_short_int      ;
+int v_unsigned_short        ;
+int v_unsigned_short_int    ;
+int v_int                   ;
+int v_signed                ;
+int v_signed_int            ;
+int v_unsigned              ;
+int v_unsigned_int          ;
+int v_long                  ;
+int v_long_int              ;
+int v_signed_long           ;
+int v_signed_long_int       ;
+int v_unsigned_long         ;
+int v_unsigned_long_int     ;
+int v_long_long             ;
+int v_long_long_int         ;
+int v_signed_long_long      ;
+int v_signed_long_long_int  ;
+int v_unsigned_long_long    ;
+int v_unsigned_long_long_int;
+int v_float                 ;
+int v_double                ;
+int v_long_double           ;
+
+
+
+    v_char                    =sizeof(               char                          );     
+    v_signed_char             =sizeof(               signed char                 );     
+    v_unsigned_char           =sizeof(               unsigned char               );     
+    v_short                   =sizeof(               short                         );     
+    v_short_int               =sizeof(               short int                   );     
+    v_signed_short            =sizeof(               signed short                );     
+    v_signed_short_int        =sizeof(               signed short int          );     
+    v_unsigned_short          =sizeof(               unsigned short              );     
+    v_unsigned_short_int      =sizeof(               unsigned short int        );     
+    v_int                     =sizeof(               int                           );     
+    v_signed                  =sizeof(               signed                        );     
+    v_signed_int              =sizeof(               signed int                  );     
+    v_unsigned                =sizeof(               unsigned                      );     
+    v_unsigned_int            =sizeof(               unsigned int                );     
+    v_long                    =sizeof(               long                          );     
+    v_long_int                =sizeof(               long int                    );     
+    v_signed_long             =sizeof(               signed long                 );     
+    v_signed_long_int         =sizeof(               signed long int           );     
+    v_unsigned_long           =sizeof(               unsigned long               );     
+    v_unsigned_long_int       =sizeof(               unsigned long int         );     
+    v_long_long               =sizeof(               long long                   );     
+    v_long_long_int           =sizeof(               long long int             );     
+    v_signed_long_long        =sizeof(               signed long long          );     
+    v_signed_long_long_int    =sizeof(               signed long long int    );     
+    v_unsigned_long_long      =sizeof(               unsigned long long        );     
+    v_unsigned_long_long_int  =sizeof(               unsigned long long int  );     
+    v_float                   =sizeof(               float                         );     
+    v_double                  =sizeof(               double                        );     
+    v_long_double             =sizeof(               long double                 );
+    
+

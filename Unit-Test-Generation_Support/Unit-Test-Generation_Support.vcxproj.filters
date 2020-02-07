@@ -62,4 +62,9 @@
       <Filter>File di origine</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="SizeofTypes.txt">
+      <Filter>File di origine</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

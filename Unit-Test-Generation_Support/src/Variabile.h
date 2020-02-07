@@ -20,7 +20,8 @@ public:
         isArray,
         isRef,
         isValue,
-        isStruct
+        isStruct, 
+        isUnion
     };
     enum typeEnum_t typeEnum;
     std::string type;
@@ -28,6 +29,10 @@ public:
     std::vector<Variable> array;
     int arrayIx;
     std::vector<Variable> intStruct;
+    std::vector<unsigned char> intUnion;
+    int size;
+    int offset;
+    Variable* myParent = NULL;
     Variable* myAddressDebug = NULL;
 
 

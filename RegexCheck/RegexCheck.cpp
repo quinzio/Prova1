@@ -5,41 +5,26 @@
 #include <fstream>
 #include <iomanip>
 
-
+union u1 {
+	int a;
+	long b;
+}vu1;
+union u2 {
+	int c;
+	long d;
+	union u1 v2u1;
+}vu2;
 
 int main()
 {
-	std::ifstream infile("Typedef.txt");
-	std::string str;
-	std::regex reg(
-		"[^\\w<]*"
-		"[\\w<]+"
-		"\\s"
-		"0x[\\da-f]{6,11}"
-		"\\s"
-		"<[^>]*>"
-		"\\s"
-		"(?:col:\\d+|line:\\d+:\\d+)"
-		"(?:\\sreferenced)?"
-		"\\s"
-		"(\\w+)"
-		"\\s"
-		"'([^']+)'"
-		"(?::'([^']+)')?"
-	);
-	std::smatch sm;
-	int ix = 0;
-	while (std::getline(infile, str)) {
-		if (std::regex_search(str, sm, reg)) {
-			std::cout << "Matched" << std::setw(5) << ix << std::setw(20) << sm[1] << std::setw(30) << sm[2] << std::setw(30) << sm[3] << "\n";
-		}
-		else {
-			std::cout << "*******" << std::setw(5) << ix << std::setw(20) << sm[1] << std::setw(30) << sm[2] << std::setw(30) << sm[3] << "\n";
-		}
-		ix++;
-
-	}
-
-
+	vu1.a = 1111;
+	vu2.c = 1111;
+	std::cout << std::setw(20) << "vu1.a " << vu1.a << "\n";
+	std::cout << std::setw(20) << "vu1.b " << vu1.b << "\n";
+	std::cout << std::setw(20) << "vu2.v2u1.a " << vu2.v2u1.a << "\n";
+	std::cout << std::setw(20) << "vu2.v2u1.b " << vu2.v2u1.b << "\n";
+	std::cout << std::setw(20) << "vu2.c " << vu2.c << "\n";
+	std::cout << std::setw(20) << "vu2.d " << vu2.d << "\n";
+	return 0;
 }
 

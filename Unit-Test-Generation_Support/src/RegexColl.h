@@ -179,7 +179,7 @@ std::regex eStructTypeAnonymous2(
 );
 
 std::regex eStructDefinition(
-    R"###([^\w<]*[\w<]+\s(0x[\da-f]{6,11})\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\sstruct\s?(\w+)?\sdefinition)###");
+    R"###([^\w<]*[\w<]+\s(0x[\da-f]{6,11})\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\s(struct|union)\s?(\w+)?\sdefinition)###");
 
 /*
 | `-FieldDecl 0x247143d8818 <line:12:5, line:15:6> col:6 fx2 'struct x2':'struct x2'

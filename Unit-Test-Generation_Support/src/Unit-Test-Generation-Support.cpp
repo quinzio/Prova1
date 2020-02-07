@@ -4,7 +4,6 @@ You have already see a strange case, that made you lose a lot of time in
 debugging. 
 */
 
-
 #include <iostream>
 #include <fstream>
 #include <regex>
@@ -19,7 +18,6 @@ debugging.
 #include "Node.h"
 #include "CoreTypes.h"
 #include "RegexColl.h"
-
 
 // vVariable contains all the global and local variables defined.
 VariableShadow vShadowedVar;
@@ -693,11 +691,17 @@ Variable fFieldDecl(Node* node) {
     return vField;
 }
 Variable fRecordDecl(Node* node) {
+    /*
+    This function is for struct and for unions as well !!!
+    */
     Variable tStruct, vField;
     std::smatch smStructDefinition;
     std::regex_search(node->text, smStructDefinition, eStructDefinition);
+    /* Capture 1 is the hexadecimal ID of the node
+       Capture 2 is struct or union 
+       Capture 3 is the name of the struct */
     // Anonimous structures will take name as file.ext:line:col
-    tStruct.name = smStructDefinition[2];
+    tStruct.name = smStructDefinition[3];
     /* The hexID will take a hexadecimal value
     It is necessary because when you make a typedef out of an 
     anonymous struct, the only way to find the struct is by its
@@ -709,14 +713,24 @@ Variable fRecordDecl(Node* node) {
             ":" + std::to_string(node->sourceRef.Name.line) +
             ":" + std::to_string(node->sourceRef.Name.col);
     }
-    tStruct.typeEnum = Variable::typeEnum_t::isStruct;
+    if (smStructDefinition[2].compare("struct") == 0) {
+        tStruct.typeEnum = Variable::typeEnum_t::isStruct;
+    }
+    else if (smStructDefinition[2].compare("union") == 0) {
+        tStruct.typeEnum = Variable::typeEnum_t::isUnion;
+    }
     for (auto n = node->child; n != NULL; n = n->nextSib) {
         vField = visit(n);
         if (n->astType.compare("FieldDecl") == 0) {
             tStruct.intStruct.push_back(vField);
         }
     }
-    vStruct.push_back(tStruct);
+    if (smStructDefinition[2].compare("struct") == 0) {
+        vStruct.push_back(tStruct);
+    }
+    else if (smStructDefinition[2].compare("union") == 0) {
+        vUnion.push_back(tStruct);
+    }
     return tStruct;
 }
 Variable fIndirectFieldDecl(Node* node) {
