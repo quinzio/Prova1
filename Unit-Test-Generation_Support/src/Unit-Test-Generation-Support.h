@@ -7,12 +7,13 @@
 #include "Unit-Test-Generation-Support.h"
 
 int inner_main(int argc, std::string argv[]);
-void recurseVaribale(Variable* v, Variable* ref, void (*fp)(Variable* , Variable*));
+void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable* , Variable*));
 void nullifyPointer(Variable* v, Variable* ref);
 void cleanTestStorage();
 void setSourceLocations(Node* tempNode, std::string str);
 void setGlobalLocation(std::smatch smSourcePoint);
 Variable buildVariable(struct coreType_str& CoreTypes, Node* node = NULL);
+BbSize setVariableOffset(Variable* v, BbSize vOffset = BbSize());
 Variable getTypDef(std::string uType);
 Variable fVarDecl(Node* node);
 Variable fIntegerLiteral(Node* node);

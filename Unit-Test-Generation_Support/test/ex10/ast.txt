@@ -1,29 +1,33 @@
-TranslationUnitDecl 0x16facdb0928 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x16facdb11c0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x16facdb0ec0 '__int128'
-|-TypedefDecl 0x16facdb1230 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x16facdb0ee0 'unsigned __int128'
-|-TypedefDecl 0x16facdb1538 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x16facdb1310 'struct __NSConstantString_tag'
-|   `-Record 0x16facdb1288 '__NSConstantString_tag'
-|-TypedefDecl 0x16facdb15a8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x16facdb0b00 'unsigned long long'
-|-TypedefDecl 0x16facdb1640 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x16facdb1600 'char *'
-|   `-BuiltinType 0x16facdb09c0 'char'
-|-TypedefDecl 0x16facdb16b0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x16facdb1600 'char *'
-|   `-BuiltinType 0x16facdb09c0 'char'
-|-RecordDecl 0x16facdb1708 <temp.c:4:1, line:7:1> line:4:7 union u1 definition
-| |-FieldDecl 0x16facdb17c8 <line:5:2, col:6> col:6 referenced a 'int'
-| `-FieldDecl 0x16facdb1838 <line:6:2, col:7> col:7 b 'long'
-|-VarDecl 0x16facf76230 <line:4:1, line:7:2> col:2 used vu1 'union u1':'union u1'
-`-FunctionDecl 0x16facf76350 <line:15:1, line:20:1> line:15:5 main 'int ()'
-  `-CompoundStmt 0x16facf76518 <line:16:1, line:20:1>
-    |-BinaryOperator 0x16facf76468 <line:17:2, col:10> 'int' '='
-    | |-MemberExpr 0x16facf76410 <col:2, col:6> 'int' lvalue .a 0x16facdb17c8
-    | | `-DeclRefExpr 0x16facf763f0 <col:2> 'union u1':'union u1' lvalue Var 0x16facf76230 'vu1' 'union u1':'union u1'
-    | `-IntegerLiteral 0x16facf76440 <col:10> 'int' 1111
-    `-ReturnStmt 0x16facf76508 <line:19:2, col:9>
-      `-IntegerLiteral 0x16facf764e0 <col:9> 'int' 0
-C:\Users\munarid\AppData\Local\Temp\temp-6693ba.o : fatal error LNK1136: file danneggiato o non valido
+TranslationUnitDecl 0x26646642798 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x26646643030 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x26646642d30 '__int128'
+|-TypedefDecl 0x266466430a0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x26646642d50 'unsigned __int128'
+|-TypedefDecl 0x266466433c8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x26646643180 'struct __NSConstantString_tag'
+|   `-Record 0x266466430f8 '__NSConstantString_tag'
+|-TypedefDecl 0x26646643438 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x26646642970 'unsigned long long'
+|-TypedefDecl 0x266466434d0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x26646643490 'char *'
+|   `-BuiltinType 0x26646642830 'char'
+|-TypedefDecl 0x26646643540 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x26646643490 'char *'
+|   `-BuiltinType 0x26646642830 'char'
+|-RecordDecl 0x26646643598 <temp.c:3:1, line:6:1> line:3:8 struct s_s definition
+| |-FieldDecl 0x26646643658 <line:4:9, col:13> col:13 sa 'int'
+| `-FieldDecl 0x266466436c8 <line:5:9, col:14> col:14 sb 'long'
+|-RecordDecl 0x266466ab1b0 <line:8:1, line:12:1> line:8:7 union u1 definition
+| |-FieldDecl 0x266466ab268 <line:9:2, col:6> col:6 referenced a 'int'
+| |-FieldDecl 0x266466ab2d8 <line:10:2, col:7> col:7 b 'long'
+| `-FieldDecl 0x266466ab380 <line:11:9, col:20> col:20 s1 'struct s_s':'struct s_s'
+|-VarDecl 0x266466ab438 <line:8:1, line:12:2> col:2 used vu1 'union u1':'union u1'
+`-FunctionDecl 0x266466ab550 <line:20:1, line:25:1> line:20:5 main 'int ()'
+  `-CompoundStmt 0x266466ab778 <line:21:1, line:25:1>
+    |-BinaryOperator 0x266466ab668 <line:22:2, col:10> 'int' '='
+    | |-MemberExpr 0x266466ab610 <col:2, col:6> 'int' lvalue .a 0x266466ab268
+    | | `-DeclRefExpr 0x266466ab5f0 <col:2> 'union u1':'union u1' lvalue Var 0x266466ab438 'vu1' 'union u1':'union u1'
+    | `-IntegerLiteral 0x266466ab640 <col:10> 'int' 1111
+    `-ReturnStmt 0x266466ab768 <line:24:2, col:9>
+      `-IntegerLiteral 0x266466ab740 <col:9> 'int' 0
+C:\Users\Davide\AppData\Local\Temp\temp-25803b.o : fatal error LNK1136: invalid or corrupt file

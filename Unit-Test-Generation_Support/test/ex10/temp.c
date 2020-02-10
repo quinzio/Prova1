@@ -1,9 +1,14 @@
 // ex10
 // Unions
+struct s_s{
+        int sa;
+        long sb;
+};
 
 union u1 {
 	int a;
 	long b;
+        struct s_s s1;
 }vu1;
 /*
 union u2 {

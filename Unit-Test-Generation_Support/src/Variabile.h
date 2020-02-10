@@ -3,6 +3,15 @@
 #include <vector>
 #include <fstream>
 
+#include "BbSize.h"
+
+class Variable;
+
+struct unionData {
+    BbSize uSize;
+    BbSize uOffset;
+    Variable* myParent;
+};
 
 class Variable
 {
@@ -30,9 +39,7 @@ public:
     int arrayIx;
     std::vector<Variable> intStruct;
     std::vector<unsigned char> intUnion;
-    int size;
-    int offset;
-    Variable* myParent = NULL;
+    struct unionData uData;
     Variable* myAddressDebug = NULL;
 
 

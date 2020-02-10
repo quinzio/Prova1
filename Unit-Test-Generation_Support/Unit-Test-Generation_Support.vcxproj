@@ -152,23 +152,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AsciiArt.cpp" />
+    <ClCompile Include="src\BbSize.cpp" />
     <ClCompile Include="src\CoreTypes.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Node.cpp" />
+    <ClCompile Include="src\SizeofTypes.cpp" />
     <ClCompile Include="src\Unit-Test-Generation-Support.cpp" />
     <ClCompile Include="src\Variable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BbSize.h" />
     <ClInclude Include="src\CoreTypes.h" />
     <ClInclude Include="src\RegexCollCoreTypes.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\RegexColl.h" />
+    <ClInclude Include="src\SizeofTypes.h" />
     <ClInclude Include="src\Unit-Test-Generation-Support.h" />
     <ClInclude Include="src\Variabile.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="SizeofTypes.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,12 +12,14 @@ debugging.
 #include <string>
 #include <set>
 #include <utility>
+#include <algorithm> 
 
 #include "Unit-Test-Generation-Support.h"
 #include "Variabile.h"
 #include "Node.h"
 #include "CoreTypes.h"
 #include "RegexColl.h"
+#include "SizeofTypes.h"
 
 // vVariable contains all the global and local variables defined.
 VariableShadow vShadowedVar;
@@ -31,6 +33,7 @@ std::ofstream Variable::outputFile;
 int shadowLevel = 0;
 struct SourceRef_s::SourcePoint_s globalSource;
 extern std::string splash;
+Variable* myP;
 
 Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
@@ -242,20 +245,57 @@ unsigned long long cast(std::string str, unsigned long long v)
 
     std::cout << "Exception encountered\n";
 }
-void recurseVaribale(Variable* v,  Variable* ref, void (*fp)(Variable* , Variable* )) {
+void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*)) {
     if (v->typeEnum == Variable::typeEnum_t::isRef) {
         fp(v, ref);
     }
     if (v->typeEnum == Variable::typeEnum_t::isArray) {
         for (auto it = v->array.begin(); it != v->array.end(); it++) {
-            recurseVaribale(&*it, ref, fp);
+            recurseVariable(&*it, ref, fp);
         }
     }
     if (v->typeEnum == Variable::typeEnum_t::isStruct) {
         for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
-            recurseVaribale(&*it, ref, fp);
+            recurseVariable(&*it, ref, fp);
         }
     }
+}
+BbSize setVariableOffset(Variable* v, BbSize vOffset) {
+    v->uData.myParent = myP;
+    if (v->typeEnum == Variable::typeEnum_t::isArray) {
+        for (auto it = v->array.begin(); it != v->array.end(); it++) {
+            it->uData.uOffset = vOffset;
+            vOffset = vOffset + setVariableOffset(&*it, vOffset);
+        }
+    }
+    else if (v->typeEnum == Variable::typeEnum_t::isStruct) {
+        for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
+            it->uData.uOffset = vOffset;
+            vOffset = vOffset + setVariableOffset(&*it, vOffset);
+        }
+    }
+    else if (v->typeEnum == Variable::typeEnum_t::isUnion) {
+        for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
+            it->uData.uOffset = vOffset;
+            setVariableOffset(&*it, vOffset);
+        }
+    }
+    else {
+        v->uData.uOffset = vOffset;
+        vOffset += v->uData.uSize;
+    }
+    return vOffset;
+}
+void careUnions(Variable* v) {
+    /* If v points to a union, update the parent address of all the members and 
+    submembers.
+    If v points to something which is part of a union, then updated the common area.
+    */
+    if (v->typeEnum == Variable::typeEnum_t::isUnion) {
+        myP = v;
+        setVariableOffset(v);
+    }
+    v->updateCommonArea;
 }
 void nullifyPointer(Variable* v, Variable* ref) {
     if (v->pointsTo == ref) {
@@ -366,6 +406,8 @@ Variable fVarDecl(Node* node) {
     temp.name = smVarDecl[1];
     temp.type = rawType;
     temp.used = true;
+    myP = &temp;
+    setVariableOffset(&temp);
 
 /*
 //    if (smGenericType[5].length() > 0) {
@@ -478,6 +520,8 @@ Variable fTypedefDecl(Node* node) {
     temp.name = smTypeDef[2];
     temp.type = rawType;
     temp.used = true;
+    myP = &temp;
+    setVariableOffset(&temp);
 
     /*
     //    if (smGenericType[5].length() > 0) {
@@ -629,6 +673,7 @@ Variable fBinaryOperator(Node* node) {
     if (boperator.compare("=") == 0) {
         std::string saveName = opa.pointsTo->name;
         *opa.pointsTo = opb;
+        careUnions(opa.pointsTo);
         opa.pointsTo->name = saveName;
         ret = *opa.pointsTo;
     }
@@ -682,6 +727,7 @@ Variable fFieldDecl(Node* node) {
     else {
         vField.typeEnum = Variable::typeEnum_t::isValue;
         vField.type = rawType;
+        vField.uData.uSize = szTypes[rawType];
     }
     vField.name = name;
     // Note the blank space in " referenced"
@@ -723,6 +769,15 @@ Variable fRecordDecl(Node* node) {
         vField = visit(n);
         if (n->astType.compare("FieldDecl") == 0) {
             tStruct.intStruct.push_back(vField);
+            if (tStruct.typeEnum == Variable::typeEnum_t::isStruct) {
+                tStruct.uData.uSize += vField.uData.uSize;
+            }
+            if (tStruct.typeEnum == Variable::typeEnum_t::isUnion) {
+                // Make unione size the biggest of its memebrs
+                if (tStruct.uData.uSize < vField.uData.uSize) {
+                    tStruct.uData.uSize = vField.uData.uSize;
+                }
+            }
         }
     }
     if (smStructDefinition[2].compare("struct") == 0) {
@@ -744,7 +799,8 @@ Variable fMemberExpr(Node* node) {
     std::regex_search(node->text, smMemberExpr, eMemberExpr);
     memberName = smMemberExpr[2];
     v = visit(node->child);
-    if (v.pointsTo->typeEnum == Variable::typeEnum_t::isStruct) {
+    if (v.pointsTo->typeEnum == Variable::typeEnum_t::isStruct ||
+        v.pointsTo->typeEnum == Variable::typeEnum_t::isUnion) {
         for (auto m = v.pointsTo->intStruct.begin(); m != v.pointsTo->intStruct.end(); m++) {
             if (memberName.compare(m->name) == 0) {
                 ret.pointsTo = &*m;
@@ -806,7 +862,7 @@ Variable fCompoundStmt(Node* node) {
     for (auto var = vVar->begin(); var != vVar->end(); var++) {
         for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
             for (auto itit = it->begin(); itit != it->end(); itit++) {
-                recurseVaribale(&*itit, &*var, nullifyPointer);
+                recurseVariable(&*itit, &*var, nullifyPointer);
             }
         }
     }
@@ -884,6 +940,7 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node *node) {
     else if (std::regex_search(CoreTypes.finalType, smTemp, eBuiltinTypes)) {
         temp.type = CoreTypes.finalType;
         temp.typeEnum = Variable::typeEnum_t::isValue;
+        temp.uData.uSize = szTypes[temp.type];
         found = true;
     }
     else {
@@ -945,6 +1002,7 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node *node) {
                 vIt.typeEnum = Variable::typeEnum_t::isArray;
                 vIt.array.push_back(temp);
             }
+            vIt.uData.uSize = temp.uData.uSize * std::stoi(smTemp[1]);
             temp = vIt;
         }
         else if (std::regex_search(CoreTypes.typeChainA.at(i), smTemp, std::regex("\\*"))) {
@@ -953,6 +1011,7 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node *node) {
                finalType. Reinitialize temp */
             temp = Variable();
             temp.typeEnum = Variable::typeEnum_t::isRef;
+            temp.uData.uSize = {4, 0}; // !!!!! Is the size of pointer 4 ?
             temp.value = 0;
         }
     }

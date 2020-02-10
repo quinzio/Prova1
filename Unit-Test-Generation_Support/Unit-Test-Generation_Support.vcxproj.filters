@@ -38,6 +38,12 @@
     <ClCompile Include="src\AsciiArt.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\SizeofTypes.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BbSize.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\RegexColl.h">
@@ -61,10 +67,11 @@
     <ClInclude Include="src\RegexCollCoreTypes.h">
       <Filter>File di origine</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="SizeofTypes.txt">
+    <ClInclude Include="src\SizeofTypes.h">
       <Filter>File di origine</Filter>
-    </Text>
+    </ClInclude>
+    <ClInclude Include="src\BbSize.h">
+      <Filter>File di origine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

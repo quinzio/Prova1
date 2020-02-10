@@ -2,6 +2,12 @@
 #include <iostream>
 #include "Variabile.h"
 
+Variable& Variable::operator= (Variable const& rhs) {
+	if (this != &rhs) {
+	    
+	}
+	return *this;
+}
 
 std::string Variable::print() {
 	std::string prefix = "";
