@@ -13,6 +13,7 @@ debugging.
 #include <set>
 #include <utility>
 #include <algorithm> 
+#include <cstdint>
 
 #include "Unit-Test-Generation-Support.h"
 #include "Variabile.h"
@@ -234,17 +235,106 @@ Variable visit(Node *node)
     }
     return Variable();
 }
-unsigned long long cast(std::string str, unsigned long long v) 
+unsigned long long valueCast(std::string str, unsigned long long v) 
 {
-    if (str.compare("int") == 0) {
-        return (int)v;
+    if (str.compare("char") == 0) {
+        return (int8_t)v;
     }
-    if (str.compare("unsigned int") == 0) {
-        return (unsigned int)v;
+    else if (str.compare("signed char") == 0) {
+        return (int8_t)v;
+    }
+    else if (str.compare("unsigned char") == 0) {
+        return (uint8_t)v;
+    }
+    else if (str.compare("short") == 0) {
+        return (int16_t)v;
+    }
+    else if (str.compare("short int") == 0) {
+        return (int16_t)v;
+    }
+    else if (str.compare("signed short") == 0) {
+        return (int16_t)v;
+    }
+    else if (str.compare("signed short int") == 0) {
+        return (int16_t)v;
+    }
+    else if (str.compare("unsigned short") == 0) {
+        return (uint16_t)v;
+    }
+    else if (str.compare("unsigned short int") == 0) {
+        return (uint16_t)v;
+    }
+    else if (str.compare("int") == 0) {
+        return (int16_t)v;
+    }
+    else if (str.compare("signed") == 0) {
+        return (int16_t)v;
+    }
+    else if (str.compare("signed int") == 0) {
+        return (int16_t)v;
+    }
+    else if (str.compare("unsigned") == 0) {
+        return (uint16_t)v;
+    }
+    else if (str.compare("unsigned int") == 0) {
+        return (uint16_t)v;
+    }
+    else if (str.compare("long") == 0) {
+        return (int32_t)v;
+    }
+    else if (str.compare("signed long") == 0) {
+        return (int32_t)v;
+    }
+    else if (str.compare("signed long int") == 0) {
+        return (int32_t)v;
+    }
+    else if (str.compare("unsigned long") == 0) {
+        return (uint32_t)v;
+    }
+    else if (str.compare("unsigned long int") == 0) {
+        return (uint32_t)v;
+    }
+    else if (str.compare("long long") == 0) {
+        return (int32_t)v;
+    }
+    else if (str.compare("long long int") == 0) {
+        return (int32_t)v;
+    }
+    else if (str.compare("signed long long") == 0) {
+        return (int32_t)v;
+    }
+    else if (str.compare("signed long long int") == 0) {
+        return (int32_t)v;
+    }
+    else if (str.compare("unsigned long long") == 0) {
+        return (uint32_t)v;
+    }
+    else if (str.compare("unsigned long long int") == 0) {
+        return (uint32_t)v;
+    }
+    else if (str.compare("float") == 0) {
+        return (float)v;
+    }
+    else if (str.compare("double") == 0) {
+        return (double)v;
+    }
+    else if (str.compare("long double") == 0) {
+        return (double)v;
     }
 
-    std::cout << "Exception encountered\n";
+    throw std::exception("cast: Exception encountered\n");
 }
+void signExtend(Variable* v) {
+    unsigned long long val;
+    val = v->value;
+    if (szTypes[v->type] == 1) {
+        val & 0x80 ? 0xFFFFFFFF & val : val;
+    }
+    else if (szTypes[v->type] == 2) {
+        val & 0x8000 ? 0xFFFFFFFF & val : val;
+    }
+}
+
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*)) {
     if (v->typeEnum == Variable::typeEnum_t::isRef) {
         fp(v, ref);
@@ -295,7 +385,7 @@ void careUnions(Variable* v) {
         myP = v;
         setVariableOffset(v);
     }
-    v->updateCommonArea;
+    v->updateCommonArea();
 }
 void nullifyPointer(Variable* v, Variable* ref) {
     if (v->pointsTo == ref) {
@@ -406,8 +496,6 @@ Variable fVarDecl(Node* node) {
     temp.name = smVarDecl[1];
     temp.type = rawType;
     temp.used = true;
-    myP = &temp;
-    setVariableOffset(&temp);
 
 /*
 //    if (smGenericType[5].length() > 0) {
@@ -470,6 +558,8 @@ Variable fVarDecl(Node* node) {
     vShadowedVar.shadows[shadowLevel].push_back(temp);
     vback = &vShadowedVar.shadows[shadowLevel].back();
     vback->myAddressDebug = vback;
+    myP = vback;
+    setVariableOffset(vback);
     return temp;
 }
 Variable fIntegerLiteral(Node* node) {
@@ -477,8 +567,10 @@ Variable fIntegerLiteral(Node* node) {
     Variable ret;
     std::smatch smIntegralType;
     std::regex_search(node->text, smIntegralType, eIntegralType);
-    integral = std::stoi(smIntegralType[2]);
-    ret.value = cast(smIntegralType[1], integral);
+    integral = std::stoull(smIntegralType[2]);
+    ret.value = valueCast(smIntegralType[1], integral);
+    ret.type = smIntegralType[1];
+    signExtend(&ret);
     ret.typeEnum = Variable::typeEnum_t::isValue;
     return ret;
 }
@@ -612,14 +704,21 @@ Variable fImplicitCastExpr(Node* node) {
         // Leave the pointer as it is, it's already a pointer to array.
         return ret;
     }
-    if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
+    else if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
         if (ret.typeEnum == Variable::typeEnum_t::isArray) {
             return ret.pointsTo->array[ret.pointsTo->arrayIx];
         }
         return *ret.pointsTo;
     }
-    // No cast should be necessary as the type is not changed by 
-    // ImplicitCastExpr
+    else if (smImplicitCastExpr[2].compare("IntegralCast") == 0) {
+        ret.value = valueCast(smImplicitCastExpr[1].str(), ret.value);
+        ret.type = smImplicitCastExpr[1];
+        signExtend(&ret);
+        return ret;
+    }
+
+    /* No cast should be necessary as the type is not changed by 
+    ImplicitCastExpr */
     return ret;
 }
 Variable fUnaryOperator(Node* node) {
@@ -672,9 +771,13 @@ Variable fBinaryOperator(Node* node) {
     }
     if (boperator.compare("=") == 0) {
         std::string saveName = opa.pointsTo->name;
+        Variable * saveParent = opa.pointsTo->uData.myParent;
+        struct unionData saveUData = opa.pointsTo->uData;
         *opa.pointsTo = opb;
-        careUnions(opa.pointsTo);
+        opa.pointsTo->uData.myParent = saveParent;
         opa.pointsTo->name = saveName;
+        opa.pointsTo->uData = saveUData;
+        careUnions(opa.pointsTo);
         ret = *opa.pointsTo;
     }
     return ret;
@@ -764,6 +867,10 @@ Variable fRecordDecl(Node* node) {
     }
     else if (smStructDefinition[2].compare("union") == 0) {
         tStruct.typeEnum = Variable::typeEnum_t::isUnion;
+        /* As we're allocating a union, we have to foresee the 
+        common area. Initialize it */
+        for (int i = 0; i < 256; i++)
+            tStruct.intUnion.push_back(0x00);
     }
     for (auto n = node->child; n != NULL; n = n->nextSib) {
         vField = visit(n);

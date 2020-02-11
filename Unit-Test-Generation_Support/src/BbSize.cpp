@@ -47,6 +47,15 @@ BbSize BbSize::operator*(int rhs)
 	return BbSize(a * rhs, 0);
 }
 
+int BbSize::getBits() {	
+	return bit;
+}
+
+
+int BbSize::getBytes() {
+	return Byte;
+}
+
 BbSize::BbSize() {
 	bit = 0;
 	Byte = 0;

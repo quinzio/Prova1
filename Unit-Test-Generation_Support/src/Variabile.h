@@ -42,6 +42,9 @@ public:
     struct unionData uData;
     Variable* myAddressDebug = NULL;
 
+    /* Public methods */
+    void updateCommonArea(void);
+    void updateUnion();
 
 private:
 };

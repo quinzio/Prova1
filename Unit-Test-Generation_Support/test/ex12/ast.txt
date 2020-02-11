@@ -1,0 +1,86 @@
+TranslationUnitDecl 0x186b12f3128 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x186b12f39c0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x186b12f36c0 '__int128'
+|-TypedefDecl 0x186b12f3a30 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x186b12f36e0 'unsigned __int128'
+|-TypedefDecl 0x186b12f3d38 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x186b12f3b10 'struct __NSConstantString_tag'
+|   `-Record 0x186b12f3a88 '__NSConstantString_tag'
+|-TypedefDecl 0x186b12f3da8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x186b12f3300 'unsigned long long'
+|-TypedefDecl 0x186b12f3e40 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x186b12f3e00 'char *'
+|   `-BuiltinType 0x186b12f31c0 'char'
+|-TypedefDecl 0x186b12f3eb0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x186b12f3e00 'char *'
+|   `-BuiltinType 0x186b12f31c0 'char'
+|-RecordDecl 0x186b12f3f08 <temp.c:3:1, line:6:1> line:3:8 struct s definition
+| |-FieldDecl 0x186b12f3fc8 <line:4:9, col:13> col:13 referenced vInt 'int'
+| `-FieldDecl 0x186b12f4038 <line:5:9, col:14> col:14 vLong 'long'
+|-VarDecl 0x186b1477240 <line:3:1, line:6:2> col:2 used s1 'struct s':'struct s'
+|-RecordDecl 0x186b1477308 <line:8:1, line:20:1> line:8:8 struct u definition
+| |-FieldDecl 0x186b14773c0 <line:9:5, col:10> col:10 referenced c 'char'
+| |-FieldDecl 0x186b1477430 <line:10:5, col:19> col:19 referenced uc 'unsigned char'
+| |-FieldDecl 0x186b14774a0 <line:11:2, col:8> col:8 referenced s 'short'
+| |-FieldDecl 0x186b1477510 <line:12:2, col:17> col:17 referenced us 'unsigned short'
+| |-FieldDecl 0x186b1477580 <line:13:2, col:6> col:6 referenced i 'int'
+| |-FieldDecl 0x186b14775f0 <line:14:2, col:15> col:15 referenced ui 'unsigned int'
+| |-FieldDecl 0x186b1477660 <line:15:2, col:7> col:7 referenced l 'long'
+| |-FieldDecl 0x186b14776d0 <line:16:2, col:16> col:16 referenced ul 'unsigned long'
+| |-FieldDecl 0x186b1477740 <line:17:2, col:12> col:12 referenced ll 'long long'
+| |-FieldDecl 0x186b14777b0 <line:18:2, col:21> col:21 referenced ull 'unsigned long long'
+| `-FieldDecl 0x186b1477860 <line:19:5, col:14> col:14 s2 'struct s':'struct s'
+|-VarDecl 0x186b1477918 <line:8:1, line:20:2> col:2 used vu 'struct u':'struct u'
+`-FunctionDecl 0x186b14779f0 <line:24:1, line:38:1> line:24:5 main 'int ()'
+  `-CompoundStmt 0x186b1470668 <line:25:1, line:38:1>
+    |-BinaryOperator 0x186b1477b20 <line:26:2, col:9> 'char' '='
+    | |-MemberExpr 0x186b1477ab0 <col:2, col:5> 'char' lvalue .c 0x186b14773c0
+    | | `-DeclRefExpr 0x186b1477a90 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1477b08 <col:9> 'char' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1477ae0 <col:9> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b1477cc8 <line:27:2, col:10> 'unsigned char' '='
+    | |-MemberExpr 0x186b1477c58 <col:2, col:5> 'unsigned char' lvalue .uc 0x186b1477430
+    | | `-DeclRefExpr 0x186b1477c38 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1477cb0 <col:10> 'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1477c88 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b1477d78 <line:28:2, col:9> 'short' '='
+    | |-MemberExpr 0x186b1477d08 <col:2, col:5> 'short' lvalue .s 0x186b14774a0
+    | | `-DeclRefExpr 0x186b1477ce8 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1477d60 <col:9> 'short' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1477d38 <col:9> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b1477e28 <line:29:2, col:10> 'unsigned short' '='
+    | |-MemberExpr 0x186b1477db8 <col:2, col:5> 'unsigned short' lvalue .us 0x186b1477510
+    | | `-DeclRefExpr 0x186b1477d98 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1477e10 <col:10> 'unsigned short' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1477de8 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b1477ed8 <line:30:2, col:9> 'int' '='
+    | |-MemberExpr 0x186b1477e68 <col:2, col:5> 'int' lvalue .i 0x186b1477580
+    | | `-DeclRefExpr 0x186b1477e48 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1477ec0 <col:9> 'int' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1477e98 <col:9> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b1477f88 <line:31:2, col:10> 'unsigned int' '='
+    | |-MemberExpr 0x186b1477f18 <col:2, col:5> 'unsigned int' lvalue .ui 0x186b14775f0
+    | | `-DeclRefExpr 0x186b1477ef8 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1477f70 <col:10> 'unsigned int' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1477f48 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b1478038 <line:32:2, col:10> 'long long' '='
+    | |-MemberExpr 0x186b1477fc8 <col:2, col:5> 'long long' lvalue .ll 0x186b1477740
+    | | `-DeclRefExpr 0x186b1477fa8 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1478020 <col:10> 'long long' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1477ff8 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b14780e8 <line:33:2, col:10> 'unsigned long' '='
+    | |-MemberExpr 0x186b1478078 <col:2, col:5> 'unsigned long' lvalue .ul 0x186b14776d0
+    | | `-DeclRefExpr 0x186b1478058 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b14780d0 <col:10> 'unsigned long' <IntegralCast>
+    |   `-IntegerLiteral 0x186b14780a8 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b1478198 <line:34:2, col:9> 'long' '='
+    | |-MemberExpr 0x186b1478128 <col:2, col:5> 'long' lvalue .l 0x186b1477660
+    | | `-DeclRefExpr 0x186b1478108 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-ImplicitCastExpr 0x186b1478180 <col:9> 'long' <IntegralCast>
+    |   `-IntegerLiteral 0x186b1478158 <col:9> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x186b14701d0 <line:35:2, col:11> 'unsigned long long' '='
+    | |-MemberExpr 0x186b14781d8 <col:2, col:5> 'unsigned long long' lvalue .ull 0x186b14777b0
+    | | `-DeclRefExpr 0x186b14781b8 <col:2> 'struct u':'struct u' lvalue Var 0x186b1477918 'vu' 'struct u':'struct u'
+    | `-IntegerLiteral 0x186b1478208 <col:11> 'unsigned long long' 2273806215
+    `-ReturnStmt 0x186b1470658 <line:37:2, col:9>
+      `-IntegerLiteral 0x186b1470630 <col:9> 'int' 0

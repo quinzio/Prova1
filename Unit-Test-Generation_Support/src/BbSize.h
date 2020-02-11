@@ -11,6 +11,8 @@ public:
 	BbSize operator=(int rhs);
 	bool operator<(BbSize rhs);
 	BbSize operator*(int rhs);
+	int getBits();
+	int getBytes();
 	BbSize(int _Byte, int _bit);
 	BbSize();
 };

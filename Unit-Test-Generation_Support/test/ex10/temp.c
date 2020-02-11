@@ -3,12 +3,12 @@
 struct s_s{
         int sa;
         long sb;
-};
+}s_s1;
 
 union u1 {
 	int a;
 	long b;
-        struct s_s s1;
+    struct s_s s1;
 }vu1;
 /*
 union u2 {
@@ -20,6 +20,6 @@ union u2 {
 int main()
 {
 	vu1.a = 1111;
-	//vu2.c = 1111;
+    s_s1.sb = vu1.b;
 	return 0;
 }

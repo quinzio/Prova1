@@ -1,0 +1,17 @@
+s1 = 0
+s1.vInt = 0
+s1.vLong = 0
+vu = 0
+vu.c = -121
+vu.uc = 135
+vu.s = -30841
+vu.us = 34695
+vu.i = -30841
+vu.ui = 34695
+vu.l = -2021161081
+vu.ul = 2273806215
+vu.ll = -2021161081
+vu.ull = 2273806215
+vu.s2 = 0
+vu.s2.vInt = 0
+vu.s2.vLong = 0

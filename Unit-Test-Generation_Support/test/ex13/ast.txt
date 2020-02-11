@@ -1,0 +1,81 @@
+TranslationUnitDecl 0x254c6974d38 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x254c69755d0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x254c69752d0 '__int128'
+|-TypedefDecl 0x254c6975640 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x254c69752f0 'unsigned __int128'
+|-TypedefDecl 0x254c6975948 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x254c6975720 'struct __NSConstantString_tag'
+|   `-Record 0x254c6975698 '__NSConstantString_tag'
+|-TypedefDecl 0x254c69759b8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x254c6974f10 'unsigned long long'
+|-TypedefDecl 0x254c6975a50 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x254c6975a10 'char *'
+|   `-BuiltinType 0x254c6974dd0 'char'
+|-TypedefDecl 0x254c6975ac0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x254c6975a10 'char *'
+|   `-BuiltinType 0x254c6974dd0 'char'
+|-VarDecl 0x254c6975b28 <temp.c:4:5, col:10> col:10 used c 'char'
+|-VarDecl 0x254c6975bf0 <line:5:5, col:19> col:19 used uc 'unsigned char'
+|-VarDecl 0x254c6975c70 <line:6:2, col:8> col:8 used s 'short'
+|-VarDecl 0x254c6adf1c0 <line:7:2, col:17> col:17 used us 'unsigned short'
+|-VarDecl 0x254c6adf240 <line:8:2, col:6> col:6 used i 'int'
+|-VarDecl 0x254c6adf2c0 <line:9:2, col:15> col:15 used ui 'unsigned int'
+|-VarDecl 0x254c6adf340 <line:10:2, col:7> col:7 used l 'long'
+|-VarDecl 0x254c6adf3c0 <line:11:2, col:16> col:16 used ul 'unsigned long'
+|-VarDecl 0x254c6adf440 <line:12:2, col:12> col:12 used ll 'long long'
+|-VarDecl 0x254c6adf4c0 <line:13:2, col:21> col:21 used ull 'unsigned long long'
+|-VarDecl 0x254c6adf540 <line:15:2, col:6> col:6 used res 'int'
+`-FunctionDecl 0x254c6adf600 <line:17:1, line:32:1> line:17:5 main 'int ()'
+  `-CompoundStmt 0x254c6adfce8 <line:18:1, line:32:1>
+    |-BinaryOperator 0x254c6adf700 <line:19:2, col:6> 'char' '='
+    | |-DeclRefExpr 0x254c6adf6a0 <col:2> 'char' lvalue Var 0x254c6975b28 'c' 'char'
+    | `-ImplicitCastExpr 0x254c6adf6e8 <col:6> 'char' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adf6c0 <col:6> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adf780 <line:20:2, col:7> 'unsigned char' '='
+    | |-DeclRefExpr 0x254c6adf720 <col:2> 'unsigned char' lvalue Var 0x254c6975bf0 'uc' 'unsigned char'
+    | `-ImplicitCastExpr 0x254c6adf768 <col:7> 'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adf740 <col:7> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adf800 <line:21:2, col:6> 'short' '='
+    | |-DeclRefExpr 0x254c6adf7a0 <col:2> 'short' lvalue Var 0x254c6975c70 's' 'short'
+    | `-ImplicitCastExpr 0x254c6adf7e8 <col:6> 'short' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adf7c0 <col:6> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adf880 <line:22:2, col:7> 'unsigned short' '='
+    | |-DeclRefExpr 0x254c6adf820 <col:2> 'unsigned short' lvalue Var 0x254c6adf1c0 'us' 'unsigned short'
+    | `-ImplicitCastExpr 0x254c6adf868 <col:7> 'unsigned short' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adf840 <col:7> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adf900 <line:23:2, col:6> 'int' '='
+    | |-DeclRefExpr 0x254c6adf8a0 <col:2> 'int' lvalue Var 0x254c6adf240 'i' 'int'
+    | `-ImplicitCastExpr 0x254c6adf8e8 <col:6> 'int' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adf8c0 <col:6> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adf980 <line:24:2, col:7> 'unsigned int' '='
+    | |-DeclRefExpr 0x254c6adf920 <col:2> 'unsigned int' lvalue Var 0x254c6adf2c0 'ui' 'unsigned int'
+    | `-ImplicitCastExpr 0x254c6adf968 <col:7> 'unsigned int' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adf940 <col:7> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adfa00 <line:25:2, col:7> 'long long' '='
+    | |-DeclRefExpr 0x254c6adf9a0 <col:2> 'long long' lvalue Var 0x254c6adf440 'll' 'long long'
+    | `-ImplicitCastExpr 0x254c6adf9e8 <col:7> 'long long' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adf9c0 <col:7> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adfa80 <line:26:2, col:7> 'unsigned long' '='
+    | |-DeclRefExpr 0x254c6adfa20 <col:2> 'unsigned long' lvalue Var 0x254c6adf3c0 'ul' 'unsigned long'
+    | `-ImplicitCastExpr 0x254c6adfa68 <col:7> 'unsigned long' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adfa40 <col:7> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adfb00 <line:27:2, col:6> 'long' '='
+    | |-DeclRefExpr 0x254c6adfaa0 <col:2> 'long' lvalue Var 0x254c6adf340 'l' 'long'
+    | `-ImplicitCastExpr 0x254c6adfae8 <col:6> 'long' <IntegralCast>
+    |   `-IntegerLiteral 0x254c6adfac0 <col:6> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x254c6adfb68 <line:28:2, col:8> 'unsigned long long' '='
+    | |-DeclRefExpr 0x254c6adfb20 <col:2> 'unsigned long long' lvalue Var 0x254c6adf4c0 'ull' 'unsigned long long'
+    | `-IntegerLiteral 0x254c6adfb40 <col:8> 'unsigned long long' 2273806215
+    |-IfStmt 0x254c6adfc98 <line:29:2, col:20>
+    | |-BinaryOperator 0x254c6adfc10 <col:6, col:11> 'int' '<'
+    | | |-ImplicitCastExpr 0x254c6adfbc8 <col:6> 'unsigned long' <LValueToRValue>
+    | | | `-DeclRefExpr 0x254c6adfb88 <col:6> 'unsigned long' lvalue Var 0x254c6adf3c0 'ul' 'unsigned long'
+    | | `-ImplicitCastExpr 0x254c6adfbf8 <col:11> 'unsigned long' <IntegralCast>
+    | |   `-ImplicitCastExpr 0x254c6adfbe0 <col:11> 'long' <LValueToRValue>
+    | |     `-DeclRefExpr 0x254c6adfba8 <col:11> 'long' lvalue Var 0x254c6adf340 'l' 'long'
+    | `-BinaryOperator 0x254c6adfc78 <col:14, col:20> 'int' '='
+    |   |-DeclRefExpr 0x254c6adfc30 <col:14> 'int' lvalue Var 0x254c6adf540 'res' 'int'
+    |   `-IntegerLiteral 0x254c6adfc50 <col:20> 'int' 0
+    `-ReturnStmt 0x254c6adfcd8 <line:31:2, col:9>
+      `-IntegerLiteral 0x254c6adfcb0 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-0563c8.o : fatal error LNK1136: file danneggiato o non valido

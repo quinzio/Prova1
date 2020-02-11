@@ -4,27 +4,39 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <cstdint>
 
 
-class Test {
-private:
-	int a;
-	int b;
+// ex11
+// Unions
+struct s {
+	int vInt;
+	long vLong;
+}s1;
 
-public:
-	Test& operator=(const Test& rhs) {
-		*this = rhs;
-		return *this;
-	}
-
-};
-
+union u {
+	char c;
+	unsigned char uc;
+	short s;
+	unsigned short us;
+	int i;
+	unsigned int ui;
+	long b;
+	unsigned long ul;
+	long long ll;
+	unsigned long long ull;
+	struct s s2;
+}vu;
+/*
+union u2 {
+	int c;
+	long d;
+	union u1 v2u1;
+}vu2;
+*/
 int main()
 {
-	Test a, b;
-
-	a = b;
-
+	vu.ull = 0x87878787;
+	s1.vInt = vu.b;
 	return 0;
 }
-
