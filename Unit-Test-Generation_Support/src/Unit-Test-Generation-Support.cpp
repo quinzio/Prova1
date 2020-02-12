@@ -220,6 +220,10 @@ Variable visit(Node *node)
         return fDeclStmt(node);
     }
 
+    if (node->astType.compare("FullComment") == 0) {
+        return fFullComment(node);
+    }
+
     if (node->astType.compare("<<<NULL") == 0) {
         return fNULL(node);
     }
@@ -481,7 +485,7 @@ Variable fVarDecl(Node* node) {
     example: struct s (*(*[10])[3])[4]
     Core type is *[10]
     */
-    CoreTypes.coreType = rawType;
+    CoreTypes.coreType = rawType; 
     findCoreType(CoreTypes);
     /* In CoreTypes.typeChainA there's now the vector of the types. 
        An array is made as of [11], a pointer is written as *, 
@@ -830,7 +834,15 @@ Variable fFieldDecl(Node* node) {
     else {
         vField.typeEnum = Variable::typeEnum_t::isValue;
         vField.type = rawType;
-        vField.uData.uSize = szTypes[rawType];
+        /* It's a bitfield ? If it's a bit field there will be a 
+        ConstExpr child who has an IntegralLiterl as child.
+        */
+        if (node->child) {
+            Variable v = visit(node->child);
+            vField.uData.uSize = BbSize(0, v.isValue);
+        } else {
+            vField.uData.uSize = szTypes[rawType];
+        }
     }
     vField.name = name;
     // Note the blank space in " referenced"
@@ -1006,6 +1018,9 @@ Variable fDeclStmt(Node* node) {
     return temp;
 }
 Variable fNULL(Node* node) {
+    return Variable();
+}
+Variable fFullComment(Node* node) {
     return Variable();
 }
 Variable buildVariable(struct coreType_str& CoreTypes, Node *node) {

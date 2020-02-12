@@ -38,3 +38,4 @@ Variable fArraySubscriptExpr(Node* node);
 Variable fFunctionDecl(Node* node);
 Variable fDeclStmt(Node* node);
 Variable fNULL(Node* node);
+Variable fFullComment(Node* node);
