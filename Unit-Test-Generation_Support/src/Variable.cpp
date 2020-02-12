@@ -14,11 +14,36 @@ std:: string Variable::print(std::string prefix, std::string postfix) {
 	std::string tempPrefix;
 	std::string tempPostfix;
 	std::string res;
-	if ((long long)this->value < 0) {
-		res = prefix + this->name + postfix + " = " + std::to_string((long long)this->value) + "\n";
+	bool unsignedType = false;
+	if (std::regex_search(this->type, std::regex("(.*)unsigned"))) {
+		unsignedType = true;
+	}
+	if (this->uData.uSize.getBytes() == 4) {
+		if (unsignedType) {
+			res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)this->value) + "\n";
+		}
+		else {
+			res = prefix + this->name + postfix + " = " + std::to_string((int32_t)this->value) + "\n";
+		}
+	}
+	else if (this->uData.uSize.getBytes() == 2) {
+		if (unsignedType) {
+			res = prefix + this->name + postfix + " = " + std::to_string((uint16_t)this->value) + "\n";
+		}
+		else {
+			res = prefix + this->name + postfix + " = " + std::to_string((int16_t)this->value) + "\n";
+		}
+	}
+	else if (this->uData.uSize.getBytes() == 1) {
+		if (unsignedType) {
+			res = prefix + this->name + postfix + " = " + std::to_string((uint8_t)this->value) + "\n";
+		}
+		else {
+			res = prefix + this->name + postfix + " = " + std::to_string((int8_t)this->value) + "\n";
+		}
 	}
 	else {
-		res = prefix + this->name + postfix + " = " + std::to_string(this->value) + "\n";
+		res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)this->value) + "\n";
 	}
 	std::cout << res;
 	Variable::outputFile << res;
@@ -65,12 +90,29 @@ void Variable::updateCommonArea(void) {
 		this->uData.myParent->typeEnum == Variable::typeEnum_t::isUnion) 
 	{
 		int bbOffset_byte = this->uData.uOffset.getBytes();
+		int bbOffset_bit = this->uData.uOffset.getBits();
 		int bbSize_byte = this->uData.uSize.getBytes();
 		int bbSize_bit = this->uData.uSize.getBits();
 		/* In case that we have to copy Bytes (not Bits)
 		*/
 		if (bbSize_bit) {
-
+			/* Copy verbatim bit by bit */
+			int length = bbSize_byte * 8 + bbSize_bit;
+			BbSize from;
+			BbSize to =  this->uData.uOffset;
+			BbSize inc = BbSize(1, 0);
+			bool val;
+			unsigned char mask8;
+			for (int ix = 0; ix < length; ix++) {
+				val = ((unsigned char*)&this->value)[from.getBytes()] & (1 << from.getBits());
+				mask8 = 1 << to.getBits();
+				this->uData.myParent->intUnion.at(to.getBytes()) &= (~mask8);
+				if (val) {
+					this->uData.myParent->intUnion.at(to.getBytes()) |= mask8;
+				}
+				from = from + inc;
+				to = to + inc;
+			}
 		}
 		else {
 			for (int i = 0; i < bbSize_byte; i++) {
@@ -103,25 +145,38 @@ void Variable::updateUnion() {
 		Variable* p; // parent
 		unsigned long long value = 0;
 		p = this->uData.myParent;
-		int sizeByte = this->uData.uSize.getBytes();
-		int sizeBit = this->uData.uSize.getBits();
-		int offsetByte = this->uData.uOffset.getBytes();
-		int offsetBit = this->uData.uOffset.getBits();
-		if (sizeBit) {
-			// bits !!!
+		int bbOffset_byte = this->uData.uOffset.getBytes();
+		int bbOffset_bit = this->uData.uOffset.getBits();
+		int bbSize_byte = this->uData.uSize.getBytes();
+		int bbSize_bit = this->uData.uSize.getBits();
+		if (bbSize_bit) {
+			/* Copy verbatim bit by bit */
+			int length = bbSize_byte * 8 + bbSize_bit;
+			BbSize from = this->uData.uOffset;
+			BbSize to;
+			BbSize inc = BbSize(0,1);
+			bool val;
+			unsigned char mask8;
+			for (int ix = 0; ix < length; ix++) {
+				val = this->uData.myParent->intUnion.at(from.getBytes()) & (1 << from.getBits());
+				mask8 = 1 << to.getBits();
+				((unsigned char*)&this->value)[to.getBytes()] &= (~mask8);
+				if (val) {
+					((unsigned char*)&this->value)[to.getBytes()] |= mask8;
+				}
+				from = from + inc;
+				to = to + inc;
+			}
 		}
 		else {
-			for (int i = 0; i < sizeByte; i++) {
-				*((unsigned char*)&value + i) =
-					p->intUnion.at(i + offsetByte);
+			for (int i = 0; i < bbSize_byte; i++) {
+				*((unsigned char*)&this->value + i) =
+					p->intUnion.at(i + bbOffset_byte);
 			}
 			signExtend(this);
 		}
 		if (this->typeEnum == Variable::typeEnum_t::isRef) {
 			this->pointsTo = (Variable*)value;
-		}
-		else {
-			this->value = value;
 		}
 	}
 	return;

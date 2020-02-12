@@ -1,0 +1,206 @@
+TranslationUnitDecl 0x230a6462aa8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x230a6463340 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x230a6463040 '__int128'
+|-TypedefDecl 0x230a64633b0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x230a6463060 'unsigned __int128'
+|-TypedefDecl 0x230a64636b8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x230a6463490 'struct __NSConstantString_tag'
+|   `-Record 0x230a6463408 '__NSConstantString_tag'
+|-TypedefDecl 0x230a6463728 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x230a6462c80 'unsigned long long'
+|-TypedefDecl 0x230a64637c0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x230a6463780 'char *'
+|   `-BuiltinType 0x230a6462b40 'char'
+|-TypedefDecl 0x230a6463830 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x230a6463780 'char *'
+|   `-BuiltinType 0x230a6462b40 'char'
+|-TypedefDecl 0x230a64638a0 <temp.c:4:1, col:22> col:22 referenced word 'unsigned int'
+| `-BuiltinType 0x230a6462c40 'unsigned int'
+|-TypedefDecl 0x230a6463910 <line:5:1, col:23> col:23 referenced byte 'unsigned char'
+| `-BuiltinType 0x230a6462c00 'unsigned char'
+|-RecordDecl 0x230a6463998 <line:8:9, line:109:1> line:8:9 union definition
+| |-FullComment 0x230a650c660 <line:7:4, col:50>
+| | `-ParagraphComment 0x230a650c638 <col:4, col:50>
+| |   `-TextComment 0x230a650c610 <col:4, col:50> Text="* PT01AD - Port AD Data Register; 0x00000270 **"
+| |-FieldDecl 0x230a64ff1c0 <line:9:5, col:10> col:10 Word 'word':'unsigned int'
+| |-RecordDecl 0x230a64ff218 <line:11:5, line:81:5> line:11:5 struct definition
+| | |-RecordDecl 0x230a64ff2f0 <line:13:9, line:32:9> line:13:9 union definition
+| | | |-FullComment 0x230a650c710 <line:12:12, col:58>
+| | | | `-ParagraphComment 0x230a650c6e8 <col:12, col:58>
+| | | |   `-TextComment 0x230a650c6c0 <col:12, col:58> Text="* PT0AD - Port ADH Data Register; 0x00000270 **"
+| | | |-FieldDecl 0x230a64ff3c0 <line:14:13, col:18> col:18 Byte 'byte':'unsigned char'
+| | | |-RecordDecl 0x230a64ff418 <line:15:13, line:24:13> line:15:13 struct definition
+| | | | |-FieldDecl 0x230a64ff510 <line:16:17, col:31> col:22 PT0AD0 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ff4f8 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ff4c0 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a64ff5b8 <line:17:17, col:31> col:22 PT0AD1 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ff5a0 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ff568 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a64ff660 <line:18:17, col:31> col:22 referenced PT0AD2 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ff648 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ff610 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a64ff708 <line:19:17, col:31> col:22 PT0AD3 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ff6f0 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ff6b8 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a64ff7b0 <line:20:17, col:24> col:17 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ff798 <col:24> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ff760 <col:24> 'int' 1
+| | | | |-FieldDecl 0x230a64ff858 <line:21:17, col:24> col:17 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ff840 <col:24> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ff808 <col:24> 'int' 1
+| | | | |-FieldDecl 0x230a64ff900 <line:22:17, col:24> col:17 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ff8e8 <col:24> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ff8b0 <col:24> 'int' 1
+| | | | `-FieldDecl 0x230a64ff9a8 <line:23:17, col:24> col:17 'byte':'unsigned char'
+| | | |   `-ConstantExpr 0x230a64ff990 <col:24> 'int'
+| | | |     `-IntegerLiteral 0x230a64ff958 <col:24> 'int' 1
+| | | |-FieldDecl 0x230a64ffa58 <line:15:13, line:24:15> col:15 referenced Bits 'struct (anonymous struct at temp.c:15:13)':'struct PT01ADSTR::(anonymous at temp.c:15:13)'
+| | | |-RecordDecl 0x230a64ffab0 <line:25:13, line:31:13> line:25:13 struct definition
+| | | | |-FieldDecl 0x230a64ffba0 <line:26:17, col:33> col:22 grpPT0AD 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ffb88 <col:33> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ffb50 <col:33> 'int' 4
+| | | | |-FieldDecl 0x230a64ffc48 <line:27:17, col:24> col:17 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ffc30 <col:24> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ffbf8 <col:24> 'int' 1
+| | | | |-FieldDecl 0x230a64ffcf0 <line:28:17, col:24> col:17 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ffcd8 <col:24> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ffca0 <col:24> 'int' 1
+| | | | |-FieldDecl 0x230a64ffd98 <line:29:17, col:24> col:17 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a64ffd80 <col:24> 'int'
+| | | | |   `-IntegerLiteral 0x230a64ffd48 <col:24> 'int' 1
+| | | | `-FieldDecl 0x230a64ffe40 <line:30:17, col:24> col:17 'byte':'unsigned char'
+| | | |   `-ConstantExpr 0x230a64ffe28 <col:24> 'int'
+| | | |     `-IntegerLiteral 0x230a64ffdf0 <col:24> 'int' 1
+| | | `-FieldDecl 0x230a64ffef8 <line:25:13, line:31:15> col:15 MergedBits 'struct (anonymous struct at temp.c:25:13)':'struct PT01ADSTR::(anonymous at temp.c:25:13)'
+| | |-FieldDecl 0x230a64fffa8 <line:13:9, line:32:11> col:11 referenced PT0ADSTR 'union (anonymous union at temp.c:13:9)':'union PT01ADSTR::(anonymous at temp.c:13:9)'
+| | |-RecordDecl 0x230a6500030 <line:49:9, line:61:9> line:49:9 union definition
+| | | |-FullComment 0x230a650c7c0 <line:48:12, col:58>
+| | | | `-ParagraphComment 0x230a650c798 <col:12, col:58>
+| | | |   `-TextComment 0x230a650c770 <col:12, col:58> Text="* PT1AD - Port ADL Data Register; 0x00000271 **"
+| | | |-FieldDecl 0x230a65000e0 <line:50:13, col:18> col:18 Byte 'byte':'unsigned char'
+| | | |-RecordDecl 0x230a6500138 <line:51:13, line:60:13> line:51:13 struct definition
+| | | | |-FieldDecl 0x230a650b2f0 <line:52:17, col:31> col:22 referenced PT1AD0 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a650b2d8 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a650b2a0 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a650b398 <line:53:17, col:31> col:22 PT1AD1 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a650b380 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a650b348 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a650b440 <line:54:17, col:31> col:22 PT1AD2 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a650b428 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a650b3f0 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a650b4e8 <line:55:17, col:31> col:22 PT1AD3 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a650b4d0 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a650b498 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a650b590 <line:56:17, col:31> col:22 PT1AD4 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a650b578 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a650b540 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a650b638 <line:57:17, col:31> col:22 PT1AD5 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a650b620 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a650b5e8 <col:31> 'int' 1
+| | | | |-FieldDecl 0x230a650b6e0 <line:58:17, col:31> col:22 PT1AD6 'byte':'unsigned char'
+| | | | | `-ConstantExpr 0x230a650b6c8 <col:31> 'int'
+| | | | |   `-IntegerLiteral 0x230a650b690 <col:31> 'int' 1
+| | | | `-FieldDecl 0x230a650b788 <line:59:17, col:31> col:22 PT1AD7 'byte':'unsigned char'
+| | | |   `-ConstantExpr 0x230a650b770 <col:31> 'int'
+| | | |     `-IntegerLiteral 0x230a650b738 <col:31> 'int' 1
+| | | `-FieldDecl 0x230a650b838 <line:51:13, line:60:15> col:15 referenced Bits 'struct (anonymous struct at temp.c:51:13)':'struct PT01ADSTR::(anonymous at temp.c:51:13)'
+| | `-FieldDecl 0x230a650b8e8 <line:49:9, line:61:11> col:11 referenced PT1ADSTR 'union (anonymous union at temp.c:49:9)':'union PT01ADSTR::(anonymous at temp.c:49:9)'
+| |-FieldDecl 0x230a650baf8 <line:11:5, line:81:7> col:7 referenced Overlap_STR 'struct (anonymous struct at temp.c:11:5)':'struct PT01ADSTR::(anonymous at temp.c:11:5)'
+| |-RecordDecl 0x230a650bb50 <line:83:5, line:100:5> line:83:5 struct definition
+| | |-FieldDecl 0x230a650bc40 <line:84:9, col:23> col:14 PT1AD0 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650bc28 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650bbf0 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650bce8 <line:85:9, col:23> col:14 PT1AD1 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650bcd0 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650bc98 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650bd90 <line:86:9, col:23> col:14 PT1AD2 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650bd78 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650bd40 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650be38 <line:87:9, col:23> col:14 PT1AD3 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650be20 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650bde8 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650bee0 <line:88:9, col:23> col:14 PT1AD4 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650bec8 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650be90 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650bf88 <line:89:9, col:23> col:14 PT1AD5 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650bf70 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650bf38 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650c030 <line:90:9, col:23> col:14 PT1AD6 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650c018 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650bfe0 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650c0d8 <line:91:9, col:23> col:14 PT1AD7 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650c0c0 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650c088 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650c180 <line:92:9, col:23> col:14 PT0AD0 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650c168 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650c130 <col:23> 'int' 1
+| | |-FieldDecl 0x230a650c228 <line:93:9, col:23> col:14 PT0AD1 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a650c210 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a650c1d8 <col:23> 'int' 1
+| | |-FieldDecl 0x230a6507290 <line:94:9, col:23> col:14 PT0AD2 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a6507278 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a6507240 <col:23> 'int' 1
+| | |-FieldDecl 0x230a6507338 <line:95:9, col:23> col:14 PT0AD3 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a6507320 <col:23> 'int'
+| | |   `-IntegerLiteral 0x230a65072e8 <col:23> 'int' 1
+| | |-FieldDecl 0x230a65073e0 <line:96:9, col:16> col:9 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a65073c8 <col:16> 'int'
+| | |   `-IntegerLiteral 0x230a6507390 <col:16> 'int' 1
+| | |-FieldDecl 0x230a6507488 <line:97:9, col:16> col:9 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a6507470 <col:16> 'int'
+| | |   `-IntegerLiteral 0x230a6507438 <col:16> 'int' 1
+| | |-FieldDecl 0x230a6507530 <line:98:9, col:16> col:9 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a6507518 <col:16> 'int'
+| | |   `-IntegerLiteral 0x230a65074e0 <col:16> 'int' 1
+| | `-FieldDecl 0x230a65075d8 <line:99:9, col:16> col:9 'word':'unsigned int'
+| |   `-ConstantExpr 0x230a65075c0 <col:16> 'int'
+| |     `-IntegerLiteral 0x230a6507588 <col:16> 'int' 1
+| |-FieldDecl 0x230a6507688 <line:83:5, line:100:7> col:7 Bits 'struct (anonymous struct at temp.c:83:5)':'struct PT01ADSTR::(anonymous at temp.c:83:5)'
+| |-RecordDecl 0x230a65076e0 <line:101:5, line:108:5> line:101:5 struct definition
+| | |-FieldDecl 0x230a65077d0 <line:102:9, col:25> col:14 grpPT1AD 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a65077b8 <col:25> 'int'
+| | |   `-IntegerLiteral 0x230a6507780 <col:25> 'int' 8
+| | |-FieldDecl 0x230a6507878 <line:103:9, col:25> col:14 grpPT0AD 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a6507860 <col:25> 'int'
+| | |   `-IntegerLiteral 0x230a6507828 <col:25> 'int' 4
+| | |-FieldDecl 0x230a6507920 <line:104:9, col:16> col:9 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a6507908 <col:16> 'int'
+| | |   `-IntegerLiteral 0x230a65078d0 <col:16> 'int' 1
+| | |-FieldDecl 0x230a65079c8 <line:105:9, col:16> col:9 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a65079b0 <col:16> 'int'
+| | |   `-IntegerLiteral 0x230a6507978 <col:16> 'int' 1
+| | |-FieldDecl 0x230a6507a70 <line:106:9, col:16> col:9 'word':'unsigned int'
+| | | `-ConstantExpr 0x230a6507a58 <col:16> 'int'
+| | |   `-IntegerLiteral 0x230a6507a20 <col:16> 'int' 1
+| | `-FieldDecl 0x230a6507b18 <line:107:9, col:16> col:9 'word':'unsigned int'
+| |   `-ConstantExpr 0x230a6507b00 <col:16> 'int'
+| |     `-IntegerLiteral 0x230a6507ac8 <col:16> 'int' 1
+| `-FieldDecl 0x230a6507bc8 <line:101:5, line:108:7> col:7 MergedBits 'struct (anonymous struct at temp.c:101:5)':'struct PT01ADSTR::(anonymous at temp.c:101:5)'
+|-TypedefDecl 0x230a6507c78 <line:8:1, line:109:3> col:3 referenced PT01ADSTR 'union PT01ADSTR':'PT01ADSTR'
+| `-ElaboratedType 0x230a6507c20 'union PT01ADSTR' sugar
+|   `-RecordType 0x230a6463a20 'PT01ADSTR'
+|     `-Record 0x230a6463998 ''
+|-VarDecl 0x230a6507d20 <line:110:1, col:27> col:27 used _PT01AD 'volatile PT01ADSTR':'volatile PT01ADSTR' extern
+|-VarDecl 0x230a6507de0 <line:144:1, col:11> col:11 used var1 'PT01ADSTR':'PT01ADSTR'
+|-VarDecl 0x230a6507e58 <line:145:1, col:17> col:17 var2 'const PT01ADSTR':'const PT01ADSTR'
+`-FunctionDecl 0x230a6507f10 <line:147:1, line:153:1> line:147:5 f1 'int ()'
+  `-CompoundStmt 0x230a650c5b0 <line:148:1, line:153:1>
+    |-BinaryOperator 0x230a65080d0 <line:63:37, line:149:20> 'byte':'unsigned char' '='
+    | |-MemberExpr 0x230a6508060 <line:63:37, col:71> 'volatile byte':'volatile unsigned char' lvalue bitfield .PT1AD0 0x230a650b2f0
+    | | `-MemberExpr 0x230a6508030 <col:37, col:66> 'volatile struct (anonymous struct at temp.c:51:13)':'volatile struct PT01ADSTR::(anonymous at temp.c:51:13)' lvalue .Bits 0x230a650b838
+    | |   `-MemberExpr 0x230a6508000 <col:37, col:57> 'volatile union (anonymous union at temp.c:49:9)':'volatile union PT01ADSTR::(anonymous at temp.c:49:9)' lvalue .PT1ADSTR 0x230a650b8e8
+    | |     `-MemberExpr 0x230a6507fd0 <col:37, col:45> 'volatile struct (anonymous struct at temp.c:11:5)':'volatile struct PT01ADSTR::(anonymous at temp.c:11:5)' lvalue .Overlap_STR 0x230a650baf8
+    | |       `-DeclRefExpr 0x230a6507fb0 <col:37> 'volatile PT01ADSTR':'volatile PT01ADSTR' lvalue Var 0x230a6507d20 '_PT01AD' 'volatile PT01ADSTR':'volatile PT01ADSTR'
+    | `-ImplicitCastExpr 0x230a65080b8 <line:149:20> 'byte':'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x230a6508090 <col:20> 'int' 1
+    |-BinaryOperator 0x230a650c558 <line:150:5, col:45> 'byte':'unsigned char' '='
+    | |-MemberExpr 0x230a650c4e8 <col:5, col:36> 'byte':'unsigned char' lvalue bitfield .PT0AD2 0x230a64ff660
+    | | `-MemberExpr 0x230a650c4b8 <col:5, col:31> 'struct (anonymous struct at temp.c:15:13)':'struct PT01ADSTR::(anonymous at temp.c:15:13)' lvalue .Bits 0x230a64ffa58
+    | |   `-MemberExpr 0x230a650c488 <col:5, col:22> 'union (anonymous union at temp.c:13:9)':'union PT01ADSTR::(anonymous at temp.c:13:9)' lvalue .PT0ADSTR 0x230a64fffa8
+    | |     `-MemberExpr 0x230a650c458 <col:5, col:10> 'struct (anonymous struct at temp.c:11:5)':'struct PT01ADSTR::(anonymous at temp.c:11:5)' lvalue .Overlap_STR 0x230a650baf8
+    | |       `-DeclRefExpr 0x230a650c438 <col:5> 'PT01ADSTR':'PT01ADSTR' lvalue Var 0x230a6507de0 'var1' 'PT01ADSTR':'PT01ADSTR'
+    | `-ImplicitCastExpr 0x230a650c540 <col:45> 'byte':'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x230a650c518 <col:45> 'int' 1
+    `-ReturnStmt 0x230a650c5a0 <line:152:2, col:9>
+      `-IntegerLiteral 0x230a650c578 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-b7808d.o : fatal error LNK1136: file danneggiato o non valido

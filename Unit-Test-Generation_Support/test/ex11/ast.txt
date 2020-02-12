@@ -1,74 +1,74 @@
-TranslationUnitDecl 0x1fba1323278 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x1fba1323b10 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x1fba1323810 '__int128'
-|-TypedefDecl 0x1fba1323b80 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x1fba1323830 'unsigned __int128'
-|-TypedefDecl 0x1fba1323e88 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x1fba1323c60 'struct __NSConstantString_tag'
-|   `-Record 0x1fba1323bd8 '__NSConstantString_tag'
-|-TypedefDecl 0x1fba1323ef8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x1fba1323450 'unsigned long long'
-|-TypedefDecl 0x1fba1323f90 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x1fba1323f50 'char *'
-|   `-BuiltinType 0x1fba1323310 'char'
-|-TypedefDecl 0x1fba1324000 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x1fba1323f50 'char *'
-|   `-BuiltinType 0x1fba1323310 'char'
-|-RecordDecl 0x1fba1324058 <temp.c:3:1, line:6:1> line:3:8 struct s definition
-| |-FieldDecl 0x1fba1324118 <line:4:9, col:13> col:13 referenced vInt 'int'
-| `-FieldDecl 0x1fba1324188 <line:5:9, col:14> col:14 vLong 'long'
-|-VarDecl 0x1fba13c6230 <line:3:1, line:6:2> col:2 used s1 'struct s':'struct s'
-|-RecordDecl 0x1fba13c62f8 <line:8:1, line:20:1> line:8:7 union u definition
-| |-FieldDecl 0x1fba13c63b0 <line:9:5, col:10> col:10 referenced c 'char'
-| |-FieldDecl 0x1fba13c6420 <line:10:5, col:19> col:19 referenced uc 'unsigned char'
-| |-FieldDecl 0x1fba13c6490 <line:11:2, col:8> col:8 s 'short'
-| |-FieldDecl 0x1fba13c6500 <line:12:2, col:17> col:17 us 'unsigned short'
-| |-FieldDecl 0x1fba13c6570 <line:13:2, col:6> col:6 referenced i 'int'
-| |-FieldDecl 0x1fba13c65e0 <line:14:2, col:15> col:15 referenced ui 'unsigned int'
-| |-FieldDecl 0x1fba13c6650 <line:15:2, col:7> col:7 referenced b 'long'
-| |-FieldDecl 0x1fba13c66c0 <line:16:2, col:16> col:16 ul 'unsigned long'
-| |-FieldDecl 0x1fba13c6730 <line:17:2, col:12> col:12 referenced ll 'long long'
-| |-FieldDecl 0x1fba13c67a0 <line:18:2, col:21> col:21 referenced ull 'unsigned long long'
-| `-FieldDecl 0x1fba13c6850 <line:19:5, col:14> col:14 s2 'struct s':'struct s'
-|-VarDecl 0x1fba13c6908 <line:8:1, line:20:2> col:2 used vu 'union u':'union u'
-`-FunctionDecl 0x1fba13c69e0 <line:24:1, line:34:1> line:24:5 main 'int ()'
-  `-CompoundStmt 0x1fba13c70a8 <line:25:1, line:34:1>
-    |-BinaryOperator 0x1fba13c6af8 <line:26:2, col:11> 'unsigned long long' '='
-    | |-MemberExpr 0x1fba13c6aa0 <col:2, col:5> 'unsigned long long' lvalue .ull 0x1fba13c67a0
-    | | `-DeclRefExpr 0x1fba13c6a80 <col:2> 'union u':'union u' lvalue Var 0x1fba13c6908 'vu' 'union u':'union u'
-    | `-IntegerLiteral 0x1fba13c6ad0 <col:11> 'unsigned long long' 2273806215
-    |-BinaryOperator 0x1fba13c6ca0 <line:27:2, col:10> 'long long' '='
-    | |-MemberExpr 0x1fba13c6c30 <col:2, col:5> 'long long' lvalue .ll 0x1fba13c6730
-    | | `-DeclRefExpr 0x1fba13c6c10 <col:2> 'union u':'union u' lvalue Var 0x1fba13c6908 'vu' 'union u':'union u'
-    | `-ImplicitCastExpr 0x1fba13c6c88 <col:10> 'long long' <IntegralCast>
-    |   `-IntegerLiteral 0x1fba13c6c60 <col:10> 'unsigned long long' 2273806215
-    |-BinaryOperator 0x1fba13c6d50 <line:28:2, col:10> 'unsigned int' '='
-    | |-MemberExpr 0x1fba13c6ce0 <col:2, col:5> 'unsigned int' lvalue .ui 0x1fba13c65e0
-    | | `-DeclRefExpr 0x1fba13c6cc0 <col:2> 'union u':'union u' lvalue Var 0x1fba13c6908 'vu' 'union u':'union u'
-    | `-ImplicitCastExpr 0x1fba13c6d38 <col:10> 'unsigned int' <IntegralCast>
-    |   `-IntegerLiteral 0x1fba13c6d10 <col:10> 'unsigned long long' 2273806215
-    |-BinaryOperator 0x1fba13c6e00 <line:29:2, col:9> 'int' '='
-    | |-MemberExpr 0x1fba13c6d90 <col:2, col:5> 'int' lvalue .i 0x1fba13c6570
-    | | `-DeclRefExpr 0x1fba13c6d70 <col:2> 'union u':'union u' lvalue Var 0x1fba13c6908 'vu' 'union u':'union u'
-    | `-ImplicitCastExpr 0x1fba13c6de8 <col:9> 'int' <IntegralCast>
-    |   `-IntegerLiteral 0x1fba13c6dc0 <col:9> 'unsigned long long' 2273806215
-    |-BinaryOperator 0x1fba13c6eb0 <line:30:2, col:10> 'unsigned char' '='
-    | |-MemberExpr 0x1fba13c6e40 <col:2, col:5> 'unsigned char' lvalue .uc 0x1fba13c6420
-    | | `-DeclRefExpr 0x1fba13c6e20 <col:2> 'union u':'union u' lvalue Var 0x1fba13c6908 'vu' 'union u':'union u'
-    | `-ImplicitCastExpr 0x1fba13c6e98 <col:10> 'unsigned char' <IntegralCast>
-    |   `-IntegerLiteral 0x1fba13c6e70 <col:10> 'unsigned long long' 2273806215
-    |-BinaryOperator 0x1fba13c6f60 <line:31:2, col:9> 'char' '='
-    | |-MemberExpr 0x1fba13c6ef0 <col:2, col:5> 'char' lvalue .c 0x1fba13c63b0
-    | | `-DeclRefExpr 0x1fba13c6ed0 <col:2> 'union u':'union u' lvalue Var 0x1fba13c6908 'vu' 'union u':'union u'
-    | `-ImplicitCastExpr 0x1fba13c6f48 <col:9> 'char' <IntegralCast>
-    |   `-IntegerLiteral 0x1fba13c6f20 <col:9> 'unsigned long long' 2273806215
-    |-BinaryOperator 0x1fba13c7050 <line:32:5, col:18> 'int' '='
-    | |-MemberExpr 0x1fba13c6fa0 <col:5, col:8> 'int' lvalue .vInt 0x1fba1324118
-    | | `-DeclRefExpr 0x1fba13c6f80 <col:5> 'struct s':'struct s' lvalue Var 0x1fba13c6230 's1' 'struct s':'struct s'
-    | `-ImplicitCastExpr 0x1fba13c7038 <col:15, col:18> 'int' <IntegralCast>
-    |   `-ImplicitCastExpr 0x1fba13c7020 <col:15, col:18> 'long' <LValueToRValue>
-    |     `-MemberExpr 0x1fba13c6ff0 <col:15, col:18> 'long' lvalue .b 0x1fba13c6650
-    |       `-DeclRefExpr 0x1fba13c6fd0 <col:15> 'union u':'union u' lvalue Var 0x1fba13c6908 'vu' 'union u':'union u'
-    `-ReturnStmt 0x1fba13c7098 <line:33:2, col:9>
-      `-IntegerLiteral 0x1fba13c7070 <col:9> 'int' 0
-C:\Users\munarid\AppData\Local\Temp\temp-00fdcf.o : fatal error LNK1136: file danneggiato o non valido
+TranslationUnitDecl 0x1aabf6d2318 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1aabf6d2bb0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1aabf6d28b0 '__int128'
+|-TypedefDecl 0x1aabf6d2c20 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1aabf6d28d0 'unsigned __int128'
+|-TypedefDecl 0x1aabf6d2f28 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1aabf6d2d00 'struct __NSConstantString_tag'
+|   `-Record 0x1aabf6d2c78 '__NSConstantString_tag'
+|-TypedefDecl 0x1aabf6d2f98 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x1aabf6d24f0 'unsigned long long'
+|-TypedefDecl 0x1aabf6d3030 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1aabf6d2ff0 'char *'
+|   `-BuiltinType 0x1aabf6d23b0 'char'
+|-TypedefDecl 0x1aabf6d30a0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1aabf6d2ff0 'char *'
+|   `-BuiltinType 0x1aabf6d23b0 'char'
+|-RecordDecl 0x1aabf6d30f8 <temp.c:3:1, line:6:1> line:3:8 struct s definition
+| |-FieldDecl 0x1aabf6d31b8 <line:4:9, col:13> col:13 referenced vInt 'int'
+| `-FieldDecl 0x1aabf6d3228 <line:5:9, col:14> col:14 vLong 'long'
+|-VarDecl 0x1aabf84c290 <line:3:1, line:6:2> col:2 used s1 'struct s':'struct s'
+|-RecordDecl 0x1aabf84c358 <line:8:1, line:20:1> line:8:7 union u definition
+| |-FieldDecl 0x1aabf84c410 <line:9:5, col:10> col:10 referenced c 'char'
+| |-FieldDecl 0x1aabf84c480 <line:10:5, col:19> col:19 referenced uc 'unsigned char'
+| |-FieldDecl 0x1aabf84c4f0 <line:11:2, col:8> col:8 s 'short'
+| |-FieldDecl 0x1aabf84c560 <line:12:2, col:17> col:17 us 'unsigned short'
+| |-FieldDecl 0x1aabf84c5d0 <line:13:2, col:6> col:6 referenced i 'int'
+| |-FieldDecl 0x1aabf84c640 <line:14:2, col:15> col:15 referenced ui 'unsigned int'
+| |-FieldDecl 0x1aabf84c6b0 <line:15:2, col:7> col:7 referenced b 'long'
+| |-FieldDecl 0x1aabf84c720 <line:16:2, col:16> col:16 ul 'unsigned long'
+| |-FieldDecl 0x1aabf84c790 <line:17:2, col:12> col:12 referenced ll 'long long'
+| |-FieldDecl 0x1aabf84c800 <line:18:2, col:21> col:21 referenced ull 'unsigned long long'
+| `-FieldDecl 0x1aabf84c8b0 <line:19:5, col:14> col:14 s2 'struct s':'struct s'
+|-VarDecl 0x1aabf84c968 <line:8:1, line:20:2> col:2 used vu 'union u':'union u'
+`-FunctionDecl 0x1aabf84ca40 <line:24:1, line:34:1> line:24:5 main 'int ()'
+  `-CompoundStmt 0x1aabf84d108 <line:25:1, line:34:1>
+    |-BinaryOperator 0x1aabf84cb58 <line:26:2, col:11> 'unsigned long long' '='
+    | |-MemberExpr 0x1aabf84cb00 <col:2, col:5> 'unsigned long long' lvalue .ull 0x1aabf84c800
+    | | `-DeclRefExpr 0x1aabf84cae0 <col:2> 'union u':'union u' lvalue Var 0x1aabf84c968 'vu' 'union u':'union u'
+    | `-IntegerLiteral 0x1aabf84cb30 <col:11> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x1aabf84cd00 <line:27:2, col:10> 'long long' '='
+    | |-MemberExpr 0x1aabf84cc90 <col:2, col:5> 'long long' lvalue .ll 0x1aabf84c790
+    | | `-DeclRefExpr 0x1aabf84cc70 <col:2> 'union u':'union u' lvalue Var 0x1aabf84c968 'vu' 'union u':'union u'
+    | `-ImplicitCastExpr 0x1aabf84cce8 <col:10> 'long long' <IntegralCast>
+    |   `-IntegerLiteral 0x1aabf84ccc0 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x1aabf84cdb0 <line:28:2, col:10> 'unsigned int' '='
+    | |-MemberExpr 0x1aabf84cd40 <col:2, col:5> 'unsigned int' lvalue .ui 0x1aabf84c640
+    | | `-DeclRefExpr 0x1aabf84cd20 <col:2> 'union u':'union u' lvalue Var 0x1aabf84c968 'vu' 'union u':'union u'
+    | `-ImplicitCastExpr 0x1aabf84cd98 <col:10> 'unsigned int' <IntegralCast>
+    |   `-IntegerLiteral 0x1aabf84cd70 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x1aabf84ce60 <line:29:2, col:9> 'int' '='
+    | |-MemberExpr 0x1aabf84cdf0 <col:2, col:5> 'int' lvalue .i 0x1aabf84c5d0
+    | | `-DeclRefExpr 0x1aabf84cdd0 <col:2> 'union u':'union u' lvalue Var 0x1aabf84c968 'vu' 'union u':'union u'
+    | `-ImplicitCastExpr 0x1aabf84ce48 <col:9> 'int' <IntegralCast>
+    |   `-IntegerLiteral 0x1aabf84ce20 <col:9> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x1aabf84cf10 <line:30:2, col:10> 'unsigned char' '='
+    | |-MemberExpr 0x1aabf84cea0 <col:2, col:5> 'unsigned char' lvalue .uc 0x1aabf84c480
+    | | `-DeclRefExpr 0x1aabf84ce80 <col:2> 'union u':'union u' lvalue Var 0x1aabf84c968 'vu' 'union u':'union u'
+    | `-ImplicitCastExpr 0x1aabf84cef8 <col:10> 'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x1aabf84ced0 <col:10> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x1aabf84cfc0 <line:31:2, col:9> 'char' '='
+    | |-MemberExpr 0x1aabf84cf50 <col:2, col:5> 'char' lvalue .c 0x1aabf84c410
+    | | `-DeclRefExpr 0x1aabf84cf30 <col:2> 'union u':'union u' lvalue Var 0x1aabf84c968 'vu' 'union u':'union u'
+    | `-ImplicitCastExpr 0x1aabf84cfa8 <col:9> 'char' <IntegralCast>
+    |   `-IntegerLiteral 0x1aabf84cf80 <col:9> 'unsigned long long' 2273806215
+    |-BinaryOperator 0x1aabf84d0b0 <line:32:5, col:18> 'int' '='
+    | |-MemberExpr 0x1aabf84d000 <col:5, col:8> 'int' lvalue .vInt 0x1aabf6d31b8
+    | | `-DeclRefExpr 0x1aabf84cfe0 <col:5> 'struct s':'struct s' lvalue Var 0x1aabf84c290 's1' 'struct s':'struct s'
+    | `-ImplicitCastExpr 0x1aabf84d098 <col:15, col:18> 'int' <IntegralCast>
+    |   `-ImplicitCastExpr 0x1aabf84d080 <col:15, col:18> 'long' <LValueToRValue>
+    |     `-MemberExpr 0x1aabf84d050 <col:15, col:18> 'long' lvalue .b 0x1aabf84c6b0
+    |       `-DeclRefExpr 0x1aabf84d030 <col:15> 'union u':'union u' lvalue Var 0x1aabf84c968 'vu' 'union u':'union u'
+    `-ReturnStmt 0x1aabf84d0f8 <line:33:2, col:9>
+      `-IntegerLiteral 0x1aabf84d0d0 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-3d2abb.o : fatal error LNK1136: file danneggiato o non valido

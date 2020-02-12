@@ -73,7 +73,7 @@ std::regex eSourceRef(
     /*G  */ "(?:,\\s)?"
     /*H 3*/ "(col:\\d+|"
     /*   */ "line:\\d+:\\d+|"
-    /*   */ "\\w+\\.\\w+:\\d+:\\d+)?"
+    /*   */ "\\w[\\w\\d]*\\.\\w[\\w\\d]*:\\d+:\\d+)?"
     /*I  */ ">\\s"
     /*J 4*/ "(col:\\d+|"
     /*   */ "line:\\d+:\\d+|"
@@ -140,10 +140,10 @@ std::regex eDeclRefExpr(
 );                         /* 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)'    */
 
 std::regex eImplicitCastExpr(
-    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s<([^>]*)>)###");
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')?\s<([^>]*)>)###");
 
 std::regex eBinaryOperator(
-    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s'([^']+)')###");
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')?\s'([^']+)')###");
 
 std::regex eUnaryOperator(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
@@ -167,15 +167,21 @@ std::regex eStructTypeAnonymous(
 );
 
 std::regex eUnionTypeAnonymous(
-    "\\(anonymous\\sunion\\sat\\s"  /*(anonymous struct at */
+    "\\(anonymous\\sunion\\sat\\s"  /*(anonymous union at */
     "([^\\)]+)"                     /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
     "\\)"                           /*)*/
 );
 
 std::regex eStructTypeAnonymous2(
-    "struct\\s\\(anonymous\\sat\\s"   /*struct (anonymous struct at */
-    "([^\\)]+)"                         /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
-    "\\)"                               /*)*/
+    "struct\\s\\(anonymous\\sat\\s" /*struct (anonymous at */
+    "([^\\)]+)"                     /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
+    "\\)"                           /*)*/
+);
+
+std::regex eUnionTypeAnonymous2(
+    "union\\s\\(anonymous\\sat\\s"  /*union (anonymous at */
+    "([^\\)]+)"                     /*temp.c:4:5*/ /*Source point is always complete with file, line and col info*/
+    "\\)"                           /*)*/
 );
 
 std::regex eStructDefinition(
@@ -195,8 +201,7 @@ std::regex eFieldDeclaration(
     "\\s"                            /*                  */
     "(?:col:\\d+|line:\\d+:\\d+)"    /*col:5             */
     "(\\sreferenced)?"               /* referenced       */
-    "\\s"                            /*                  */
-    "(\\w+)"                         /*                  */
+    "(?:\\s(\\w+))?"                 /* Filed name       */
     "\\s"                            /*                  */
     "'([^']+)'"                      /*'struct (anonymous at temp.c:6:5)'                  */
 );
@@ -222,27 +227,28 @@ std::regex eFieldDeclarationImplicit(
 
 
 /*
-    | |-MemberExpr 0x26114378700 <col:5, col:8> 'int':'int' lvalue .a 0x26114378368
-A-------B---------CD------------EF-------------GH----IJ----KL-----MNOPQ------------
+    | |-MemberExpr 0x26114378700 <col:5, col:8> 'int':'int' lvalue bitfield .a 0x26114378368
+A-------B---------CD------------EF-------------GH----IJ----KL-----MN--------OPQR------------
 */
 std::regex eMemberExpr(
-    "[^\\w<]*"          /* A Tree lines, connectors between lines inthe ast files           */ \
-    "MemberExpr"        /* B Match excatly what you see                                     */ \
-    "\\s"               /* C A space                                                        */ \
-    "0x[\\da-f]{6,11}"  /* D The hex identifier of the ast node 0x123456                    */ \
-    "\\s"               /* E A space                                                        */ \
-    "<[^>]*>"           /* F Source location that is included in angular brackets <>        */ \
-    "\\s"               /* G A space                                                        */ \
-    "'([^']+)'"         /* H Type which this node return 'int'                              */ \
-    ":?"                /* I A colon (for user types) 'mytype':'mytype'                     */ \
-    "(?:'(?:[^']+)')?"  /* J The second 'mytype', see above                                 */ \
-    "\\s"               /* K A space                                                        */ \
-    "lvalue"            /* L matches exactly "lvalue"                                       */ \
-    "\\s"               /* M A space                                                        */ \
-    "(?:\\.|->)"        /* N mathes . or -> for members or pointers to members              */ \
-    "([\\w\\d]+)"       /* O The member name which can have numbers after the first char    */ \
-    "\\s"               /* P A space                                                        */ \
-    "0x[\\da-f]{6,11}"  /* Q The hex identifier of the ast member node 0x123456             */ \
+    "[^\\w<]*"          /* A   Tree lines, connectors between lines inthe ast files           */
+    "MemberExpr"        /* B   Match excatly what you see                                     */
+    "\\s"               /* C   A space                                                        */
+    "0x[\\da-f]{6,11}"  /* D   The hex identifier of the ast node 0x123456                    */
+    "\\s"               /* E   A space                                                        */
+    "<[^>]*>"           /* F   Source location that is included in angular brackets <>        */
+    "\\s"               /* G   A space                                                        */
+    "'([^']+)'"         /* H 1 Type which this node return 'int'                              */
+    ":?"                /* I   A colon (for user types) 'mytype':'mytype'                     */
+    "(?:'(?:[^']+)')?"  /* J   The second 'mytype', see above                                 */
+    "\\s"               /* K   A space                                                        */
+    "lvalue"            /* L   matches exactly "lvalue"                                       */
+    "\\s"               /* M   A space                                                        */
+    "(bitfield\\s)?"    /* N 2 bitfield                                                       */
+    "(?:\\.|->)"        /* O   matches . or -> for members or pointers to members             */
+    "([\\w\\d]+)"       /* P 3 The member name which can have numbers after the first char    */
+    "\\s"               /* Q   A space                                                        */
+    "0x[\\da-f]{6,11}"  /* R   The hex identifier of the ast member node 0x123456             */
 );
 
 /*

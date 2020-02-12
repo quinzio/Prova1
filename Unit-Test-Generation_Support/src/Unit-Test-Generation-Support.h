@@ -7,6 +7,7 @@
 #include "Unit-Test-Generation-Support.h"
 
 int inner_main(int argc, std::string argv[]);
+void createBuiltInTypes(void);
 unsigned long long valueCast(std::string str, unsigned long long v);
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*));
 void nullifyPointer(Variable* v, Variable* ref);
@@ -39,3 +40,4 @@ Variable fFunctionDecl(Node* node);
 Variable fDeclStmt(Node* node);
 Variable fNULL(Node* node);
 Variable fFullComment(Node* node);
+Variable fConstantExpr(Node* node);

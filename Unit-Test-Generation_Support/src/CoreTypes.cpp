@@ -17,6 +17,11 @@ void findCoreType(struct coreType_str& str, bool init)
     std::string outCore;
     if (init)
     {    
+        /*
+        Strip qualifiers as volatile, const, extern ?
+        */
+        std::regex_search(str.coreType, smFinalType, std::regex("(volatile|const)?(.*)"));
+        str.coreType = smFinalType[2];
         /* 
         Must strip the final type which can be
         void (only with pointer ?)
@@ -50,7 +55,8 @@ void findCoreType(struct coreType_str& str, bool init)
         To try to guess the balanced parenthesis, the following algorithm is implemented:
         1. Search for the first '(', this is the opening parenthesis
         2. Advance until the first ')', mark this as closing par.
-        3. Continue scanning until another '(', mark every ')' as closing
+        3. Continue scanning until another '(', mark every ')' as closing, 
+            replacing the previous ')'.
         4. Repeat to find the matching '()' for the function calls parameters.
         */
         auto c = str.core.begin();

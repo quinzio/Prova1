@@ -142,11 +142,23 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
         Visit the AST
     */
     Variable t;
+    createBuiltInTypes();
     if (myRoot.child) 
         t = visit(myRoot.child);
      infile.close();
      Variable::outputFile.close();
     return 0;
+}
+void createBuiltInTypes(void)
+{
+    Variable temp;
+    for (auto it = szTypes.begin(); it != szTypes.end(); it++) {
+        temp.name = it->first;
+        temp.type = it->first;
+        temp.uData.uSize = BbSize(it->second, 0);
+        temp.typeEnum = Variable::typeEnum_t::isValue;
+        vTypeDef.push_back(temp);
+    }
 }
 Variable visit(Node *node)
 {
@@ -159,71 +171,57 @@ Variable visit(Node *node)
     if (node->astType.compare("TypedefDecl") == 0) {
         return fTypedefDecl(node);
     }
-
     if (node->astType.compare("DeclRefExpr") == 0) {
         return fDeclRefExpr(node);
     }
-
     if (node->astType.compare("ImplicitCastExpr") == 0) {
         return fImplicitCastExpr(node);
     }
-
     if (node->astType.compare("UnaryOperator") == 0) {
         return fUnaryOperator(node);
     }
-
     if (node->astType.compare("BinaryOperator") == 0) {
         return fBinaryOperator(node);
     }
-
     if (node->astType.compare("RecordDecl") == 0) {
         return fRecordDecl(node);
     }
-
     if (node->astType.compare("FieldDecl") == 0) {
         return fFieldDecl(node);
     }
-
     if (node->astType.compare("IndirectFieldDecl") == 0) {
         return fIndirectFieldDecl(node);
     }
-
     if (node->astType.compare("MemberExpr") == 0) {
         return fMemberExpr(node);
     }
-
     if (node->astType.compare("IfStmt") == 0) {
         return fIfStmt(node);
     }
-
     if (node->astType.compare("ForStmt") == 0) {
         return fForStmt(node);
     }
-
     if (node->astType.compare("CompoundStmt") == 0) {
         return fCompoundStmt(node);
     }
-
     if (node->astType.compare("TranslationUnitDecl") == 0) {
         return fTranslationUnitDecl(node);
     }
-
     if (node->astType.compare("ArraySubscriptExpr") == 0) {
         return fArraySubscriptExpr(node);
     }
-
     if (node->astType.compare("FunctionDecl") == 0) {
         return fFunctionDecl(node);
     }
-    
     if (node->astType.compare("DeclStmt") == 0) {
         return fDeclStmt(node);
     }
-
     if (node->astType.compare("FullComment") == 0) {
         return fFullComment(node);
     }
-
+    if (node->astType.compare("ConstantExpr") == 0) {
+        return fConstantExpr(node);
+    }
     if (node->astType.compare("<<<NULL") == 0) {
         return fNULL(node);
     }
@@ -325,6 +323,29 @@ unsigned long long valueCast(std::string str, unsigned long long v)
     else if (str.compare("long double") == 0) {
         return (double)v;
     }
+    /* At this point we have encountered a typedef cast 
+    like a = 1; where a is a u8 a and u8 is a typedef. 
+    So we search the typedef, and we get the type. 
+    the "final" type should be a builtin or a pointer.
+    Otherwise there shoukld be an explicit cast and that is handled otherwise.*/
+
+    struct coreType_str coreTypes;
+    coreTypes.coreType = str;
+    findCoreType(coreTypes);
+    /* Shouldn't be a pointer !!!
+    So take only the final type */
+    str = coreTypes.finalType;
+    Variable temp;
+    for (auto it = vTypeDef.begin(); it != vTypeDef.end(); it++) {
+        if (it->name.compare(str) == 0) {
+            temp = *it;
+            break;
+        }
+    }
+    // Try to cast again
+    return valueCast(temp.type, v);
+
+
 
     throw std::exception("cast: Exception encountered\n");
 }
@@ -337,6 +358,130 @@ void signExtend(Variable* v) {
     else if (szTypes[v->type] == 2) {
         val & 0x8000 ? 0xFFFFFFFF & val : val;
     }
+}
+Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
+    bool found;
+    std::smatch smTemp;
+    std::smatch smStructTypeAnonymous;
+    std::smatch smUnionTypeAnonymous;
+    Variable temp;
+
+    found = false;
+    if (std::regex_search(CoreTypes.finalType, smTemp, std::regex("^struct\\s(.*)"))) {
+        // Must take care of anonymous structs
+        std::string typeName = smTemp[1];
+        if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
+        {
+            typeName = smStructTypeAnonymous[1];
+        }
+        for (auto t : vStruct) {
+            if (t.name.compare(typeName) == 0) {
+                temp = t;
+                found = true;
+            }
+        }
+    }
+    else if (std::regex_search(CoreTypes.finalType, smTemp, std::regex("^union\\s(.*)"))) {
+        // Must take care of anonymous unions ?
+        std::string typeName = smTemp[1];
+        if (std::regex_search(typeName, smUnionTypeAnonymous, eUnionTypeAnonymous))
+        {
+            typeName = smStructTypeAnonymous[1];
+        }
+        for (auto t : vUnion) {
+            if (t.name.compare(typeName) == 0) {
+                temp = t;
+                found = true;
+            }
+        }
+    }
+    else if (std::regex_search(CoreTypes.finalType, smTemp, eBuiltinTypes)) {
+        temp.type = CoreTypes.finalType;
+        temp.typeEnum = Variable::typeEnum_t::isValue;
+        temp.uData.uSize = szTypes[temp.type];
+        found = true;
+    }
+    else {
+        // Search into typedefs
+        for (auto t : vTypeDef) {
+            if (t.name.compare(CoreTypes.finalType) == 0) {
+                temp = t;
+                found = true;
+            }
+        }
+    }
+    if (found == false) {
+        /* Try to find the typedef with the hexID in the (anon structs) */
+        /* To understand the following just look at how a typedef
+        ast node is made. It must refer to other typedefs.
+        */
+        node = node->child;
+        while (node) {
+            std::smatch smTemp;
+            if (std::regex_search(node->text, smTemp, std::regex(
+                "[^\\w<]*"                       /*| |-              */
+                "Record"                         /*Record            */
+                "\\s"                            /*                  */
+                "(0x[\\da-f]{6,11})"             /*0x247143d8308     */
+            ))) {
+                for (auto t : vStruct) {
+                    if (t.hexID.compare(smTemp[1]) == 0) {
+                        temp = t;
+                        found = true;
+                    }
+                }
+                if (found == false) {
+                    for (auto t : vUnion) {
+                        if (t.hexID.compare(smTemp[1]) == 0) {
+                            temp = t;
+                            found = true;
+                        }
+                    }
+                }
+            }
+            while (node->nextSib) {
+
+                node = node->nextSib;
+            }
+            node = node->child;
+        }
+    }
+    if (found == false) {
+        throw std::exception("VarDecl: cannot find final type.");
+    }
+
+
+    int i;
+    for (i = 0; i < CoreTypes.typeChainA.size(); i++) {
+        if (CoreTypes.typeChainA.at(i).compare("*") == 0) {
+            // It's omogeneous with the scan that end at i = CoreTypes.typeChainA.size()
+            i++;
+            break; // On the first pointer
+        }
+    }
+    i--;
+    for (; i >= 0; i--) {
+        Variable vIt;
+        if (std::regex_search(CoreTypes.typeChainA.at(i), smTemp, std::regex("\\[(\\d+)\\]"))) {
+            /* An array */
+            for (int ix = 0; ix < std::stoi(smTemp[1]); ix++) {
+                vIt.typeEnum = Variable::typeEnum_t::isArray;
+                vIt.array.push_back(temp);
+            }
+            vIt.uData.uSize = temp.uData.uSize * std::stoi(smTemp[1]);
+            temp = vIt;
+        }
+        else if (std::regex_search(CoreTypes.typeChainA.at(i), smTemp, std::regex("\\*"))) {
+            /* A pointer
+               so the final type will be this pointer and not the previously found
+               finalType. Reinitialize temp */
+            temp = Variable();
+            temp.typeEnum = Variable::typeEnum_t::isRef;
+            temp.uData.uSize = { 4, 0 }; // !!!!! Is the size of pointer 4 ?
+            temp.value = 0;
+        }
+    }
+    return temp;
 }
 
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*)) {
@@ -358,19 +503,19 @@ BbSize setVariableOffset(Variable* v, BbSize vOffset) {
     v->uData.myParent = myP;
     if (v->typeEnum == Variable::typeEnum_t::isArray) {
         for (auto it = v->array.begin(); it != v->array.end(); it++) {
-            it->uData.uOffset = vOffset;
-            vOffset = vOffset + setVariableOffset(&*it, vOffset);
+            (&*it)->uData.uOffset = vOffset;
+            vOffset = setVariableOffset(&*it, vOffset);
         }
     }
     else if (v->typeEnum == Variable::typeEnum_t::isStruct) {
         for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
-            it->uData.uOffset = vOffset;
-            vOffset = vOffset + setVariableOffset(&*it, vOffset);
+            (&*it)->uData.uOffset = vOffset;
+            vOffset = setVariableOffset(&*it, vOffset);
         }
     }
     else if (v->typeEnum == Variable::typeEnum_t::isUnion) {
         for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
-            it->uData.uOffset = vOffset;
+            (&*it)->uData.uOffset = vOffset;
             setVariableOffset(&*it, vOffset);
         }
     }
@@ -496,7 +641,7 @@ Variable fVarDecl(Node* node) {
       We allocate new Variables only to the first pointer. The correctness of the code
       has already been checked by the compiler. */
 
-    temp = buildVariable(CoreTypes);
+    temp = buildVariable(CoreTypes, node);
     temp.name = smVarDecl[1];
     temp.type = rawType;
     temp.used = true;
@@ -564,7 +709,7 @@ Variable fVarDecl(Node* node) {
     vback->myAddressDebug = vback;
     myP = vback;
     setVariableOffset(vback);
-    return temp;
+    return *vback;
 }
 Variable fIntegerLiteral(Node* node) {
     unsigned long long integral;
@@ -787,17 +932,19 @@ Variable fBinaryOperator(Node* node) {
     return ret;
 }
 Variable fFieldDecl(Node* node) {
-
     Variable vField;
     std::smatch smFieldDeclaration;
     std::smatch smFieldDeclarationImplicit;
     std::smatch smStructTypeAnonymous;
     std::smatch smStructTypeAnonymous2;
+    std::smatch smUnionTypeAnonymous;
+    std::smatch smUnionTypeAnonymous2;
     std::smatch smStructType;
     std::string rawType;
     std::string name;
     std::string referenced;
-    std::string refinedType = "";
+    struct coreType_str coreTypes;
+    bool found;
     if (std::regex_search(node->text, smFieldDeclarationImplicit, eFieldDeclarationImplicit)) {
         // Capture 1: "referenced" (or void)
         // Capture 2: type (will be anonymous)
@@ -813,42 +960,35 @@ Variable fFieldDecl(Node* node) {
         rawType = smFieldDeclaration[3];
     }
     if (std::regex_search(rawType, smStructTypeAnonymous, eStructTypeAnonymous)) {
-        refinedType = smStructTypeAnonymous[1];
+        rawType = "struct " + smStructTypeAnonymous[1].str();
     }
     else if (std::regex_search(rawType, smStructTypeAnonymous2, eStructTypeAnonymous2)) {
-        refinedType = smStructTypeAnonymous2[1];
+        rawType = "struct " + smStructTypeAnonymous2[1].str();
     }
-    else if (std::regex_search(rawType, smStructType, eStructType)) {
-        refinedType = smStructType[1];
+    else if (std::regex_search(rawType, smUnionTypeAnonymous, eUnionTypeAnonymous)) {
+        rawType = "union " + smUnionTypeAnonymous[1].str();
     }
-    if (refinedType.length() > 0)
-    {
-        // Field is a nested struct
-        for (Variable v : vStruct) {
-            if (refinedType.compare(v.name) == 0) {
-                vField = v;
-                break;
-            }
-        }
+    else if (std::regex_search(rawType, smUnionTypeAnonymous2, eUnionTypeAnonymous2)) {
+        rawType = "union " + smUnionTypeAnonymous2[1].str();
     }
-    else {
-        vField.typeEnum = Variable::typeEnum_t::isValue;
-        vField.type = rawType;
-        /* It's a bitfield ? If it's a bit field there will be a 
-        ConstExpr child who has an IntegralLiterl as child.
-        */
-        if (node->child) {
-            Variable v = visit(node->child);
-            vField.uData.uSize = BbSize(0, v.isValue);
-        } else {
-            vField.uData.uSize = szTypes[rawType];
-        }
-    }
+    coreTypes.coreType = rawType;
+    findCoreType(coreTypes);
+    vField = buildVariable(coreTypes);
     vField.name = name;
     // Note the blank space in " referenced"
     if (smFieldDeclaration[1].compare(" referenced") == 0) {
         vField.used = true;
     }
+    /* Search for bitfields. In case of bitfields the length will be that specified 
+    by the bitfields.
+    */
+    if (node->child) {
+        Variable bitField;
+        bitField = visit(node->child);
+        vField.uData.uSize = BbSize(0, bitField.value);
+    }
+
+
     return vField;
 }
 Variable fRecordDecl(Node* node) {
@@ -916,7 +1056,7 @@ Variable fMemberExpr(Node* node) {
     std::string memberName;
     std::smatch smMemberExpr;
     std::regex_search(node->text, smMemberExpr, eMemberExpr);
-    memberName = smMemberExpr[2];
+    memberName = smMemberExpr[3];
     v = visit(node->child);
     if (v.pointsTo->typeEnum == Variable::typeEnum_t::isStruct ||
         v.pointsTo->typeEnum == Variable::typeEnum_t::isUnion) {
@@ -1023,119 +1163,9 @@ Variable fNULL(Node* node) {
 Variable fFullComment(Node* node) {
     return Variable();
 }
-Variable buildVariable(struct coreType_str& CoreTypes, Node *node) {
-    bool found;
-    std::smatch smTemp;
-    std::smatch smStructTypeAnonymous;
-    std::smatch smUnionTypeAnonymous;
-    Variable temp;
-
-    found = false;
-    if (std::regex_search(CoreTypes.finalType, smTemp, std::regex("^struct\\s(.*)"))) {
-        // Must take care of anonymous structs
-        std::string typeName = smTemp[1];
-        if (std::regex_search(typeName, smStructTypeAnonymous, eStructTypeAnonymous))
-        {
-            typeName = smStructTypeAnonymous[1];
-        }
-        for (auto t : vStruct) {
-            if (t.name.compare(typeName) == 0) {
-                temp = t;
-                found = true;
-            }
-        }
-    }
-    else if (std::regex_search(CoreTypes.finalType, smTemp, std::regex("^union\\s(.*)"))) {
-        // Must take care of anonymous unions ?
-        std::string typeName = smTemp[1];
-        if (std::regex_search(typeName, smUnionTypeAnonymous, eUnionTypeAnonymous))
-        {
-            typeName = smStructTypeAnonymous[1];
-        }
-        for (auto t : vUnion) {
-            if (t.name.compare(typeName) == 0) {
-                temp = t;
-                found = true;
-            }
-        }
-    }
-    else if (std::regex_search(CoreTypes.finalType, smTemp, eBuiltinTypes)) {
-        temp.type = CoreTypes.finalType;
-        temp.typeEnum = Variable::typeEnum_t::isValue;
-        temp.uData.uSize = szTypes[temp.type];
-        found = true;
-    }
-    else {
-        // Search into typedefs
-        for (auto t : vTypeDef) {
-            if (t.name.compare(CoreTypes.finalType) == 0) {
-                temp = t;
-                found = true;
-            }
-        }
-    }
-    if (found == false) {
-        /* Try to find the typedef with the hexID in the (anon structs) */
-        /* To understand the following just look at how a typedef
-        ast node is made. It must refer to other typedefs.
-        */
-        node = node->child;
-        while (node) {
-            std::smatch smTemp;
-            if (std::regex_search(node->text, smTemp, std::regex(
-                "[^\\w<]*"                       /*| |-              */
-                "Record"                         /*Record            */
-                "\\s"                            /*                  */
-                "(0x[\\da-f]{6,11})"             /*0x247143d8308     */
-            ))) {
-                for (auto t : vStruct) {
-                    if (t.hexID.compare(smTemp[1]) == 0) {
-                        temp = t;
-                        found = true;
-                    }
-                }
-            }
-            while (node->nextSib) {
-
-                node = node->nextSib;
-            }
-            node = node->child;
-        }
-    }
-    if (found == false) {
-            throw std::exception("VarDecl: cannot find final type.");
-    }
-
-
-    int i;
-    for (i = 0; i < CoreTypes.typeChainA.size(); i++) {
-        if (CoreTypes.typeChainA.at(i).compare("*") == 0) {
-            // It's omogeneous with the scan that end at i = CoreTypes.typeChainA.size()
-            i++;
-            break; // On the first pointer
-        }
-    }
-    i--;
-    for (; i >= 0; i--) {
-        Variable vIt;
-        if (std::regex_search(CoreTypes.typeChainA.at(i), smTemp, std::regex("\\[(\\d+)\\]"))) {
-            /* An array */
-            for (int ix = 0; ix < std::stoi(smTemp[1]); ix++) {
-                vIt.typeEnum = Variable::typeEnum_t::isArray;
-                vIt.array.push_back(temp);
-            }
-            vIt.uData.uSize = temp.uData.uSize * std::stoi(smTemp[1]);
-            temp = vIt;
-        }
-        else if (std::regex_search(CoreTypes.typeChainA.at(i), smTemp, std::regex("\\*"))) {
-            /* A pointer
-               so the final type will be this pointer and not the previously found
-               finalType. Reinitialize temp */
-            temp = Variable();
-            temp.typeEnum = Variable::typeEnum_t::isRef;
-            temp.uData.uSize = {4, 0}; // !!!!! Is the size of pointer 4 ?
-            temp.value = 0;
-        }
-    }
-    return temp;
+Variable fConstantExpr(Node* node) {
+    /* As simple as that */
+    return visit(node->child);
 }
+
+

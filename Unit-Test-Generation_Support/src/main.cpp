@@ -8,20 +8,23 @@ int main(int argc, char* argv[]) {
 	std::string testFolder;
 	try
 	{
-		//testCompare("ex01");
-		//testCompare("ex02");
-		//testCompare("ex03");
-		//testCompare("ex04");
-		//testCompare("ex05");
-		//testCompare("ex06");
-		//testCompare("ex07");
-		//testCompare("ex08");
-		//testCompare("ex09");
-		//testCompare("ex10");
-		//testCompare("ex11");
-		//testCompare("ex12");
-		//testCompare("ex13");
-		testCompare("ex14");
+		//testCompare("ex01");	getchar();
+		//testCompare("ex02");	getchar();
+		//testCompare("ex03");	getchar();
+		//testCompare("ex04");	getchar();
+		//testCompare("ex05");	getchar();
+		//testCompare("ex06");	getchar();
+		//testCompare("ex07");	getchar();
+		//testCompare("ex08");	getchar();
+		//testCompare("ex09");	getchar();
+		//testCompare("ex10");	getchar();
+		//testCompare("ex11");	getchar();
+		//testCompare("ex12");	getchar();
+		//testCompare("ex13");	getchar();
+		//testCompare("ex14");	getchar();
+		//testCompare("ex15");	getchar();
+		//testCompare("ex16");	getchar();
+		testCompare("final");	getchar();
 
 	}
 	catch (const std::exception& e)

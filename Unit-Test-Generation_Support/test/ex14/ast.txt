@@ -1,191 +1,64 @@
-TranslationUnitDecl 0x2c712304278 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x2c712304b10 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x2c712304810 '__int128'
-|-TypedefDecl 0x2c712304b80 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x2c712304830 'unsigned __int128'
-|-TypedefDecl 0x2c712304ea8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x2c712304c60 'struct __NSConstantString_tag'
-|   `-Record 0x2c712304bd8 '__NSConstantString_tag'
-|-TypedefDecl 0x2c712304f18 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x2c712304450 'unsigned long long'
-|-TypedefDecl 0x2c712304fb0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x2c712304f70 'char *'
-|   `-BuiltinType 0x2c712304310 'char'
-|-TypedefDecl 0x2c712305020 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x2c712304f70 'char *'
-|   `-BuiltinType 0x2c712304310 'char'
-|-TypedefDecl 0x2c712305090 <temp.c:4:1, col:22> col:22 referenced word 'unsigned int'
-| `-BuiltinType 0x2c712304410 'unsigned int'
-|-TypedefDecl 0x2c712305100 <line:5:1, col:23> col:23 referenced byte 'unsigned char'
-| `-BuiltinType 0x2c7123043d0 'unsigned char'
-|-RecordDecl 0x2c712305188 <line:8:9, line:109:1> line:8:9 union definition
-| |-FullComment 0x2c7125aba68 <line:7:4, col:50>
-| | `-ParagraphComment 0x2c7125aba40 <col:4, col:50>
-| |   `-TextComment 0x2c7125aba18 <col:4, col:50> Text="* PT01AD - Port AD Data Register; 0x00000270 **"
-| |-FieldDecl 0x2c7125a9d00 <line:9:5, col:10> col:10 Word 'word':'unsigned int'
-| |-RecordDecl 0x2c7125a9d58 <line:11:5, line:81:5> line:11:5 struct definition
-| | |-RecordDecl 0x2c7125a9e30 <line:13:9, line:32:9> line:13:9 union definition
-| | | |-FullComment 0x2c7125abb18 <line:12:12, col:58>
-| | | | `-ParagraphComment 0x2c7125abaf0 <col:12, col:58>
-| | | |   `-TextComment 0x2c7125abac8 <col:12, col:58> Text="* PT0AD - Port ADH Data Register; 0x00000270 **"
-| | | |-FieldDecl 0x2c7125a9f00 <line:14:13, col:18> col:18 Byte 'byte':'unsigned char'
-| | | |-RecordDecl 0x2c7125a9f58 <line:15:13, line:24:13> line:15:13 struct definition
-| | | | |-FieldDecl 0x2c7125aa050 <line:16:17, col:31> col:22 PT0AD0 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa038 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa000 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa0f8 <line:17:17, col:31> col:22 PT0AD1 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa0e0 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa0a8 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa1a0 <line:18:17, col:31> col:22 PT0AD2 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa188 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa150 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa248 <line:19:17, col:31> col:22 PT0AD3 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa230 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa1f8 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa2f0 <line:20:17, col:24> col:17 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa2d8 <col:24> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa2a0 <col:24> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa398 <line:21:17, col:24> col:17 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa380 <col:24> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa348 <col:24> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa440 <line:22:17, col:24> col:17 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa428 <col:24> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa3f0 <col:24> 'int' 1
-| | | | `-FieldDecl 0x2c7125aa4e8 <line:23:17, col:24> col:17 'byte':'unsigned char'
-| | | |   `-ConstantExpr 0x2c7125aa4d0 <col:24> 'int'
-| | | |     `-IntegerLiteral 0x2c7125aa498 <col:24> 'int' 1
-| | | |-FieldDecl 0x2c7125aa598 <line:15:13, line:24:15> col:15 Bits 'struct (anonymous struct at temp.c:15:13)':'struct PT01ADSTR::(anonymous at temp.c:15:13)'
-| | | |-RecordDecl 0x2c7125aa5f0 <line:25:13, line:31:13> line:25:13 struct definition
-| | | | |-FieldDecl 0x2c7125aa6e0 <line:26:17, col:33> col:22 grpPT0AD 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa6c8 <col:33> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa690 <col:33> 'int' 4
-| | | | |-FieldDecl 0x2c7125aa788 <line:27:17, col:24> col:17 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa770 <col:24> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa738 <col:24> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa830 <line:28:17, col:24> col:17 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa818 <col:24> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa7e0 <col:24> 'int' 1
-| | | | |-FieldDecl 0x2c7125aa8d8 <line:29:17, col:24> col:17 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aa8c0 <col:24> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aa888 <col:24> 'int' 1
-| | | | `-FieldDecl 0x2c7125aa980 <line:30:17, col:24> col:17 'byte':'unsigned char'
-| | | |   `-ConstantExpr 0x2c7125aa968 <col:24> 'int'
-| | | |     `-IntegerLiteral 0x2c7125aa930 <col:24> 'int' 1
-| | | `-FieldDecl 0x2c7125aaa38 <line:25:13, line:31:15> col:15 MergedBits 'struct (anonymous struct at temp.c:25:13)':'struct PT01ADSTR::(anonymous at temp.c:25:13)'
-| | |-FieldDecl 0x2c7125aaae8 <line:13:9, line:32:11> col:11 PT0ADSTR 'union (anonymous union at temp.c:13:9)':'union PT01ADSTR::(anonymous at temp.c:13:9)'
-| | |-RecordDecl 0x2c7125aab70 <line:49:9, line:61:9> line:49:9 union definition
-| | | |-FullComment 0x2c7125abbc8 <line:48:12, col:58>
-| | | | `-ParagraphComment 0x2c7125abba0 <col:12, col:58>
-| | | |   `-TextComment 0x2c7125abb78 <col:12, col:58> Text="* PT1AD - Port ADL Data Register; 0x00000271 **"
-| | | |-FieldDecl 0x2c7125aac20 <line:50:13, col:18> col:18 Byte 'byte':'unsigned char'
-| | | |-RecordDecl 0x2c7125aac78 <line:51:13, line:60:13> line:51:13 struct definition
-| | | | |-FieldDecl 0x2c7125aedc0 <line:52:17, col:31> col:22 PT1AD0 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aeda8 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aed70 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125aee68 <line:53:17, col:31> col:22 PT1AD1 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aee50 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aee18 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125aef10 <line:54:17, col:31> col:22 PT1AD2 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aeef8 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aeec0 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125aefb8 <line:55:17, col:31> col:22 PT1AD3 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125aefa0 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125aef68 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125af060 <line:56:17, col:31> col:22 PT1AD4 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125af048 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125af010 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125af108 <line:57:17, col:31> col:22 PT1AD5 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125af0f0 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125af0b8 <col:31> 'int' 1
-| | | | |-FieldDecl 0x2c7125af1b0 <line:58:17, col:31> col:22 PT1AD6 'byte':'unsigned char'
-| | | | | `-ConstantExpr 0x2c7125af198 <col:31> 'int'
-| | | | |   `-IntegerLiteral 0x2c7125af160 <col:31> 'int' 1
-| | | | `-FieldDecl 0x2c7125af258 <line:59:17, col:31> col:22 PT1AD7 'byte':'unsigned char'
-| | | |   `-ConstantExpr 0x2c7125af240 <col:31> 'int'
-| | | |     `-IntegerLiteral 0x2c7125af208 <col:31> 'int' 1
-| | | `-FieldDecl 0x2c7125af308 <line:51:13, line:60:15> col:15 Bits 'struct (anonymous struct at temp.c:51:13)':'struct PT01ADSTR::(anonymous at temp.c:51:13)'
-| | `-FieldDecl 0x2c7125af3b8 <line:49:9, line:61:11> col:11 PT1ADSTR 'union (anonymous union at temp.c:49:9)':'union PT01ADSTR::(anonymous at temp.c:49:9)'
-| |-FieldDecl 0x2c7125af5c8 <line:11:5, line:81:7> col:7 Overlap_STR 'struct (anonymous struct at temp.c:11:5)':'struct PT01ADSTR::(anonymous at temp.c:11:5)'
-| |-RecordDecl 0x2c7125af620 <line:83:5, line:100:5> line:83:5 struct definition
-| | |-FieldDecl 0x2c7125af710 <line:84:9, col:23> col:14 PT1AD0 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125af6f8 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125af6c0 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125af7b8 <line:85:9, col:23> col:14 PT1AD1 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125af7a0 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125af768 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125af860 <line:86:9, col:23> col:14 PT1AD2 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125af848 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125af810 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125af908 <line:87:9, col:23> col:14 PT1AD3 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125af8f0 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125af8b8 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125af9b0 <line:88:9, col:23> col:14 PT1AD4 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125af998 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125af960 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125afa58 <line:89:9, col:23> col:14 PT1AD5 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125afa40 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125afa08 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125afb00 <line:90:9, col:23> col:14 PT1AD6 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125afae8 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125afab0 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125afba8 <line:91:9, col:23> col:14 PT1AD7 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125afb90 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125afb58 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125afc50 <line:92:9, col:23> col:14 PT0AD0 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125afc38 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125afc00 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125afcf8 <line:93:9, col:23> col:14 PT0AD1 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125afce0 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125afca8 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125aad60 <line:94:9, col:23> col:14 PT0AD2 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125aad48 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125aad10 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125aae08 <line:95:9, col:23> col:14 PT0AD3 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125aadf0 <col:23> 'int'
-| | |   `-IntegerLiteral 0x2c7125aadb8 <col:23> 'int' 1
-| | |-FieldDecl 0x2c7125aaeb0 <line:96:9, col:16> col:9 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125aae98 <col:16> 'int'
-| | |   `-IntegerLiteral 0x2c7125aae60 <col:16> 'int' 1
-| | |-FieldDecl 0x2c7125aaf58 <line:97:9, col:16> col:9 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125aaf40 <col:16> 'int'
-| | |   `-IntegerLiteral 0x2c7125aaf08 <col:16> 'int' 1
-| | |-FieldDecl 0x2c7125ab000 <line:98:9, col:16> col:9 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125aafe8 <col:16> 'int'
-| | |   `-IntegerLiteral 0x2c7125aafb0 <col:16> 'int' 1
-| | `-FieldDecl 0x2c7125ab0a8 <line:99:9, col:16> col:9 'word':'unsigned int'
-| |   `-ConstantExpr 0x2c7125ab090 <col:16> 'int'
-| |     `-IntegerLiteral 0x2c7125ab058 <col:16> 'int' 1
-| |-FieldDecl 0x2c7125ab158 <line:83:5, line:100:7> col:7 Bits 'struct (anonymous struct at temp.c:83:5)':'struct PT01ADSTR::(anonymous at temp.c:83:5)'
-| |-RecordDecl 0x2c7125ab1b0 <line:101:5, line:108:5> line:101:5 struct definition
-| | |-FieldDecl 0x2c7125ab2a0 <line:102:9, col:25> col:14 grpPT1AD 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125ab288 <col:25> 'int'
-| | |   `-IntegerLiteral 0x2c7125ab250 <col:25> 'int' 8
-| | |-FieldDecl 0x2c7125ab348 <line:103:9, col:25> col:14 grpPT0AD 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125ab330 <col:25> 'int'
-| | |   `-IntegerLiteral 0x2c7125ab2f8 <col:25> 'int' 4
-| | |-FieldDecl 0x2c7125ab3f0 <line:104:9, col:16> col:9 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125ab3d8 <col:16> 'int'
-| | |   `-IntegerLiteral 0x2c7125ab3a0 <col:16> 'int' 1
-| | |-FieldDecl 0x2c7125ab498 <line:105:9, col:16> col:9 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125ab480 <col:16> 'int'
-| | |   `-IntegerLiteral 0x2c7125ab448 <col:16> 'int' 1
-| | |-FieldDecl 0x2c7125ab540 <line:106:9, col:16> col:9 'word':'unsigned int'
-| | | `-ConstantExpr 0x2c7125ab528 <col:16> 'int'
-| | |   `-IntegerLiteral 0x2c7125ab4f0 <col:16> 'int' 1
-| | `-FieldDecl 0x2c7125ab5e8 <line:107:9, col:16> col:9 'word':'unsigned int'
-| |   `-ConstantExpr 0x2c7125ab5d0 <col:16> 'int'
-| |     `-IntegerLiteral 0x2c7125ab598 <col:16> 'int' 1
-| `-FieldDecl 0x2c7125ab698 <line:101:5, line:108:7> col:7 MergedBits 'struct (anonymous struct at temp.c:101:5)':'struct PT01ADSTR::(anonymous at temp.c:101:5)'
-|-TypedefDecl 0x2c7125ab748 <line:8:1, line:109:3> col:3 referenced PT01ADSTR 'union PT01ADSTR':'PT01ADSTR'
-| |-ElaboratedType 0x2c7125ab6f0 'union PT01ADSTR' sugar
-| | `-RecordType 0x2c712305210 'PT01ADSTR'
-| |   `-Record 0x2c712305188 ''
-| `-FullComment 0x2c7125abc78 <line:7:4, col:50>
-|   `-ParagraphComment 0x2c7125abc50 <col:4, col:50>
-|     `-TextComment 0x2c7125abc28 <col:4, col:50> Text="* PT01AD - Port AD Data Register; 0x00000270 **"
-|-VarDecl 0x2c7125ab7f0 <line:110:1, col:27> col:27 _PT01AD 'volatile PT01ADSTR':'volatile PT01ADSTR' extern
-`-FunctionDecl 0x2c7125ab8f0 <line:145:1, line:149:1> line:145:5 main 'int ()'
-  `-CompoundStmt 0x2c7125ab9c8 <line:146:1, line:149:1>
-    `-ReturnStmt 0x2c7125ab9b8 <line:148:2, col:9>
-      `-IntegerLiteral 0x2c7125ab990 <col:9> 'int' 0
-C:\Users\Davide\AppData\Local\Temp\temp-f8d8e5.o : fatal error LNK1136: invalid or corrupt file
+TranslationUnitDecl 0x1275d480a78 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1275d481310 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1275d481010 '__int128'
+|-TypedefDecl 0x1275d481380 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1275d481030 'unsigned __int128'
+|-TypedefDecl 0x1275d481688 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1275d481460 'struct __NSConstantString_tag'
+|   `-Record 0x1275d4813d8 '__NSConstantString_tag'
+|-TypedefDecl 0x1275d4816f8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x1275d480c50 'unsigned long long'
+|-TypedefDecl 0x1275d481790 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1275d481750 'char *'
+|   `-BuiltinType 0x1275d480b10 'char'
+|-TypedefDecl 0x1275d481800 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1275d481750 'char *'
+|   `-BuiltinType 0x1275d480b10 'char'
+|-TypedefDecl 0x1275d481870 <temp.c:5:1, col:22> col:22 referenced u16 'unsigned int'
+| `-BuiltinType 0x1275d480c10 'unsigned int'
+|-TypedefDecl 0x1275d4818e0 <line:6:1, col:23> col:23 referenced u8 'unsigned char'
+| `-BuiltinType 0x1275d480bd0 'unsigned char'
+|-RecordDecl 0x1275d481938 <line:8:1, line:10:1> line:8:8 struct s_a definition
+| `-FieldDecl 0x1275d4819f8 <line:9:2, col:6> col:6 abc 'int'
+|-RecordDecl 0x1275d7101d0 <line:12:1, line:16:1> line:12:8 struct s definition
+| |-FieldDecl 0x1275d7102a0 <line:13:2, col:6> col:6 var1 'u16':'unsigned int'
+| |-FieldDecl 0x1275d7103f8 <line:14:2, col:12> col:5 referenced var2 'u8 [10]'
+| `-FieldDecl 0x1275d7104a0 <line:15:2, col:13> col:13 s_a1 'struct s_a':'struct s_a'
+|-VarDecl 0x1275d710558 <line:12:1, line:16:2> col:2 used s1 'struct s':'struct s'
+`-FunctionDecl 0x1275d710670 <line:19:1, line:26:1> line:19:5 main 'int ()'
+  `-CompoundStmt 0x1275d710c98 <line:20:1, line:26:1>
+    |-BinaryOperator 0x1275d710860 <line:21:2, col:15> 'u8':'unsigned char' '='
+    | |-ArraySubscriptExpr 0x1275d710800 <col:2, col:11> 'u8':'unsigned char' lvalue
+    | | |-ImplicitCastExpr 0x1275d7107e8 <col:2, col:5> 'u8 *' <ArrayToPointerDecay>
+    | | | `-MemberExpr 0x1275d710730 <col:2, col:5> 'u8 [10]' lvalue .var2 0x1275d7103f8
+    | | |   `-DeclRefExpr 0x1275d710710 <col:2> 'struct s':'struct s' lvalue Var 0x1275d710558 's1' 'struct s':'struct s'
+    | | `-IntegerLiteral 0x1275d710760 <col:10> 'int' 3
+    | `-ImplicitCastExpr 0x1275d710848 <col:15> 'u8':'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x1275d710820 <col:15> 'int' 1
+    |-BinaryOperator 0x1275d710a20 <line:22:2, col:15> 'u8':'unsigned char' '='
+    | |-ArraySubscriptExpr 0x1275d7109c0 <col:2, col:11> 'u8':'unsigned char' lvalue
+    | | |-ImplicitCastExpr 0x1275d7109a8 <col:2, col:5> 'u8 *' <ArrayToPointerDecay>
+    | | | `-MemberExpr 0x1275d710950 <col:2, col:5> 'u8 [10]' lvalue .var2 0x1275d7103f8
+    | | |   `-DeclRefExpr 0x1275d710930 <col:2> 'struct s':'struct s' lvalue Var 0x1275d710558 's1' 'struct s':'struct s'
+    | | `-IntegerLiteral 0x1275d710980 <col:10> 'int' 3
+    | `-ImplicitCastExpr 0x1275d710a08 <col:15> 'u8':'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x1275d7109e0 <col:15> 'int' 2
+    |-BinaryOperator 0x1275d710b30 <line:23:2, col:15> 'u8':'unsigned char' '='
+    | |-ArraySubscriptExpr 0x1275d710ad0 <col:2, col:11> 'u8':'unsigned char' lvalue
+    | | |-ImplicitCastExpr 0x1275d710ab8 <col:2, col:5> 'u8 *' <ArrayToPointerDecay>
+    | | | `-MemberExpr 0x1275d710a60 <col:2, col:5> 'u8 [10]' lvalue .var2 0x1275d7103f8
+    | | |   `-DeclRefExpr 0x1275d710a40 <col:2> 'struct s':'struct s' lvalue Var 0x1275d710558 's1' 'struct s':'struct s'
+    | | `-IntegerLiteral 0x1275d710a90 <col:10> 'int' 3
+    | `-ImplicitCastExpr 0x1275d710b18 <col:15> 'u8':'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x1275d710af0 <col:15> 'int' 3
+    |-BinaryOperator 0x1275d710c40 <line:24:2, col:15> 'u8':'unsigned char' '='
+    | |-ArraySubscriptExpr 0x1275d710be0 <col:2, col:11> 'u8':'unsigned char' lvalue
+    | | |-ImplicitCastExpr 0x1275d710bc8 <col:2, col:5> 'u8 *' <ArrayToPointerDecay>
+    | | | `-MemberExpr 0x1275d710b70 <col:2, col:5> 'u8 [10]' lvalue .var2 0x1275d7103f8
+    | | |   `-DeclRefExpr 0x1275d710b50 <col:2> 'struct s':'struct s' lvalue Var 0x1275d710558 's1' 'struct s':'struct s'
+    | | `-IntegerLiteral 0x1275d710ba0 <col:10> 'int' 4
+    | `-ImplicitCastExpr 0x1275d710c28 <col:15> 'u8':'unsigned char' <IntegralCast>
+    |   `-IntegerLiteral 0x1275d710c00 <col:15> 'int' 4
+    `-ReturnStmt 0x1275d710c88 <line:25:2, col:9>
+      `-IntegerLiteral 0x1275d710c60 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-0ff3d8.o : fatal error LNK1136: file danneggiato o non valido
