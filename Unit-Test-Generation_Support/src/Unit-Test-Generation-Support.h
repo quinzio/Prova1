@@ -6,7 +6,7 @@
 #include "Node.h"
 #include "Unit-Test-Generation-Support.h"
 
-int inner_main(int argc, std::string argv[]);
+int inner_main(int argc, std::string argv[]) throw (const std::exception&);
 void createBuiltInTypes(void);
 unsigned long long valueCast(std::string str, unsigned long long v);
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*));

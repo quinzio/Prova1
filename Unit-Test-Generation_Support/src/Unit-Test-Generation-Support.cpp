@@ -42,7 +42,11 @@ unsigned long long cast(std::string str, unsigned long long v);
 int inner_main(int argc, std::string argv[]) throw (const std::exception&)
 {
     if (argc != 3) {
+#if __GNUC__
+        throw std::exception();
+#else
         throw std::exception("\n\n*** There must be 2 arguments: ast file name and output file name. ***\n\n");
+#endif
     }
     std::cout << "Unit Test Generation Support!\n";
     std::cout << splash;
@@ -59,10 +63,22 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     std::cout << sm[2] << "\n";
 
     Variable::outputFile.open(argv[2], std::ios_base::trunc);
-    if (!Variable::outputFile) throw std::exception("\n\n*** Cannot open output file. ***\n\n");
+    if (!Variable::outputFile) { 
+#if __GNUC__
+        throw std::exception();
+#else
+        throw std::exception("\n\n*** Cannot open output file. ***\n\n");
+#endif
+    }
 
     std::ifstream infile(argv[1]);
-    if (!infile) throw std::exception("\n\n*** Ast file not found. ***\n\n");
+    if (!infile) {
+#if __GNUC__
+        throw std::exception();
+#else
+        throw std::exception("\n\n*** Ast file not found. ***\n\n");
+#endif
+    }
     std::string str;
 
     int depth = -2;
@@ -345,9 +361,11 @@ unsigned long long valueCast(std::string str, unsigned long long v)
     // Try to cast again
     return valueCast(temp.type, v);
 
-
-
+#if __GNUC__
+    throw std::exception();
+#else
     throw std::exception("cast: Exception encountered\n");
+#endif
 }
 void signExtend(Variable* v) {
     unsigned long long val;
@@ -447,7 +465,11 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
         }
     }
     if (found == false) {
+#if __GNUC__
+        throw std::exception();
+#else
         throw std::exception("VarDecl: cannot find final type.");
+#endif
     }
 
 
