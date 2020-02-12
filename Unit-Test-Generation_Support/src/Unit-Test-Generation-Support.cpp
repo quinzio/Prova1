@@ -90,7 +90,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
             {
                 if (std::regex_search(str, smCatchGlobalName, eCatchGlobalName)) {
                     if (smCatchGlobals[1].length() == 2)
-                        std::cout << "Found global  ";
+                        std::cout << "Found global ";
                     else 
                         std::cout << "  Found local ";
                     std::cout << "name:type " << std::setw(30) << smCatchGlobalName[1] << ":" << smCatchGlobalName[2] << "\n";
@@ -415,10 +415,10 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
         /* To understand the following just look at how a typedef
         ast node is made. It must refer to other typedefs.
         */
-        node = node->child;
-        while (node) {
+        Node* node2 = node->child;
+        while (node2) {
             std::smatch smTemp;
-            if (std::regex_search(node->text, smTemp, std::regex(
+            if (std::regex_search(node2->text, smTemp, std::regex(
                 "[^\\w<]*"                       /*| |-              */
                 "Record"                         /*Record            */
                 "\\s"                            /*                  */
@@ -439,11 +439,11 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
                     }
                 }
             }
-            while (node->nextSib) {
+            while (node2->nextSib) {
 
-                node = node->nextSib;
+                node2 = node2->nextSib;
             }
-            node = node->child;
+            node2 = node2->child;
         }
     }
     if (found == false) {
@@ -973,7 +973,7 @@ Variable fFieldDecl(Node* node) {
     }
     coreTypes.coreType = rawType;
     findCoreType(coreTypes);
-    vField = buildVariable(coreTypes);
+    vField = buildVariable(coreTypes, node);
     vField.name = name;
     // Note the blank space in " referenced"
     if (smFieldDeclaration[1].compare(" referenced") == 0) {
@@ -1145,11 +1145,15 @@ Variable fArraySubscriptExpr(Node* node) {
     return ret;
 }
 Variable fFunctionDecl(Node* node) {
-    Variable temp = visit(node->child);
+    Variable temp;
+    /* Make sure it's not a function declaration*/
+    if (node->child) {
+        temp = visit(node->child);
     for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
         for (auto itit = it->begin(); itit != it->end(); itit++) {
             itit->print();
         }
+    }
     }
     return temp;
 }

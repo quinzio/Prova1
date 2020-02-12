@@ -54,7 +54,7 @@ Captures:
 9 Col#
 */
 std::regex eSourcePoint(
-    "(col:(\\d+))|(line:(\\d+):(\\d+))|((\\w+\\.\\w+):(\\d+):(\\d+))"
+    "(col:(\\d+))|(line:(\\d+):(\\d+))|(([\\w\\d\\\\/:\\.]+\\.\\w+):(\\d+):(\\d+))"
 );
 
 /*
@@ -69,20 +69,21 @@ std::regex eSourceRef(
     /*E  */ "\\s<"
     /*F 2*/ "(col:\\d+|"
     /*   */ "line:\\d+:\\d+|"
-    /*   */ "\\w+\\.\\w+:\\d+:\\d+)"
+    /*   */ "[\\w\\d\\\\/:\\.]*\\.\\w[\\w\\d]*:\\d+:\\d+)"
     /*G  */ "(?:,\\s)?"
     /*H 3*/ "(col:\\d+|"
     /*   */ "line:\\d+:\\d+|"
-    /*   */ "\\w[\\w\\d]*\\.\\w[\\w\\d]*:\\d+:\\d+)?"
+    /*   */ "[\\w\\d\\\\/:\\.]*\\.\\w[\\w\\d]*:\\d+:\\d+)?"
     /*I  */ ">\\s"
     /*J 4*/ "(col:\\d+|"
     /*   */ "line:\\d+:\\d+|"
-    /*   */ "\\w+\\.\\w+:\\d+:\\d+|0)?"
+    /*   */ "[\\w\\d\\\\/:\\.]*\\.\\w[\\w\\d]*:\\d+:\\d+|)?"
     /*K  */ ".*"
 );
 
 std::regex eCatchGlobals(
-    R"(([^\w<]*)([\w<]+).*)");
+    "([^\\w<]*)([\\w<]+).*"
+);
 
 std::regex eCatchGlobalName(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,7}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
@@ -185,7 +186,7 @@ std::regex eUnionTypeAnonymous2(
 );
 
 std::regex eStructDefinition(
-    R"###([^\w<]*[\w<]+\s(0x[\da-f]{6,11})\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)\s(struct|union)\s?(\w+)?\sdefinition)###");
+    R"###([^\w<]*[\w<]+\s(0x[\da-f]{6,11})\s<[^>]*>\s(?:col:\d+|line:\d+:\d+|[\\w\\d\\\\/:]+\\.\\w+:\\d+:\\d+)\s(struct|union)\s?(\w+)?\sdefinition)###");
 
 /*
 | `-FieldDecl 0x247143d8818 <line:12:5, line:15:6> col:6 fx2 'struct x2':'struct x2'
@@ -280,6 +281,7 @@ std::regex eGenericType(
 Matches the C built-in types
 */
 std::regex eBuiltinTypes(
+    "void"                         "|"
     "char"                         "|"
     "signed\\schar"                "|"
     "unsigned\\schar"              "|"

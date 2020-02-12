@@ -5,8 +5,8 @@ Match the basic c types
 */
 std::regex eFinalType(
     "("
-    "struct\\s[\\w\\d\\.:]+"       "|"
-    "union\\s[\\w\\d\\.:]+"        "|"
+    "struct\\s[\\w\\d\\.:\\\\/]+"  "|"
+    "union\\s[\\w\\d\\.:\\\\/]+"   "|"
     "struct\\s\\([^\\)]+\\)"       "|"
     "void"                         "|"
     "unsigned\\sshort\\sint"       "|"
@@ -38,7 +38,7 @@ std::regex eFinalType(
     "float"                        "|"
     "double"                       "|"
     "char"                         "|"    
-    "[\\w\\d\\.:]+"  // A typedef, can be anonymous like temp.c:2:3
+    "[\\w\\d\\.:\\\\/]+"  // A typedef, can be anonymous like temp.c:2:3
     ")"
     "(.*)"
 );

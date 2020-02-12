@@ -3,6 +3,7 @@
 #include "sizeofTypes.h"
 
 std::map<std::string, int> szTypes = {
+{"void"                   , 0  },
 {"char"                   , 1  },
 {"signed char"            , 1  },
 {"unsigned char"          , 1  },
