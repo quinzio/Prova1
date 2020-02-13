@@ -1,50 +1,91 @@
-TranslationUnitDecl 0x24f1ad115c8 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x24f1ad11e60 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x24f1ad11b60 '__int128'
-|-TypedefDecl 0x24f1ad11ed0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x24f1ad11b80 'unsigned __int128'
-|-TypedefDecl 0x24f1ad121d8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x24f1ad11fb0 'struct __NSConstantString_tag'
-|   `-Record 0x24f1ad11f28 '__NSConstantString_tag'
-|-TypedefDecl 0x24f1ad12248 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x24f1ad117a0 'unsigned long long'
-|-TypedefDecl 0x24f1ad122e0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x24f1ad122a0 'char *'
-|   `-BuiltinType 0x24f1ad11660 'char'
-|-TypedefDecl 0x24f1ad12350 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x24f1ad122a0 'char *'
-|   `-BuiltinType 0x24f1ad11660 'char'
-|-VarDecl 0x24f1ad123c0 <temp.c:4:1, col:12> col:5 used var1 'int' cinit
-| `-IntegerLiteral 0x24f1ad12470 <col:12> 'int' 1
-|-VarDecl 0x24f1ad124b0 <col:1, col:22> col:15 used var2 'int' cinit
-| `-IntegerLiteral 0x24f1ad12518 <col:22> 'int' 2
-|-VarDecl 0x24f1aec8550 <line:6:1, col:30> col:9 f3 'int (*(*)(long))(long)'
-|-VarDecl 0x24f1aec8888 <line:7:1, col:21> col:9 f4 'int (*(*)(char))[4]'
-|-FunctionDecl 0x24f1aec8f50 <line:9:1, col:58> col:15 f5 'int (*(*(((**(char))[4])[5])[6])(long))(long)':'int (*(*(((**(char))[4])[5])[6])(long))(long)'
-| `-ParmVarDecl 0x24f1aec8900 <col:19> col:23 'char'
-|-VarDecl 0x24f1aec65e0 <line:11:1, col:37> col:13 v1 'int *(*((([5][4][3][2])[6][7]':'int *(*((([5][4][3][2])[6][7]'
-|-VarDecl 0x24f1aec6af0 <line:13:1, col:30> col:10 v2 'int (((([1][2][3][4][5]'
-|-VarDecl 0x24f1aec7000 <line:14:1, col:30> col:10 v3 'int *(((([1][2][3][4][5]'
-|-VarDecl 0x24f1aec7548 <line:15:1, col:30> col:10 v4 'int (*((([1][2][3][4])[5]'
-|-VarDecl 0x24f1aec79a8 <line:16:1, col:30> col:10 v5 'int ((*(([1][2][3])[4])[5]'
-|-VarDecl 0x24f1aec7d58 <line:17:1, col:30> col:10 v6 'int (((*([1][2])[3])[4])[5]'
-|-VarDecl 0x24f1aec8068 <line:18:1, col:30> col:10 v7 'int ((((*[1])[2])[3])[4])[5]'
-|-VarDecl 0x24f1aecb1e8 <line:20:1, col:119> col:18 v8 'int ((*((((((*(*([1])(int (((*(*)[3])[4])[5])[6], int (((*(*)[3])[4])[5])[6]))[2])[3])[4])[5][1])[2])[3])[4])[5]'
-|-VarDecl 0x24f1aec3d88 <line:21:1, col:118> col:18 v9 'int ((*((((((*(*([1])(int ((((*)[3])[4])[5])[6], int (((*(*)[3])[4])[5])[6]))[2])[3])[4])[5][1])[2])[3])[4])[5]'
-`-FunctionDecl 0x24f1aec3f60 <line:25:1, line:30:1> line:25:5 f1 'int (int, char)'
-  |-ParmVarDecl 0x24f1aec3e08 <col:8, col:12> col:12 used a 'int'
-  |-ParmVarDecl 0x24f1aec3e80 <col:15, col:20> col:20 used b 'char'
-  `-CompoundStmt 0x24f1aec4160 <col:23, line:30:1>
-    |-BinaryOperator 0x24f1aec4068 <line:26:5, col:12> 'int' '='
-    | |-DeclRefExpr 0x24f1aec4010 <col:5> 'int' lvalue Var 0x24f1ad123c0 'var1' 'int'
-    | `-ImplicitCastExpr 0x24f1aec4050 <col:12> 'int' <LValueToRValue>
-    |   `-DeclRefExpr 0x24f1aec4030 <col:12> 'int' lvalue ParmVar 0x24f1aec3e08 'a' 'int'
-    |-BinaryOperator 0x24f1aec40f8 <line:27:5, col:12> 'int' '='
-    | |-DeclRefExpr 0x24f1aec4088 <col:5> 'int' lvalue Var 0x24f1ad124b0 'var2' 'int'
-    | `-ImplicitCastExpr 0x24f1aec40e0 <col:12> 'int' <IntegralCast>
-    |   `-ImplicitCastExpr 0x24f1aec40c8 <col:12> 'char' <LValueToRValue>
-    |     `-DeclRefExpr 0x24f1aec40a8 <col:12> 'char' lvalue ParmVar 0x24f1aec3e80 'b' 'char'
-    `-ReturnStmt 0x24f1aec4150 <line:29:2, col:9>
-      `-ImplicitCastExpr 0x24f1aec4138 <col:9> 'int' <LValueToRValue>
-        `-DeclRefExpr 0x24f1aec4118 <col:9> 'int' lvalue Var 0x24f1ad123c0 'var1' 'int'
-C:\Users\munarid\AppData\Local\Temp\temp-5eefb9.o : fatal error LNK1136: file danneggiato o non valido
+TranslationUnitDecl 0x2aa1d4647b8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x2aa1d465050 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x2aa1d464d50 '__int128'
+|-TypedefDecl 0x2aa1d4650c0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x2aa1d464d70 'unsigned __int128'
+|-TypedefDecl 0x2aa1d4653e8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x2aa1d4651a0 'struct __NSConstantString_tag'
+|   `-Record 0x2aa1d465118 '__NSConstantString_tag'
+|-TypedefDecl 0x2aa1d465458 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x2aa1d464990 'unsigned long long'
+|-TypedefDecl 0x2aa1d4654f0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x2aa1d4654b0 'char *'
+|   `-BuiltinType 0x2aa1d464850 'char'
+|-TypedefDecl 0x2aa1d465560 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x2aa1d4654b0 'char *'
+|   `-BuiltinType 0x2aa1d464850 'char'
+|-VarDecl 0x2aa1d4655d0 <temp.c:4:1, col:12> col:5 used var1 'int' cinit
+| `-IntegerLiteral 0x2aa1d465680 <col:12> 'int' 1
+|-VarDecl 0x2aa1d4656c0 <col:1, col:22> col:15 used var2 'int' cinit
+| `-IntegerLiteral 0x2aa1d465728 <col:22> 'int' 2
+|-VarDecl 0x2aa1d63adf0 <line:6:1, col:31> col:10 used f3 'int (*(**)(long))(long)'
+|-VarDecl 0x2aa1d63afc0 <line:7:1, col:31> col:9 used ff3 'int (*(*)(long))(long)'
+|-VarDecl 0x2aa1d63b2f8 <line:8:1, col:21> col:9 f4 'int (*(*)(char))[4]'
+|-FunctionDecl 0x2aa1d63b9c0 <line:10:1, col:58> col:15 f5 'int (*(*(((**(char))[4])[5])[6])(long))(long)':'int (*(*(((**(char))[4])[5])[6])(long))(long)'
+| `-ParmVarDecl 0x2aa1d63b370 <col:19> col:23 'char'
+|-VarDecl 0x2aa1d639040 <line:12:1, col:37> col:13 v1 'int *(*((([5][4][3][2])[6][7]':'int *(*((([5][4][3][2])[6][7]'
+|-VarDecl 0x2aa1d639550 <line:14:1, col:30> col:10 v2 'int (((([1][2][3][4][5]'
+|-VarDecl 0x2aa1d635a40 <line:15:1, col:30> col:10 v3 'int *(((([1][2][3][4][5]'
+|-VarDecl 0x2aa1d635f48 <line:16:1, col:30> col:10 v4 'int (*((([1][2][3][4])[5]'
+|-VarDecl 0x2aa1d6363a8 <line:17:1, col:30> col:10 v5 'int ((*(([1][2][3])[4])[5]'
+|-VarDecl 0x2aa1d636758 <line:18:1, col:30> col:10 v6 'int (((*([1][2])[3])[4])[5]'
+|-VarDecl 0x2aa1d639b10 <line:19:1, col:30> col:10 v7 'int ((((*[1])[2])[3])[4])[5]'
+|-VarDecl 0x2aa1d63bca0 <line:22:1, col:121> col:19 v8 'int ((*((((((*(*(([1])(int (((*(*)[3])[4])[5])[6], int (((*(*)[3])[4])[5])[6]))[2])[3])[4])[5][1])[2])[3])[4])[5]'
+|-VarDecl 0x2aa1d63c898 <line:23:1, col:118> col:18 v9 'int ((*((((((*(*([1])(int ((((*)[3])[4])[5])[6], int (((*(*)[3])[4])[5])[6]))[2])[3])[4])[5][1])[2])[3])[4])[5]'
+|-FunctionDecl 0x2aa1d63c9e0 <line:25:1, line:27:1> line:25:5 used f2 'int (int)'
+| |-ParmVarDecl 0x2aa1d63c918 <col:8, col:12> col:12 used a 'int'
+| `-CompoundStmt 0x2aa1d63db50 <col:14, line:27:1>
+|   `-ReturnStmt 0x2aa1d63db40 <line:26:9, col:18>
+|     `-BinaryOperator 0x2aa1d63db20 <col:16, col:18> 'int' '+'
+|       |-ImplicitCastExpr 0x2aa1d63db08 <col:16> 'int' <LValueToRValue>
+|       | `-DeclRefExpr 0x2aa1d63dac0 <col:16> 'int' lvalue ParmVar 0x2aa1d63c918 'a' 'int'
+|       `-IntegerLiteral 0x2aa1d63dae0 <col:18> 'int' 1
+|-FunctionDecl 0x2aa1d63dcc0 <line:28:1, line:31:1> line:28:7 used f6 'int (*(long))(long)'
+| |-ParmVarDecl 0x2aa1d63db80 <col:10, col:15> col:15 l1 'long'
+| `-CompoundStmt 0x2aa1d63df30 <col:28, line:31:1>
+|   |-DeclStmt 0x2aa1d63ded0 <line:29:9, col:30>
+|   | `-VarDecl 0x2aa1d63de28 <col:9, col:29> col:15 used k 'int (*)(long)' cinit
+|   |   `-ImplicitCastExpr 0x2aa1d63deb8 <col:29> 'int (*)(long)' <NullToPointer>
+|   |     `-IntegerLiteral 0x2aa1d63de90 <col:29> 'int' 0
+|   `-ReturnStmt 0x2aa1d63df20 <line:30:9, col:16>
+|     `-ImplicitCastExpr 0x2aa1d63df08 <col:16> 'int (*)(long)' <LValueToRValue>
+|       `-DeclRefExpr 0x2aa1d63dee8 <col:16> 'int (*)(long)' lvalue Var 0x2aa1d63de28 'k' 'int (*)(long)'
+`-FunctionDecl 0x2aa1d63e0c0 <line:33:1, line:41:1> line:33:5 f1 'int (int, char)'
+  |-ParmVarDecl 0x2aa1d63df68 <col:8, col:12> col:12 used a 'int'
+  |-ParmVarDecl 0x2aa1d63dfe0 <col:15, col:20> col:20 used b 'char'
+  `-CompoundStmt 0x2aa1d63e5b0 <col:23, line:41:1>
+    |-BinaryOperator 0x2aa1d63e1c8 <line:34:5, col:12> 'int' '='
+    | |-DeclRefExpr 0x2aa1d63e170 <col:5> 'int' lvalue Var 0x2aa1d4655d0 'var1' 'int'
+    | `-ImplicitCastExpr 0x2aa1d63e1b0 <col:12> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x2aa1d63e190 <col:12> 'int' lvalue ParmVar 0x2aa1d63df68 'a' 'int'
+    |-BinaryOperator 0x2aa1d63e258 <line:35:5, col:12> 'int' '='
+    | |-DeclRefExpr 0x2aa1d63e1e8 <col:5> 'int' lvalue Var 0x2aa1d4656c0 'var2' 'int'
+    | `-ImplicitCastExpr 0x2aa1d63e240 <col:12> 'int' <IntegralCast>
+    |   `-ImplicitCastExpr 0x2aa1d63e228 <col:12> 'char' <LValueToRValue>
+    |     `-DeclRefExpr 0x2aa1d63e208 <col:12> 'char' lvalue ParmVar 0x2aa1d63dfe0 'b' 'char'
+    |-BinaryOperator 0x2aa1d63e2d0 <line:36:5, col:11> 'int (*(**)(long))(long)' '='
+    | |-DeclRefExpr 0x2aa1d63e278 <col:5> 'int (*(**)(long))(long)' lvalue Var 0x2aa1d63adf0 'f3' 'int (*(**)(long))(long)'
+    | `-UnaryOperator 0x2aa1d63e2b8 <col:10, col:11> 'int (*(**)(long))(long)' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2aa1d63e298 <col:11> 'int (*(*)(long))(long)' lvalue Var 0x2aa1d63afc0 'ff3' 'int (*(*)(long))(long)'
+    |-BinaryOperator 0x2aa1d63e3a0 <line:37:5, col:12> 'int (*(*)(long))(long)' '='
+    | |-UnaryOperator 0x2aa1d63e328 <col:5, col:6> 'int (*(*)(long))(long)' lvalue prefix '*' cannot overflow
+    | | `-ImplicitCastExpr 0x2aa1d63e310 <col:6> 'int (*(**)(long))(long)' <LValueToRValue>
+    | |   `-DeclRefExpr 0x2aa1d63e2f0 <col:6> 'int (*(**)(long))(long)' lvalue Var 0x2aa1d63adf0 'f3' 'int (*(**)(long))(long)'
+    | `-UnaryOperator 0x2aa1d63e388 <col:11, col:12> 'int (*(*)(long))(long)' prefix '&' cannot overflow
+    |   `-DeclRefExpr 0x2aa1d63e340 <col:12> 'int (*(long))(long)' Function 0x2aa1d63dcc0 'f6' 'int (*(long))(long)'
+    |-CallExpr 0x2aa1d63e470 <line:38:5, col:34> 'int (*)(long)'
+    | |-ImplicitCastExpr 0x2aa1d63e458 <col:5, col:25> 'int (*(*)(long))(long)' <LValueToRValue>
+    | | `-ParenExpr 0x2aa1d63e410 <col:5, col:25> 'int (*(*)(long))(long)' lvalue
+    | |   `-UnaryOperator 0x2aa1d63e3f8 <col:6, col:7> 'int (*(*)(long))(long)' lvalue prefix '*' cannot overflow
+    | |     `-ImplicitCastExpr 0x2aa1d63e3e0 <col:7> 'int (*(**)(long))(long)' <LValueToRValue>
+    | |       `-DeclRefExpr 0x2aa1d63e3c0 <col:7> 'int (*(**)(long))(long)' lvalue Var 0x2aa1d63adf0 'f3' 'int (*(**)(long))(long)'
+    | `-ImplicitCastExpr 0x2aa1d63e498 <col:27> 'long' <IntegralCast>
+    |   `-IntegerLiteral 0x2aa1d63e430 <col:27> 'int' 1000000
+    |-CallExpr 0x2aa1d63e540 <line:39:5, col:10> 'int'
+    | |-ImplicitCastExpr 0x2aa1d63e528 <col:5> 'int (*)(int)' <FunctionToPointerDecay>
+    | | `-DeclRefExpr 0x2aa1d63e4b0 <col:5> 'int (int)' Function 0x2aa1d63c9e0 'f2' 'int (int)'
+    | `-IntegerLiteral 0x2aa1d63e4d0 <col:8> 'int' 10
+    `-ReturnStmt 0x2aa1d63e5a0 <line:40:5, col:12>
+      `-ImplicitCastExpr 0x2aa1d63e588 <col:12> 'int' <LValueToRValue>
+        `-DeclRefExpr 0x2aa1d63e568 <col:12> 'int' lvalue Var 0x2aa1d4655d0 'var1' 'int'
+C:\Users\Davide\AppData\Local\Temp\temp-ea4f06.o : fatal error LNK1136: invalid or corrupt file

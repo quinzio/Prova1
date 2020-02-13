@@ -46,3 +46,6 @@ Variable fConstantExpr(Node* node);
 Variable fEnumDecl(Node* node);
 Variable fEnumConstantDecl(Node* node);
 Variable fParmVarDecl(Node* node);
+Variable fCallExpr(Node* node);
+Variable fParenExpr(Node* node);
+Variable fReturnStmt(Node* node);

@@ -96,12 +96,21 @@ std::regex eVarDecl(
 
 /* Matches something as
 |-ParmVarDecl 0x2e6392983e0 <col:8, col:12> col:12 used a 'int'
-Caputres: 
-1 name
+Captures:
+1 name (optional)
 2 type
 */
 std::regex eParmVarDecl(
-    R"###([^\w]*ParmVarDecl\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+    R"###([^\w]*ParmVarDecl\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?(?:\s([\w\d]+))?\s'([^']+)')###");
+
+/* Matches something as
+|-FunctionDecl 0x1b5f74af000 <line:27:1, line:30:1> line:27:7 used f6 'int (*(long))(long)'
+Captures:
+1 name 
+2 type
+*/
+std::regex eFunctionDecl(
+    R"###([^\w]*FunctionDecl\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?(?:\s([\w\d]+))?\s'([^']+)')###");
 
 /*
 _____________________________________________________1---------- 2__3--------___4--------
@@ -166,6 +175,53 @@ std::regex eDeclRefExprEnum(
     "(0x[\\da-f]{6,11})"   /*0x269eb381c80      2                                                             */
     "\\s"                  /*                                                                                 */
     "'([\\w\\d]+)'"        /*'IDLE'             3                                                             */
+    "\\s"                  /*                                                                                 */
+    "'([\\w\\d]+)'"        /*'int'              4                                                             */
+);
+
+/*
+DeclRefExpr of a Function !!!
+|   `-DeclRefExpr 0x1b5f74af608 <col:12> 'int (*(long))(long)' Function 0x1b5f74af000 'f6' 'int (*(long))(long)'
+
+*/
+std::regex eDeclRefExprFunction(
+    "[^\\w<]*"             /*    | |   `-                                                                     */
+    "[\\w<]+"              /*DeclRefExpr                                                                      */
+    "\\s"                  /*                                                                                 */
+    "0x[\\da-f]{6,11}"     /*0x23a31f28510                                                                    */
+    "\\s"                  /*                                                                                 */
+    "<[^>]*>"              /*<col:3>                                                                          */
+    "\\s"                  /*                                                                                 */
+    "'([^']+)'"            /*'int'              1                                                             */
+    "\\sFunction"          /* Function                                                                        */
+    "\\s"                  /*                                                                                 */
+    "(0x[\\da-f]{6,11})"   /*0x269eb381c80      2                                                             */
+    "\\s"                  /*                                                                                 */
+    "'([\\w\\d]+)'"        /*'f6'               3                                                             */
+    "\\s"                  /*                                                                                 */
+    "'([^']+)'"            /*'int'              4                                                             */
+);
+
+
+/*
+    |   `-DeclRefExpr 0x24f1aec4030 <col:12> 'int' lvalue ParmVar 0x24f1aec3e08 'a' 'int'
+*/
+std::regex eDeclRefExprParmVar(
+    "[^\\w<]*"             /*    | |   `-                                                                     */
+    "[\\w<]+"              /*DeclRefExpr                                                                      */
+    "\\s"                  /*                                                                                 */
+    "0x[\\da-f]{6,11}"     /*0x23a31f28510                                                                    */
+    "\\s"                  /*                                                                                 */
+    "<[^>]*>"              /*<col:3>                                                                          */
+    "\\s"                  /*                                                                                 */
+    "'([^']+)'"            /*'int'              1                                                             */
+    "\\s"                  /*                                                                                 */
+    "lvalue"               /*lvalue                                                                           */
+    "\\sParmVar"           /* ParmVar                                                                         */
+    "\\s"                  /*                                                                                 */
+    "(0x[\\da-f]{6,11})"   /*0x269eb381c80      2                                                             */
+    "\\s"                  /*                                                                                 */
+    "'([\\w\\d]+)'"        /*'var1'             3                                                             */
     "\\s"                  /*                                                                                 */
     "'([\\w\\d]+)'"        /*'int'              4                                                             */
 );

@@ -32,6 +32,8 @@ std::vector<Variable> vUnion;
 std::vector<Variable> vTypeDef;
 // vEnum contains all the user defined enums
 std::vector<Variable> vEnum;
+// vFunction contains the declared function
+std::vector<Variable> vFunction;
 // vParams contains the temporary function parameters
 std::vector<Variable> vParams;
 std::ofstream Variable::outputFile;
@@ -249,6 +251,15 @@ Variable visit(Node *node)
     }
     if (node->astType.compare("ParmVarDecl") == 0) {
         return fParmVarDecl(node);
+    }
+    if (node->astType.compare("CallExpr") == 0) {
+        return fCallExpr(node);
+    }
+    if (node->astType.compare("ParenExpr") == 0) {
+        return fParenExpr(node);
+    }
+    if (node->astType.compare("ReturnStmt") == 0) {
+        return fReturnStmt(node);
     }
     if (node->astType.compare("<<<NULL") == 0) {
         return fNULL(node);
@@ -889,6 +900,8 @@ Variable fTypedefDecl(Node* node) {
 Variable fDeclRefExpr(Node* node) {
     std::smatch smDeclRefExpr;
     std::smatch smDeclRefExprEnum;
+    std::smatch smDeclRefExprParmVar;
+    std::smatch smDeclRefExprFunction;
     Variable ret;
     if (std::regex_search(node->text, smDeclRefExpr, eDeclRefExpr)) {
         std::string varName = smDeclRefExpr[2];
@@ -903,9 +916,9 @@ Variable fDeclRefExpr(Node* node) {
         }
     }
     else if (std::regex_search(node->text, smDeclRefExprEnum, eDeclRefExprEnum)) {
-        /* Captures 
+        /* Captures
         1: should always be int
-        2: the hedID to search, there are homonymous
+        2: the hexID to search, there are homonymous
         3: the face name
         4: should be always int
         */
@@ -919,6 +932,38 @@ Variable fDeclRefExpr(Node* node) {
                     ret.typeEnum = Variable::typeEnum_t::isEnum;
                     return ret;
                 }
+            }
+        }
+    }
+    else if (std::regex_search(node->text, smDeclRefExprParmVar, eDeclRefExprParmVar)) {
+        /* Captures
+        1: type
+        2: hexID
+        3: the face name
+        4: type
+        */
+        std::string name = smDeclRefExprParmVar[3];
+        for (auto it = vParams.begin(); it != vParams.end(); it++) {
+            if (it->name.compare(name) == 0) {
+                ret.pointsTo = &*it;
+                ret.typeEnum = Variable::typeEnum_t::isRef;
+                return ret;
+            }
+        }
+    }
+    else if (std::regex_search(node->text, smDeclRefExprFunction, eDeclRefExprFunction)) {
+        /* Captures
+        1: type
+        2: hexID
+        3: the face name
+        4: type
+        */
+        std::string name = smDeclRefExprFunction[3];
+        for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+            if (it->name.compare(name) == 0) {
+                ret.pointsTo = &*it;
+                ret.typeEnum = Variable::typeEnum_t::isRef;
+                return ret;
             }
         }
     }
@@ -1004,6 +1049,12 @@ Variable fBinaryOperator(Node* node) {
     opb = visit(node->child->nextSib);
     if (boperator.compare("<") == 0) {
         ret.value = opa.value < opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    if (boperator.compare("+") == 0) {
+        ret.value = opa.value + opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
         return ret;
     }
     if (boperator.compare("=") == 0) {
@@ -1234,6 +1285,12 @@ Variable fArraySubscriptExpr(Node* node) {
 }
 Variable fFunctionDecl(Node* node) {
     Variable temp;
+    Variable func;
+    std::smatch smFunctionDecl;
+    std::regex_search(node->text, smFunctionDecl, eFunctionDecl);
+    func.name = smFunctionDecl[1];
+    func.typeEnum = Variable::typeEnum_t::isFunction;
+    func.type = smFunctionDecl[2];
     Node* node2;
     /* Make sure it's not a function declaration*/
     if (node->child) {
@@ -1242,7 +1299,15 @@ Variable fFunctionDecl(Node* node) {
             /* Visit all, there will be parameters first and then 
             the function body. 
             Parameters will be in vParams global vector */
-            temp = visit(node2);
+            try {
+                temp = visit(node2);
+            }
+            catch (Variable v) {
+                v;
+            }
+            if (node2->astType.compare("ParmVarDecl") == 0) {
+                func.intStruct.push_back(temp);
+            }
             node2 = node2->nextSib;
         }
         for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
@@ -1251,6 +1316,9 @@ Variable fFunctionDecl(Node* node) {
             }
         }
     }
+    vFunction.push_back(func);
+    /* Clear all parameters declared  */
+    vParams.clear();
     return temp;
 }
 Variable fDeclStmt(Node* node) {
@@ -1379,6 +1447,25 @@ However I like to keep them separated
     return *vback;
 
 }
-
-
+Variable fCallExpr(Node* node) {
+    Variable call;
+    call = visit(node->child);
+    return call;
+}
+Variable fParenExpr(Node* node) {
+    Variable temp;
+    for (auto next = node->child; next != NULL; next = next->nextSib) {
+        temp = visit(next);
+    }
+    return temp;
+}
+Variable fReturnStmt(Node* node) {
+    Variable retV;
+    retV = visit(node->child);
+    /*
+    Throw it !!!
+    FunctionDecl will catch it... hopefully
+    */
+    throw retV;
+}
 

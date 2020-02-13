@@ -33,7 +33,9 @@ void findCoreType(struct coreType_str& str, bool init)
             std::regex eUnbalance(
                 "(.*)"
                 "\\({" + std::to_string(unbalanced) + "}"
-                "(\\[d+\\]){" + std::to_string(unbalanced+1) + "}"
+                "("
+                "(?:\\[\\d+\\]){" + std::to_string(1) + "}"
+                ")"
                 "(.*)"
             );
             if (std::regex_search(str.coreType, smUnbalance, eUnbalance)) {
@@ -108,6 +110,12 @@ void findCoreType(struct coreType_str& str, bool init)
         outCore = str.core.substr(0, str.brackPos[0])
             +
             str.core.substr(str.brackPos[1] + 1, str.core.length() - str.brackPos[1]);
+        /* If in the outCore there are function parameters, we must strip them away*/
+        std::regex eStripParams(R"(([^\(]*)\(.*\)(.*))");
+        std::smatch smStripParams;
+        if (std::regex_search(outCore, smStripParams, eStripParams)) {
+            outCore = smStripParams[1].str() + smStripParams[2].str();
+        }
     }
     else {
         outCore = str.core;
