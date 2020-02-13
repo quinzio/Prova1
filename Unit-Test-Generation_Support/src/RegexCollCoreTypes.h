@@ -7,6 +7,7 @@ std::regex eFinalType(
     "("
     "struct\\s[\\w\\d\\.:\\\\/]+"  "|"
     "union\\s[\\w\\d\\.:\\\\/]+"   "|"
+    "enum\\s[\\w\\d\\.:\\\\/]+"    "|"
     "struct\\s\\([^\\)]+\\)"       "|"
     "void"                         "|"
     "unsigned\\sshort\\sint"       "|"

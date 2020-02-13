@@ -8,23 +8,25 @@ int main(int argc, char* argv[]) {
 	std::string testFolder;
 	try
 	{
-		//testCompare("ex01");	getchar();
-		//testCompare("ex02");	getchar();
-		//testCompare("ex03");	getchar();
-		//testCompare("ex04");	getchar();
-		//testCompare("ex05");	getchar();
-		//testCompare("ex06");	getchar();
-		//testCompare("ex07");	getchar();
-		//testCompare("ex08");	getchar();
-		//testCompare("ex09");	getchar();
-		//testCompare("ex10");	getchar();
-		//testCompare("ex11");	getchar();
-		//testCompare("ex12");	getchar();
-		//testCompare("ex13");	getchar();
-		//testCompare("ex14");	getchar();
-		//testCompare("ex15");	getchar();
-		//testCompare("ex16");	getchar();
-		testCompare("final");	getchar();
+		testCompare("ex01");	getchar();
+		testCompare("ex02");	getchar();
+		testCompare("ex03");	getchar();
+		testCompare("ex04");	getchar();
+		testCompare("ex05");	getchar();
+		testCompare("ex06");	getchar();
+		testCompare("ex07");	getchar();
+		testCompare("ex08");	getchar();
+		testCompare("ex09");	getchar();
+		testCompare("ex10");	getchar();
+		testCompare("ex11");	getchar();
+		testCompare("ex12");	getchar();
+		testCompare("ex13");	getchar();
+		testCompare("ex14");	getchar();
+		testCompare("ex15");	getchar();
+		testCompare("ex16");	getchar();
+		testCompare("ex17");	getchar();
+		//testCompare("ex18");	getchar();
+		//testCompare("final");	getchar();
 
 	}
 	catch (const std::exception& e)

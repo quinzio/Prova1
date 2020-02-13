@@ -7,6 +7,7 @@
 #include "Unit-Test-Generation-Support.h"
 
 int inner_main(int argc, std::string argv[]) throw (const std::exception&);
+
 void createBuiltInTypes(void);
 unsigned long long valueCast(std::string str, unsigned long long v);
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*));
@@ -19,6 +20,7 @@ BbSize setVariableOffset(Variable* v, BbSize vOffset = BbSize());
 void updateUnion(Variable* v);
 void signExtend(Variable* v);
 void careUnions(Variable* v);
+Variable visit(Node* node);
 Variable getTypDef(std::string uType);
 Variable fVarDecl(Node* node);
 Variable fIntegerLiteral(Node* node);
@@ -41,3 +43,6 @@ Variable fDeclStmt(Node* node);
 Variable fNULL(Node* node);
 Variable fFullComment(Node* node);
 Variable fConstantExpr(Node* node);
+Variable fEnumDecl(Node* node);
+Variable fEnumConstantDecl(Node* node);
+Variable fParmVarDecl(Node* node);

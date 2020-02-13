@@ -6,37 +6,17 @@
 #include <iomanip>
 #include <cstdint>
 
+#include <iostream>
+#include <regex>
+#include <string>
 
-// ex11
-// Unions
-struct s {
-	int vInt;
-	long vLong;
-}s1;
+std::regex e;
 
-union u {
-	char c;
-	unsigned char uc;
-	short s;
-	unsigned short us;
-	int i;
-	unsigned int ui;
-	long b;
-	unsigned long ul;
-	long long ll;
-	unsigned long long ull;
-	struct s s2;
-}vu;
-/*
-union u2 {
-	int c;
-	long d;
-	union u1 v2u1;
-}vu2;
-*/
+std::string fail("int *(((([1][2][3][4][5]");
+
 int main()
 {
-	vu.ull = 0x87878787;
-	s1.vInt = vu.b;
+	std::string str("aaa");
+	e = std::regex(str+str+ std::to_string(1));
 	return 0;
 }

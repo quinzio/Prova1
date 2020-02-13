@@ -94,6 +94,15 @@ std::regex eIntegralType(
 std::regex eVarDecl(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
 
+/* Matches something as
+|-ParmVarDecl 0x2e6392983e0 <col:8, col:12> col:12 used a 'int'
+Caputres: 
+1 name
+2 type
+*/
+std::regex eParmVarDecl(
+    R"###([^\w]*ParmVarDecl\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+
 /*
 _____________________________________________________1---------- 2__3--------___4--------
 |-TypedefDecl 0x261143784f0 <line:8:1, col:19> col:19 referenced k 'struct st':'struct st'
@@ -139,6 +148,27 @@ std::regex eDeclRefExpr(
     "\\s"                  /*                                                                                 */
     "'([\\w\\d]+)'"        /*'vb'                                                                             */
 );                         /* 'struct (anonymous struct at temp.c:3:1)':'struct (anonymous at temp.c:3:1)'    */
+
+/*
+    | `-DeclRefExpr 0x269eb41f840 <col:12> 'int' EnumConstant 0x269eb381c80 'IDLE' 'int'
+*/
+std::regex eDeclRefExprEnum(
+    "[^\\w<]*"             /*    | |   `-                                                                     */
+    "[\\w<]+"              /*DeclRefExpr                                                                      */
+    "\\s"                  /*                                                                                 */
+    "0x[\\da-f]{6,11}"     /*0x23a31f28510                                                                    */
+    "\\s"                  /*                                                                                 */
+    "<[^>]*>"              /*<col:3>                                                                          */
+    "\\s"                  /*                                                                                 */
+    "'([^']+)'"            /*'int'              1                                                             */
+    "\\sEnumConstant"      /* EnumConstant                                                                    */
+    "\\s"                  /*                                                                                 */
+    "(0x[\\da-f]{6,11})"   /*0x269eb381c80      2                                                             */
+    "\\s"                  /*                                                                                 */
+    "'([\\w\\d]+)'"        /*'IDLE'             3                                                             */
+    "\\s"                  /*                                                                                 */
+    "'([\\w\\d]+)'"        /*'int'              4                                                             */
+);
 
 std::regex eImplicitCastExpr(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')?\s<([^>]*)>)###");
@@ -251,6 +281,27 @@ std::regex eMemberExpr(
     "\\s"               /* Q   A space                                                        */
     "0x[\\da-f]{6,11}"  /* R   The hex identifier of the ast member node 0x123456             */
 );
+
+/*
+EnumDecl Syntax
+|-EnumDecl 0x1f18b49f398 <line:15:1, line:19:1> line:15:6 e1
+The enum struct can be anonymous: in this case the hexID must be tracked.
+|-EnumDecl 0x1f18b49f398 <line:15:1, line:19:1> line:15:6
+Can be followed by a typedef
+
+*/
+std::regex eEnumDecl(
+    R"###([^\w]*EnumDecl\s(0x[\da-f]{6,11})\s<[^>]*>\s(?:col:\d+|line:\d+:\d+|[\w\d\\\/\.:]+\.\w+:\d+:\d+)(?:\s(\w+))?)###");
+
+/*
+EnumConstantDecl syntax
+referenced is optional
+| |-EnumConstantDecl 0x1f18b3127b0 <line:6:5> col:5 referenced IDLE 'int'
+*/
+std::regex eEnumConstantDecl(
+    R"###([^\w]*EnumConstantDecl\s(0x[\da-f]{6,11})\s<[^>]*>\s(?:col:\d+|line:\d+:\d+|[\w\d\\\/\.:]+\.\w+:\d+:\d+)(?:\sreferenced)?\s(\w+)\s'int')###");
+
+
 
 /*
 Generic type regex

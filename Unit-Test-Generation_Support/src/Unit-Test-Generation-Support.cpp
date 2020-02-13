@@ -30,13 +30,16 @@ std::vector<Variable> vStruct;
 std::vector<Variable> vUnion;
 // vTypeDef contains all the user defined types
 std::vector<Variable> vTypeDef;
+// vEnum contains all the user defined enums
+std::vector<Variable> vEnum;
+// vParams contains the temporary function parameters
+std::vector<Variable> vParams;
 std::ofstream Variable::outputFile;
 int shadowLevel = 0;
 struct SourceRef_s::SourcePoint_s globalSource;
 extern std::string splash;
 Variable* myP;
 
-Variable visit(Node* node);
 unsigned long long cast(std::string str, unsigned long long v);
 
 int inner_main(int argc, std::string argv[]) throw (const std::exception&)
@@ -238,10 +241,19 @@ Variable visit(Node *node)
     if (node->astType.compare("ConstantExpr") == 0) {
         return fConstantExpr(node);
     }
+    if (node->astType.compare("EnumDecl") == 0) {
+        return fEnumDecl(node);
+    }
+    if (node->astType.compare("EnumConstantDecl") == 0) {
+        return fEnumConstantDecl(node);
+    }
+    if (node->astType.compare("ParmVarDecl") == 0) {
+        return fParmVarDecl(node);
+    }
     if (node->astType.compare("<<<NULL") == 0) {
         return fNULL(node);
     }
-
+    
     if (node->child) {
         Variable t;
         t = visit(node->child);
@@ -377,6 +389,13 @@ void signExtend(Variable* v) {
         val & 0x8000 ? 0xFFFFFFFF & val : val;
     }
 }
+void expThrow(std::string mex) {
+#if __GNUC__
+    throw std::exception();
+#else
+    throw std::exception(mex.c_str());
+#endif
+}
 Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
     bool found;
     std::smatch smTemp;
@@ -413,6 +432,16 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
             }
         }
     }
+    else if (std::regex_search(CoreTypes.finalType, smTemp, std::regex("^enum\\s(.*)"))) {
+        // Must take care of anonymous enums ?
+        std::string typeName = smTemp[1];
+        for (auto t : vEnum) {
+            if (t.name.compare(typeName) == 0) {
+                temp = t;
+                found = true;
+            }
+        }
+    }
     else if (std::regex_search(CoreTypes.finalType, smTemp, eBuiltinTypes)) {
         temp.type = CoreTypes.finalType;
         temp.typeEnum = Variable::typeEnum_t::isValue;
@@ -438,7 +467,7 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
             std::smatch smTemp;
             if (std::regex_search(node2->text, smTemp, std::regex(
                 "[^\\w<]*"                       /*| |-              */
-                "Record"                         /*Record            */
+                "(?:Record|Enum)"                /*Record or Enum    */
                 "\\s"                            /*                  */
                 "(0x[\\da-f]{6,11})"             /*0x247143d8308     */
             ))) {
@@ -450,6 +479,14 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
                 }
                 if (found == false) {
                     for (auto t : vUnion) {
+                        if (t.hexID.compare(smTemp[1]) == 0) {
+                            temp = t;
+                            found = true;
+                        }
+                    }
+                }
+                if (found == false) {
+                    for (auto t : vEnum) {
                         if (t.hexID.compare(smTemp[1]) == 0) {
                             temp = t;
                             found = true;
@@ -851,18 +888,42 @@ Variable fTypedefDecl(Node* node) {
 }
 Variable fDeclRefExpr(Node* node) {
     std::smatch smDeclRefExpr;
-    std::regex_search(node->text, smDeclRefExpr, eDeclRefExpr);
-    std::string varName = smDeclRefExpr[2];
+    std::smatch smDeclRefExprEnum;
     Variable ret;
-    for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
-        for (auto itit = it->begin(); itit != it->end(); itit++) {
-            if (itit->name.compare(varName) == 0) {
-                ret.pointsTo = &*itit;
-                ret.typeEnum = Variable::typeEnum_t::isRef;
-                return ret;
+    if (std::regex_search(node->text, smDeclRefExpr, eDeclRefExpr)) {
+        std::string varName = smDeclRefExpr[2];
+        for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+            for (auto itit = it->begin(); itit != it->end(); itit++) {
+                if (itit->name.compare(varName) == 0) {
+                    ret.pointsTo = &*itit;
+                    ret.typeEnum = Variable::typeEnum_t::isRef;
+                    return ret;
+                }
             }
         }
     }
+    else if (std::regex_search(node->text, smDeclRefExprEnum, eDeclRefExprEnum)) {
+        /* Captures 
+        1: should always be int
+        2: the hedID to search, there are homonymous
+        3: the face name
+        4: should be always int
+        */
+        std::string hexID = smDeclRefExprEnum[2];
+        for (auto it = vEnum.begin(); it != vEnum.end(); it++) {
+            for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
+                if (itit->hexID.compare(hexID) == 0) {
+                    /* Enum constants returns directly the value and
+                    no reference. */
+                    ret = *itit;
+                    ret.typeEnum = Variable::typeEnum_t::isEnum;
+                    return ret;
+                }
+            }
+        }
+    }
+    expThrow("DeclRefExpr failed");
+    return Variable();
 }
 Variable fImplicitCastExpr(Node* node) {
     Variable ret;
@@ -882,7 +943,12 @@ Variable fImplicitCastExpr(Node* node) {
         return *ret.pointsTo;
     }
     else if (smImplicitCastExpr[2].compare("IntegralCast") == 0) {
-        ret.value = valueCast(smImplicitCastExpr[1].str(), ret.value);
+        /*
+        Skip casting for enums, it makes no sense ... :( ?
+        */
+        if ((ret.typeEnum == Variable::typeEnum_t::isEnum) == false) {
+            ret.value = valueCast(smImplicitCastExpr[1].str(), ret.value);
+        }
         ret.type = smImplicitCastExpr[1];
         signExtend(&ret);
         return ret;
@@ -1168,14 +1234,22 @@ Variable fArraySubscriptExpr(Node* node) {
 }
 Variable fFunctionDecl(Node* node) {
     Variable temp;
+    Node* node2;
     /* Make sure it's not a function declaration*/
     if (node->child) {
-        temp = visit(node->child);
-    for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
-        for (auto itit = it->begin(); itit != it->end(); itit++) {
-            itit->print();
+        node2 = node->child;
+        while (node2) {
+            /* Visit all, there will be parameters first and then 
+            the function body. 
+            Parameters will be in vParams global vector */
+            temp = visit(node2);
+            node2 = node2->nextSib;
         }
-    }
+        for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+            for (auto itit = it->begin(); itit != it->end(); itit++) {
+                itit->print();
+            }
+        }
     }
     return temp;
 }
@@ -1193,5 +1267,118 @@ Variable fConstantExpr(Node* node) {
     /* As simple as that */
     return visit(node->child);
 }
+Variable fEnumDecl(Node* node) {
+    Variable ret;
+    Variable temp;
+    std::smatch smEnumDecl;
+    if (!std::regex_search(node->text, smEnumDecl, eEnumDecl)) {
+#if __GNUC__
+        throw std::exception();
+#else
+        throw std::exception("EnumDecl cannot recognize regex parsing.");
+#endif    
+    }
+    std::string hexID = smEnumDecl[1];
+    std::string name = smEnumDecl[2];
+    ret.hexID = hexID;
+    ret.name = name;
+    ret.typeEnum = Variable::typeEnum_t::isEnum;
+    if (node->child) {
+        Node* node2 = node->child;
+        int progressive = 0;
+        while (node2) {
+            temp = visit(node2);
+            // Skip comments
+            if (temp.typeEnum == Variable::typeEnum_t::isEnum) {
+                if (temp.value == 0x80000000) {
+                    temp.value = progressive;
+                }
+                else {
+                    progressive = temp.value;
+                }
+                progressive++;
+                // Keep track of the name
+                temp.type = name;
+                ret.intStruct.push_back(temp);
+            }
+            node2 = node2->nextSib;
+        }
+    }
+    vEnum.push_back(ret);
+    return ret;
+}
+Variable fEnumConstantDecl(Node* node) {
+    Variable ret;
+    Variable temp;
+    std::smatch smEnumConstantDecl;
+    if (!std::regex_search(node->text, smEnumConstantDecl, eEnumConstantDecl)) {
+#if __GNUC__
+        throw std::exception();
+#else
+        throw std::exception("EnumConstantDecl cannot recognize regex parsing.");
+#endif    
+    }
+    std::string hexID = smEnumConstantDecl[1];
+    std::string name = smEnumConstantDecl[2];
+    ret.hexID = hexID;
+    ret.name = name;
+    ret.typeEnum = Variable::typeEnum_t::isEnum;
+    ret.type = "int";
+    // This will cause the value to be reassigned progressively
+    ret.value = 0x80000000;
+    /* Check is the enum case value is forced to be assigned */
+    if (node->child) {
+        temp = visit(node->child);
+        ret.value = temp.value;
+    }
+    return ret;
+
+}
+Variable fParmVarDecl(Node* node) {
+/* Something as 
+|-ParmVarDecl 0x2e6392983e0 <col:8, col:12> col:12 used a 'int'
+*/
+/* This function is really the same as VarDecl
+However I like to keep them separated
+*/
+    Variable temp;
+    std::smatch smParmVarDecl;
+    std::string rawType;
+    struct coreType_str CoreTypes;
+    Variable* vback = NULL;
+    std::regex_search(node->text, smParmVarDecl, eParmVarDecl);
+    rawType = smParmVarDecl[2];
+    /*
+    Must extract the core type, example: struct s (*[3])[4]
+    Core type is *[3]
+    example: struct s (*(*[10])[3])[4]
+    Core type is *[10]
+    */
+    CoreTypes.coreType = rawType;
+    findCoreType(CoreTypes);
+    /* In CoreTypes.typeChainA there's now the vector of the types.
+       An array is made as of [11], a pointer is written as *,
+      (Function pointers are not implemented)
+      In CoreTypes.finalType there is the final, the "real" type.
+      Can be an inbuilt type, as int or char, or void(must be preceded by a pointer),
+      struct, union, or a typedef.
+      We allocate new Variables only to the first pointer. The correctness of the code
+      has already been checked by the compiler. */
+
+    temp = buildVariable(CoreTypes, node);
+    temp.name = smParmVarDecl[1];
+    temp.type = rawType;
+    temp.used = true;
+
+    // Add Variable to store
+    vParams.push_back(temp);
+    vback = &vParams.back();
+    vback->myAddressDebug = vback;
+    myP = vback;
+    setVariableOffset(vback);
+    return *vback;
+
+}
+
 
 

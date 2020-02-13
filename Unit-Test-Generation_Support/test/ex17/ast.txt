@@ -1,0 +1,47 @@
+TranslationUnitDecl 0x1d2606146c8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1d260614f60 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1d260614c60 '__int128'
+|-TypedefDecl 0x1d260614fd0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1d260614c80 'unsigned __int128'
+|-TypedefDecl 0x1d2606152d8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1d2606150b0 'struct __NSConstantString_tag'
+|   `-Record 0x1d260615028 '__NSConstantString_tag'
+|-TypedefDecl 0x1d260615348 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x1d2606148a0 'unsigned long long'
+|-TypedefDecl 0x1d2606153e0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1d2606153a0 'char *'
+|   `-BuiltinType 0x1d260614760 'char'
+|-TypedefDecl 0x1d260615450 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1d2606153a0 'char *'
+|   `-BuiltinType 0x1d260614760 'char'
+|-EnumDecl 0x1d2606154a8 <temp.c:4:9, line:12:1> line:4:9
+| |-EnumConstantDecl 0x1d260615570 <line:6:5> col:5 IDLE 'int'
+| |-EnumConstantDecl 0x1d2606155c8 <line:7:5> col:5 PARK 'int'
+| |-EnumConstantDecl 0x1d260615620 <line:8:5> col:5 RUN_ON_FLY 'int'
+| |-EnumConstantDecl 0x1d2606ef1c0 <line:9:5> col:5 RUN 'int'
+| |-EnumConstantDecl 0x1d2606ef218 <line:10:5> col:5 referenced WAIT 'int'
+| `-EnumConstantDecl 0x1d2606ef270 <line:11:5> col:5 FAULT 'int'
+|-TypedefDecl 0x1d2606ef328 <line:4:1, line:12:3> col:3 SystStatus_t 'enum SystStatus_t':'SystStatus_t'
+| `-ElaboratedType 0x1d2606ef2d0 'enum SystStatus_t' sugar
+|   `-EnumType 0x1d260615550 'SystStatus_t'
+|     `-Enum 0x1d2606154a8 ''
+|-EnumDecl 0x1d2606ef398 <line:15:1, line:19:1> line:15:6 e1
+| |-EnumConstantDecl 0x1d2606ef460 <line:16:5> col:5 A 'int'
+| |-EnumConstantDecl 0x1d2606ef4f8 <line:17:5, col:9> col:5 B 'int'
+| | `-ConstantExpr 0x1d2606ef4e0 <col:9> 'int'
+| |   `-IntegerLiteral 0x1d2606ef4b8 <col:9> 'int' 10
+| `-EnumConstantDecl 0x1d2606ef550 <line:18:5> col:5 referenced C 'int'
+|-VarDecl 0x1d2606ef600 <line:22:1, col:9> col:9 used vare1 'enum e1':'enum e1'
+|-VarDecl 0x1d2606ef6c8 <line:23:1, col:5> col:5 used var1 'int'
+`-FunctionDecl 0x1d2606ef780 <line:25:1, line:30:1> line:25:5 f1 'int ()'
+  `-CompoundStmt 0x1d2606ef930 <col:10, line:30:1>
+    |-BinaryOperator 0x1d2606ef860 <line:26:5, col:12> 'int' '='
+    | |-DeclRefExpr 0x1d2606ef820 <col:5> 'int' lvalue Var 0x1d2606ef6c8 'var1' 'int'
+    | `-DeclRefExpr 0x1d2606ef840 <col:12> 'int' EnumConstant 0x1d2606ef218 'WAIT' 'int'
+    |-BinaryOperator 0x1d2606ef8d8 <line:27:5, col:13> 'enum e1':'enum e1' '='
+    | |-DeclRefExpr 0x1d2606ef880 <col:5> 'enum e1':'enum e1' lvalue Var 0x1d2606ef600 'vare1' 'enum e1':'enum e1'
+    | `-ImplicitCastExpr 0x1d2606ef8c0 <col:13> 'enum e1':'enum e1' <IntegralCast>
+    |   `-DeclRefExpr 0x1d2606ef8a0 <col:13> 'int' EnumConstant 0x1d2606ef550 'C' 'int'
+    `-ReturnStmt 0x1d2606ef920 <line:29:2, col:9>
+      `-IntegerLiteral 0x1d2606ef8f8 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-2b8d17.o : fatal error LNK1136: file danneggiato o non valido

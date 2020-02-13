@@ -30,7 +30,8 @@ public:
         isRef,
         isValue,
         isStruct, 
-        isUnion
+        isUnion, 
+        isEnum
     };
     enum typeEnum_t typeEnum;
     std::string type;
