@@ -31,6 +31,7 @@ public:
     enum ValueEnum_t ValueEnum = ValueEnum_t::isInteger;
     int braceNested;
     int used = false;
+    int usedInTest = false;
     int returnSignalled = false;
     enum typeEnum_t {
         isArray,

@@ -45,7 +45,9 @@ std:: string Variable::print(std::string prefix, std::string postfix) {
 	else {
 		res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)this->value) + "\n";
 	}
-	std::cout << res;
+	if (this->usedInTest == true) {
+		std::cout << res;
+	}
 	Variable::outputFile << res;
 	int ix = 0;
 	if (this->typeEnum == Variable::typeEnum_t::isArray) {

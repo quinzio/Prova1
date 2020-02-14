@@ -4,10 +4,14 @@
 #include <fstream>
 #include "main.h"
 
+std::string targetFunction;
+
 int main(int argc, char* argv[]) {
 	std::string testFolder;
 	try
 	{
+		targetFunction = "ACM_DoFrequencyRampPU";
+
 		//testCompare("ex01");	getchar();
 		//testCompare("ex02");	getchar();
 		//testCompare("ex03");	getchar();

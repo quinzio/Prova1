@@ -22,6 +22,8 @@ debugging.
 #include "RegexColl.h"
 #include "SizeofTypes.h"
 
+extern std::string targetFunction;
+
 // vVariable contains all the global and local variables defined.
 VariableShadow vShadowedVar;
 // vStruct contains all the struct definition
@@ -181,7 +183,7 @@ void createBuiltInTypes(void)
 }
 Variable visit(Node *node)
 {
-    std::cout << node->astFileRow << "\n";
+    //std::cout << node->astFileRow << "\n";
     if (node->astFileRow == 23318) {
         myP++;
     }
@@ -1084,8 +1086,30 @@ Variable fImplicitCastExpr(Node* node) {
         return ret;
     }
     else if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
+        unsigned long long userValue;
+        bool localUsedInTest = false;
         if (ret.typeEnum == Variable::typeEnum_t::isArray) {
+            localUsedInTest = ret.pointsTo->array[ret.pointsTo->arrayIx].usedInTest;
+        }
+        else {
+            localUsedInTest = ret.pointsTo->usedInTest;
+        }
+        if (localUsedInTest == false) {
+            std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
+            std::cin >> userValue;
+        }
+        if (ret.typeEnum == Variable::typeEnum_t::isArray) {
+            if (localUsedInTest == false) {
+                ret.pointsTo->array[ret.pointsTo->arrayIx].usedInTest = true;
+                ret.pointsTo->array[ret.pointsTo->arrayIx].value = userValue;
+                ret.pointsTo->array[ret.pointsTo->arrayIx].valueDouble = userValue;
+            }
             return ret.pointsTo->array[ret.pointsTo->arrayIx];
+        }
+        if (localUsedInTest == false) {
+            ret.pointsTo->usedInTest = true;
+            ret.pointsTo->value = userValue;
+            ret.pointsTo->valueDouble = userValue;
         }
         return *ret.pointsTo;
     }
@@ -1147,6 +1171,11 @@ Variable fBinaryOperator(Node* node) {
     std::string boperator = smBinaryOperator[2];
     Variable opa, opb;
     Variable ret;
+#pragma warning Prevent side effect here, read comment
+    /*TODO 
+    Read opb or opa, only if needed in case of || && operators that can short circuit
+    The value and stop the condition check
+    */
     opa = visit(node->child);
     opb = visit(node->child->nextSib);
     ret = opa;
@@ -1158,6 +1187,7 @@ Variable fBinaryOperator(Node* node) {
         opa.pointsTo->uData.myParent = saveParent;
         opa.pointsTo->name = saveName;
         opa.pointsTo->uData = saveUData;
+        opa.pointsTo->usedInTest = true;
         careUnions(opa.pointsTo);
         ret = *opa.pointsTo;
     }
@@ -1441,16 +1471,16 @@ Variable fIfStmt(Node* node) {
     while (node2->astType.compare("<<<NULL") == 0) {
         node2 = node2->nextSib;
     }
-    cond = visit(node->child);
+    cond = visit(node2);
     if (cond.value) {
-        if (node->child->nextSib)
+        if (node2->nextSib)
             //vtrue = visit(node->child->nextSib->nextSib->nextSib); You may see this version <<NULL>>
-            vtrue = visit(node->child->nextSib);
+            vtrue = visit(node2->nextSib);
     }
     else {
-        if (node->child->nextSib->nextSib)
+        if (node2->nextSib->nextSib)
             //vfalse = visit(node->child->nextSib->nextSib->nextSib->nextSib); You may see this version <<NULL>>
-            vfalse = visit(node->child->nextSib->nextSib);
+            vfalse = visit(node2->nextSib->nextSib);
     }
     return Variable();
 }
@@ -1522,38 +1552,43 @@ Variable fFunctionDecl(Node* node) {
     func.name = smFunctionDecl[1];
     func.typeEnum = Variable::typeEnum_t::isFunction;
     func.type = smFunctionDecl[2];
-    /* Make sure it's not a function declaration*/
     if (node->child) {
         node2 = node->child;
         while (node2) {
-            /* Visit all, there will be parameters first and then 
-            the function body. 
-            Parameters will be in vParams global vector */
-            try {
-                temp = visit(node2);
-            }
-            catch (Variable v) {
-                v;
-            }
-            catch (std::string str) {
-                std::cout << str;
-                throw;
-            }
-            /*
-            catch (...) {
-                std::cout << "???????" << node->astFileRow << " " << node->text;
-                throw;
-            }
-            */
-            if (node2->astType.compare("ParmVarDecl") == 0) {
-                func.intStruct.push_back(temp);
-            }
-            else if (node2->astType.compare("CompoundStmt") == 0) {
-                hasBody = true;
-            }
+            /* Do only if target function */
+            if ((node2->astType.compare("CompoundStmt") != 0) || (func.name.compare(targetFunction) == 0))
+            {
+                /* Visit all, there will be parameters first and then
+                the function body.
+                Parameters will be in vParams global vector */
+                try {
+                    temp = visit(node2);
+                }
+                catch (Variable v) {
+                    v;
+                }
+                catch (std::string str) {
+                    std::cout << str;
+                    throw;
+                }
+                /*
+                catch (...) {
+                    std::cout << "???????" << node->astFileRow << " " << node->text;
+                    throw;
+                }
+                */
+                if (node2->astType.compare("ParmVarDecl") == 0) {
+                    func.intStruct.push_back(temp);
+                }
+                else if (node2->astType.compare("CompoundStmt") == 0) {
+                    hasBody = true;
+                }
+            } 
             node2 = node2->nextSib;
         }
         if (hasBody) {
+            /* Has bofy will be false if we didn't 
+            traverse the body. */
             for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
                 for (auto itit = it->begin(); itit != it->end(); itit++) {
                     (**itit).print();
@@ -1713,7 +1748,7 @@ Variable fCallExpr(Node* node) {
     auto itPar = call.pointsTo->intStruct.begin();
     auto itArg = arguments.begin();
     prefix = "Calling function " + call.pointsTo->name + "\n";
-    //std::cout << prefix;
+    std::cout << prefix;
     for ( ;itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
         prefix +=  "\tArg " + itPar->name + " = " + "";
         itArg->print(prefix, "");
@@ -1721,7 +1756,9 @@ Variable fCallExpr(Node* node) {
     }
     /* For the moment, every function returns 100, 
     so to prevent error because of division by zero. */
-    call.valueDouble = call.value = 100;
+    std::cout << "Enter return value (line " << node->sourceRef.Name.line << "): ";
+    std::cin >> call.valueDouble;
+    call.value = call.valueDouble;
     return call;
 }
 Variable fParenExpr(Node* node) {
