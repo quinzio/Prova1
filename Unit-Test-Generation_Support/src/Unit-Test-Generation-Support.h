@@ -53,5 +53,6 @@ Variable fReturnStmt(Node* node);
 Variable fCStyleCastExprt(Node* node);
 Variable fCompoundAssignOperator(Node* node);
 Variable fWhileStmt(Node* node);
+Variable fConditionalOperator(Node* node);
 
 

@@ -60,7 +60,7 @@ private:
 
 class VariableShadow {
 public:
-    typedef std::vector<Variable> vVariable;
+    typedef std::vector<Variable*> vVariable;
     std::vector<vVariable> shadows;
     VariableShadow() {
         vVariable v;

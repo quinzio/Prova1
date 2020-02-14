@@ -49,10 +49,24 @@ std:: string Variable::print(std::string prefix, std::string postfix) {
 	Variable::outputFile << res;
 	int ix = 0;
 	if (this->typeEnum == Variable::typeEnum_t::isArray) {
+		int lastDiff = 0;
 		for (auto v = this->array.begin(); v != this->array.end(); v++) {
-			tempPrefix = prefix + this->name + "[" + std::to_string(ix) + "]";
-			tempPostfix = postfix;
-			v->print(tempPrefix, tempPostfix);
+			/* This will prevent writing a lot of equal elemt arrays 
+			Take care of float and integer values to compare. 
+			Take care of arrays of structures, unions, etc...
+			*/
+			if (ix > 0 && 
+				this->array[0].typeEnum == Variable::typeEnum_t::isValue &&
+				this->array[lastDiff].value == this->array[ix].value &&
+				this->array[lastDiff].valueDouble == this->array[ix].valueDouble
+				) {
+			}
+			else {
+				lastDiff = ix;
+				tempPrefix = prefix + this->name + "[" + std::to_string(ix) + "]";
+				tempPostfix = postfix;
+				v->print(tempPrefix, tempPostfix);
+			}
 			ix++;
 		}
 	}

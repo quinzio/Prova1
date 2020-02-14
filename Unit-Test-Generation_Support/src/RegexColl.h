@@ -207,23 +207,7 @@ std::regex eDeclRefExprFunction(
     |   `-DeclRefExpr 0x24f1aec4030 <col:12> 'int' lvalue ParmVar 0x24f1aec3e08 'a' 'int'
 */
 std::regex eDeclRefExprParmVar(
-    "[^\\w<]*"             /*    | |   `-                                                                     */
-    "[\\w<]+"              /*DeclRefExpr                                                                      */
-    "\\s"                  /*                                                                                 */
-    "0x[\\da-f]{6,11}"     /*0x23a31f28510                                                                    */
-    "\\s"                  /*                                                                                 */
-    "<[^>]*>"              /*<col:3>                                                                          */
-    "\\s"                  /*                                                                                 */
-    "'([^']+)'"            /*'int'              1                                                             */
-    "\\s"                  /*                                                                                 */
-    "lvalue"               /*lvalue                                                                           */
-    "\\sParmVar"           /* ParmVar                                                                         */
-    "\\s"                  /*                                                                                 */
-    "(0x[\\da-f]{6,11})"   /*0x269eb381c80      2                                                             */
-    "\\s"                  /*                                                                                 */
-    "'([\\w\\d]+)'"        /*'var1'             3                                                             */
-    "\\s"                  /*                                                                                 */
-    "'([\\w\\d]+)'"        /*'int'              4                                                             */
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')\slvalue\sParmVar\s(0x[\da-f]{6,11})\s'([\w\d]+)'\s'([\w\d]+)')###"
 );
 
 std::regex eImplicitCastExpr(

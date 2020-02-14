@@ -161,13 +161,6 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     /* Assigna predefined size to all globals vectors. 
     That will prevent the addresses to be changed because of reallocation.
     */
-    vShadowedVar.shadows[0].resize(1000);
-    vStruct.resize(1000);
-    vUnion.resize(1000);
-    vTypeDef.resize(1000);
-    vEnum.resize(1000);
-    vFunction.resize(1000);
-
     createBuiltInTypes();
     if (myRoot.child) 
         t = visit(myRoot.child);
@@ -189,7 +182,7 @@ void createBuiltInTypes(void)
 Variable visit(Node *node)
 {
     std::cout << node->astFileRow << "\n";
-    if (node->astFileRow == 19373) {
+    if (node->astFileRow == 23318) {
         myP++;
     }
     if (node->astType.compare("IntegerLiteral") == 0) {
@@ -284,6 +277,9 @@ Variable visit(Node *node)
     }
     if (node->astType.compare("WhileStmt") == 0) {
         return fWhileStmt(node);
+    }
+    if (node->astType.compare("ConditionalOperator") == 0) {
+        return fConditionalOperator(node);
     }
     if (node->astType.compare("<<<NULL") == 0) {
         return fNULL(node);
@@ -779,7 +775,7 @@ Variable getTypDef(std::string uType) {
     return ret;
 }
 Variable fVarDecl(Node* node) {
-    Variable temp;
+    Variable& temp = *(new Variable());
     std::string rawType;
     struct coreType_str CoreTypes;
     std::smatch smVarDecl;
@@ -866,8 +862,8 @@ Variable fVarDecl(Node* node) {
 */
 
     // Add Variable to store
-    vShadowedVar.shadows[shadowLevel].push_back(temp);
-    vback = &vShadowedVar.shadows[shadowLevel].back();
+    vShadowedVar.shadows[shadowLevel].push_back(&temp);
+    vback = vShadowedVar.shadows[shadowLevel].back();
     vback->myAddressDebug = vback;
     myP = vback;
     setVariableOffset(vback);
@@ -1009,8 +1005,8 @@ Variable fDeclRefExpr(Node* node) {
         std::string varName = smDeclRefExpr[2];
         for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
             for (auto itit = it->begin(); itit != it->end(); itit++) {
-                if (itit->name.compare(varName) == 0) {
-                    ret.pointsTo = &*itit;
+                if ((**itit).name.compare(varName) == 0) {
+                    ret.pointsTo = *itit;
                     ret.typeEnum = Variable::typeEnum_t::isRef;
                     return ret;
                 }
@@ -1175,6 +1171,56 @@ Variable fBinaryOperator(Node* node) {
         ret.typeEnum = Variable::typeEnum_t::isValue;
         return ret;
     }
+    else if (boperator.compare("<=") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.value = opa.valueDouble <= opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value <= opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare(">") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.value = opa.valueDouble > opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value > opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare(">=") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.value = opa.valueDouble >= opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value >= opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("==") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.value = opa.valueDouble == opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value == opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("!=") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.value = opa.valueDouble != opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value != opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
     else if (boperator.compare("+") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
             ret.valueDouble = opa.valueDouble + opb.valueDouble;
@@ -1224,6 +1270,21 @@ Variable fBinaryOperator(Node* node) {
         ret.value = opa.value >> opb.value;
         ret.typeEnum = Variable::typeEnum_t::isValue;
         return ret;
+    }
+    else if (boperator.compare("&") == 0) {
+        ret.value = opa.value & opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("||") == 0) {
+    ret.value = opa.value || opb.value;
+    ret.typeEnum = Variable::typeEnum_t::isValue;
+    return ret;
+    }
+    else if (boperator.compare("&&") == 0) {
+    ret.value = opa.value || opb.value;
+    ret.typeEnum = Variable::typeEnum_t::isValue;
+    return ret;
     }
     else {
         throw std::string("Unknown binary operator at ast row " + std::to_string(node->astFileRow) + " " + node->text);
@@ -1373,9 +1434,13 @@ Variable fMemberExpr(Node* node) {
     }
 }
 Variable fIfStmt(Node* node) {
-
     Variable cond, vtrue, vfalse;
+    Node* node2;
     //cond = visit(node->child->nextSib->nextSib);  You may see this version <<NULL>>
+    node2 = node->child;
+    while (node2->astType.compare("<<<NULL") == 0) {
+        node2 = node2->nextSib;
+    }
     cond = visit(node->child);
     if (cond.value) {
         if (node->child->nextSib)
@@ -1421,7 +1486,7 @@ Variable fCompoundStmt(Node* node) {
     for (auto var = vVar->begin(); var != vVar->end(); var++) {
         for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
             for (auto itit = it->begin(); itit != it->end(); itit++) {
-                recurseVariable(&*itit, &*var, nullifyPointer);
+                recurseVariable(*itit, *var, nullifyPointer);
             }
         }
     }
@@ -1491,7 +1556,7 @@ Variable fFunctionDecl(Node* node) {
         if (hasBody) {
             for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
                 for (auto itit = it->begin(); itit != it->end(); itit++) {
-                    itit->print();
+                    (**itit).print();
                 }
             }
         }
@@ -1502,7 +1567,13 @@ Variable fFunctionDecl(Node* node) {
     return temp;
 }
 Variable fDeclStmt(Node* node) {
-    Variable temp = visit(node->child);
+    Variable temp;
+    Node* node2; 
+    node2 = node->child;
+    while (node2) {
+        temp = visit(node2);
+        node2 = node2->nextSib;
+    }
     return temp;
 }
 Variable fNULL(Node* node) {
@@ -1648,9 +1719,9 @@ Variable fCallExpr(Node* node) {
         itArg->print(prefix, "");
         prefix = "";
     }
-        
-    
-
+    /* For the moment, every function returns 100, 
+    so to prevent error because of division by zero. */
+    call.valueDouble = call.value = 100;
     return call;
 }
 Variable fParenExpr(Node* node) {
@@ -1733,6 +1804,11 @@ Variable fCompoundAssignOperator(Node* node) {
         ret.typeEnum = Variable::typeEnum_t::isValue;
         return ret;
     }
+    else if (boperator.compare("&=") == 0) {
+        opa.pointsTo->value &= opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
 }
 Variable fWhileStmt(Node* node) {
     Variable cond, vtrue, vfalse;
@@ -1755,6 +1831,27 @@ Variable fWhileStmt(Node* node) {
             Break on endless loops ?
         */
         if (iterationCount > 1000) break; 
+    }
+    return Variable();
+}
+Variable fConditionalOperator(Node* node) {
+    Variable cond, vtrue, vfalse;
+    Node* node2;
+    //cond = visit(node->child->nextSib->nextSib);  You may see this version <<NULL>>
+    node2 = node->child;
+    while (node2->astType.compare("<<<NULL") == 0) {
+        node2 = node2->nextSib;
+    }
+    cond = visit(node->child);
+    if (cond.value) {
+        if (node->child->nextSib)
+            //vtrue = visit(node->child->nextSib->nextSib->nextSib); You may see this version <<NULL>>
+            vtrue = visit(node->child->nextSib);
+    }
+    else {
+        if (node->child->nextSib->nextSib)
+            //vfalse = visit(node->child->nextSib->nextSib->nextSib->nextSib); You may see this version <<NULL>>
+            vfalse = visit(node->child->nextSib->nextSib);
     }
     return Variable();
 }
