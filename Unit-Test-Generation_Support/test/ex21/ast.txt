@@ -1,0 +1,37 @@
+TranslationUnitDecl 0x23590751898 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x23590752130 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x23590751e30 '__int128'
+|-TypedefDecl 0x235907521a0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x23590751e50 'unsigned __int128'
+|-TypedefDecl 0x235907524a8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x23590752280 'struct __NSConstantString_tag'
+|   `-Record 0x235907521f8 '__NSConstantString_tag'
+|-TypedefDecl 0x23590752518 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x23590751a70 'unsigned long long'
+|-TypedefDecl 0x235907525b0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x23590752570 'char *'
+|   `-BuiltinType 0x23590751930 'char'
+|-TypedefDecl 0x23590752620 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x23590752570 'char *'
+|   `-BuiltinType 0x23590751930 'char'
+|-VarDecl 0x23590752690 <temp.c:5:1, col:7> col:7 used a 'float'
+|-VarDecl 0x23590752758 <col:1, col:10> col:10 b 'float'
+|-VarDecl 0x235907527d8 <col:1, col:13> col:13 used c 'float'
+`-FunctionDecl 0x235908c7390 <line:7:1, line:12:1> line:7:5 f1 'int (int, char)'
+  |-ParmVarDecl 0x235908c7240 <col:8, col:12> col:12 pa 'int'
+  |-ParmVarDecl 0x235908c72b8 <col:16, col:21> col:21 pb 'char'
+  `-CompoundStmt 0x235908c7650 <col:25, line:12:1>
+    |-BinaryOperator 0x235908c75d0 <line:9:5, col:43> 'float' '='
+    | |-DeclRefExpr 0x235908c7440 <col:5> 'float' lvalue Var 0x23590752690 'a' 'float'
+    | `-CStyleCastExpr 0x235908c75a8 <col:9, col:43> 'float' <NoOp>
+    |   `-ParenExpr 0x235908c7588 <col:16, col:43> 'float'
+    |     `-BinaryOperator 0x235908c7530 <col:17, col:39> 'float' '+'
+    |       |-CStyleCastExpr 0x235908c74a0 <col:17, col:24> 'float' <IntegralToFloating>
+    |       | `-IntegerLiteral 0x235908c7460 <col:24> 'int' 47000
+    |       `-CStyleCastExpr 0x235908c7508 <col:32, col:39> 'float' <IntegralToFloating>
+    |         `-IntegerLiteral 0x235908c74c8 <col:39> 'int' 7500
+    `-ReturnStmt 0x235908c7640 <line:11:5, col:12>
+      `-ImplicitCastExpr 0x235908c7628 <col:12> 'int' <FloatingToIntegral>
+        `-ImplicitCastExpr 0x235908c7610 <col:12> 'float' <LValueToRValue>
+          `-DeclRefExpr 0x235908c75f0 <col:12> 'float' lvalue Var 0x235907527d8 'c' 'float'
+C:\Users\munarid\AppData\Local\Temp\temp-65bbff.o : fatal error LNK1136: file danneggiato o non valido

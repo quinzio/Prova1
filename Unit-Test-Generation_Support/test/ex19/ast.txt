@@ -1,0 +1,49 @@
+TranslationUnitDecl 0x2db1f9a1988 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x2db1f9a2220 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x2db1f9a1f20 '__int128'
+|-TypedefDecl 0x2db1f9a2290 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x2db1f9a1f40 'unsigned __int128'
+|-TypedefDecl 0x2db1f9a2598 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x2db1f9a2370 'struct __NSConstantString_tag'
+|   `-Record 0x2db1f9a22e8 '__NSConstantString_tag'
+|-TypedefDecl 0x2db1f9a2608 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x2db1f9a1b60 'unsigned long long'
+|-TypedefDecl 0x2db1f9a26a0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x2db1f9a2660 'char *'
+|   `-BuiltinType 0x2db1f9a1a20 'char'
+|-TypedefDecl 0x2db1f9a2710 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x2db1f9a2660 'char *'
+|   `-BuiltinType 0x2db1f9a1a20 'char'
+|-FunctionDecl 0x2db1f9a28d0 <temp.c:5:2, line:7:1> line:5:6 used f2 'int (int, char)'
+| |-ParmVarDecl 0x2db1f9a2780 <col:9, col:13> col:13 used a 'int'
+| |-ParmVarDecl 0x2db1f9a27f8 <col:16, col:21> col:21 used b 'char'
+| `-CompoundStmt 0x2db1fa48350 <col:24, line:7:1>
+|   `-ReturnStmt 0x2db1fa48340 <line:6:5, col:16>
+|     `-BinaryOperator 0x2db1fa48320 <col:12, col:16> 'int' '+'
+|       |-ImplicitCastExpr 0x2db1fa482d8 <col:12> 'int' <LValueToRValue>
+|       | `-DeclRefExpr 0x2db1fa48298 <col:12> 'int' lvalue ParmVar 0x2db1f9a2780 'a' 'int'
+|       `-ImplicitCastExpr 0x2db1fa48308 <col:16> 'int' <IntegralCast>
+|         `-ImplicitCastExpr 0x2db1fa482f0 <col:16> 'char' <LValueToRValue>
+|           `-DeclRefExpr 0x2db1fa482b8 <col:16> 'char' lvalue ParmVar 0x2db1f9a27f8 'b' 'char'
+|-VarDecl 0x2db1fa48380 <line:9:1, col:5> col:5 used res 'int'
+|-VarDecl 0x2db1fa48400 <line:10:1, col:5> col:5 used res1 'int'
+`-FunctionDecl 0x2db1fa48598 <line:12:1, line:16:1> line:12:5 f1 'int (int, char)'
+  |-ParmVarDecl 0x2db1fa48480 <col:8, col:12> col:12 a 'int'
+  |-ParmVarDecl 0x2db1fa484f8 <col:15, col:20> col:20 b 'char'
+  `-CompoundStmt 0x2db1fa48848 <col:23, line:16:1>
+    |-BinaryOperator 0x2db1fa48768 <line:13:5, col:21> 'int' '='
+    | |-DeclRefExpr 0x2db1fa48648 <col:5> 'int' lvalue Var 0x2db1fa48380 'res' 'int'
+    | `-CallExpr 0x2db1fa48720 <col:11, col:21> 'int'
+    |   |-ImplicitCastExpr 0x2db1fa48708 <col:11> 'int (*)(int, char)' <FunctionToPointerDecay>
+    |   | `-DeclRefExpr 0x2db1fa48668 <col:11> 'int (int, char)' Function 0x2db1f9a28d0 'f2' 'int (int, char)'
+    |   |-IntegerLiteral 0x2db1fa48688 <col:14> 'int' 3
+    |   `-ImplicitCastExpr 0x2db1fa48750 <col:17> 'char' <IntegralCast>
+    |     `-IntegerLiteral 0x2db1fa486b0 <col:17> 'int' 1005
+    |-BinaryOperator 0x2db1fa487e0 <line:14:5, col:12> 'int' '='
+    | |-DeclRefExpr 0x2db1fa48788 <col:5> 'int' lvalue Var 0x2db1fa48400 'res1' 'int'
+    | `-ImplicitCastExpr 0x2db1fa487c8 <col:12> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x2db1fa487a8 <col:12> 'int' lvalue Var 0x2db1fa48380 'res' 'int'
+    `-ReturnStmt 0x2db1fa48838 <line:15:5, col:12>
+      `-ImplicitCastExpr 0x2db1fa48820 <col:12> 'int' <LValueToRValue>
+        `-DeclRefExpr 0x2db1fa48800 <col:12> 'int' lvalue Var 0x2db1fa48380 'res' 'int'
+C:\Users\munarid\AppData\Local\Temp\temp-6c56bb.o : fatal error LNK1136: file danneggiato o non valido

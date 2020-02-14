@@ -23,8 +23,15 @@ public:
     std::string name;
     std::string hexID;
     unsigned long long value;
+    double valueDouble;
+    enum ValueEnum_t {
+        isInteger,
+        isFloat
+    };
+    enum ValueEnum_t ValueEnum = ValueEnum_t::isInteger;
     int braceNested;
     int used = false;
+    int returnSignalled = false;
     enum typeEnum_t {
         isArray,
         isRef,

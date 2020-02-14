@@ -232,6 +232,17 @@ std::regex eImplicitCastExpr(
 std::regex eBinaryOperator(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')?\s'([^']+)')###");
 
+
+/*
+| | |   `-CompoundAssignOperator 0x5033c18 <col:37, Sources/MCN1_acmotor.c:350:22> 'C_D_ISR_Status_t':'unsigned char' '|=' ComputeLHSTy='int' ComputeResultTy='int'
+Captures:
+1. Type
+2. Compound operator
+*/
+std::regex eCompoundAssignOperator(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')?\s'([^']+)')###"
+);
+
 std::regex eUnaryOperator(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
 
@@ -421,3 +432,13 @@ std::regex eBuiltinTypes(
 );
 
 
+
+/*
+| | |   |-CStyleCastExpr 0x4f6a620 <./Sources/MCN1_RegPI.h:32:44, col:237> 'u16':'unsigned short' <FloatingToIntegral>
+Captures: 
+1. First type
+2. Second type decoded optional
+3. Type of cast
+*/
+std::regex eCStyleCastExprt(
+    R"###([^\w]*CStyleCastExpr\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'([^']+)'|)\s<([^>]+)>)###");

@@ -9,7 +9,7 @@
 int inner_main(int argc, std::string argv[]) throw (const std::exception&);
 
 void createBuiltInTypes(void);
-unsigned long long valueCast(std::string str, unsigned long long v);
+Variable& valueCast(std::string str, Variable& v);
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*));
 void nullifyPointer(Variable* v, Variable* ref);
 void cleanTestStorage();
@@ -24,6 +24,7 @@ Variable visit(Node* node);
 Variable getTypDef(std::string uType);
 Variable fVarDecl(Node* node);
 Variable fIntegerLiteral(Node* node);
+Variable fFloatingLiteral(Node* node);
 Variable fTypedefDecl(Node* node);
 Variable fDeclRefExpr(Node* node);
 Variable fImplicitCastExpr(Node* node);
@@ -49,3 +50,8 @@ Variable fParmVarDecl(Node* node);
 Variable fCallExpr(Node* node);
 Variable fParenExpr(Node* node);
 Variable fReturnStmt(Node* node);
+Variable fCStyleCastExprt(Node* node);
+Variable fCompoundAssignOperator(Node* node);
+Variable fWhileStmt(Node* node);
+
+

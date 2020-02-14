@@ -1,5 +1,5 @@
 // ex18
-// More gibberish c declarations
+// More gibberish c declarations, including functions.
 
 int var1 = 1, var2 = 2;
 

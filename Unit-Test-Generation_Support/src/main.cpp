@@ -25,8 +25,11 @@ int main(int argc, char* argv[]) {
 		//testCompare("ex15");	getchar();
 		//testCompare("ex16");	getchar();
 		//testCompare("ex17");	getchar();
-		testCompare("ex18");	getchar();
-		//testCompare("final");	getchar();
+		//testCompare("ex18");	getchar();
+		//testCompare("ex19");	getchar();
+		//testCompare("ex20");	getchar();
+		//testCompare("ex21");	getchar();
+		testCompare("final");	getchar();
 
 	}
 	catch (const std::exception& e)

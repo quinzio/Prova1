@@ -1,0 +1,9 @@
+Calling function f2
+Arg a = 
+ = 3
+Arg b = 
+ = -19
+res = 0
+res->f2 = 0
+res1 = 0
+res1->f2 = 0

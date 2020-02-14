@@ -58,14 +58,6 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
 
     if (std::regex_match("subject", std::regex("(sub)(.*)")))
         std::cout << "string literal matched\n";
-    //std::string s("|-TypedefDecl 0xd2eaa8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag");
-    std::string s("[[[[aaaaa");
-    std::regex e("(\\W*)");
-    std::smatch sm;
-    std::regex_search(s, sm, e);
-    std::cout << sm[0] << "\n";
-    std::cout << sm[1] << "\n";
-    std::cout << sm[2] << "\n";
 
     Variable::outputFile.open(argv[2], std::ios_base::trunc);
     if (!Variable::outputFile) { 
@@ -96,6 +88,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     std::smatch smCatchGlobals;
     std::smatch smCatchGlobalName;
 
+    std::cout << "\n\nGlobal variables list and internal ast building\n\n";
     while (std::getline(infile, str)) {
         if (std::regex_search(str, smCatchGlobals, eCatchGlobals) && smCatchGlobals.size() >= 2) {
             if  (   (   smCatchGlobals[1].length() == 2  // Will found only functions and global variables and skip local ones
@@ -156,6 +149,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     /*
         Print AST types encountered
     */
+    std::cout << "\n\nAst types encountered in the clang ast.\n\n";
     for (auto it = astTypesSet.begin(); it != astTypesSet.end(); it++) {
         std::cout << *it << "\n";
     }
@@ -163,6 +157,17 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
         Visit the AST
     */
     Variable t;
+
+    /* Assigna predefined size to all globals vectors. 
+    That will prevent the addresses to be changed because of reallocation.
+    */
+    vShadowedVar.shadows[0].resize(1000);
+    vStruct.resize(1000);
+    vUnion.resize(1000);
+    vTypeDef.resize(1000);
+    vEnum.resize(1000);
+    vFunction.resize(1000);
+
     createBuiltInTypes();
     if (myRoot.child) 
         t = visit(myRoot.child);
@@ -183,8 +188,15 @@ void createBuiltInTypes(void)
 }
 Variable visit(Node *node)
 {
+    std::cout << node->astFileRow << "\n";
+    if (node->astFileRow == 19373) {
+        myP++;
+    }
     if (node->astType.compare("IntegerLiteral") == 0) {
         return fIntegerLiteral(node);
+    }
+    if (node->astType.compare("FloatingLiteral") == 0) {
+        return fFloatingLiteral(node);
     }
     if (node->astType.compare("VarDecl") == 0) {
         return fVarDecl(node);
@@ -261,10 +273,22 @@ Variable visit(Node *node)
     if (node->astType.compare("ReturnStmt") == 0) {
         return fReturnStmt(node);
     }
+    if (node->astType.compare("CStyleCastExpr") == 0) {
+        return fCStyleCastExprt(node);
+    }
+    if (node->astType.compare("CompoundAssignOperator") == 0) {
+        return fCompoundAssignOperator(node);
+    }
+    if (node->astType.compare("NullStmt") == 0) {
+        return Variable();
+    }
+    if (node->astType.compare("WhileStmt") == 0) {
+        return fWhileStmt(node);
+    }
     if (node->astType.compare("<<<NULL") == 0) {
         return fNULL(node);
     }
-    
+    throw std::string("Unknown ast node at " + std::to_string(node->astFileRow) + " " + node->text );
     if (node->child) {
         Variable t;
         t = visit(node->child);
@@ -276,95 +300,151 @@ Variable visit(Node *node)
     }
     return Variable();
 }
-unsigned long long valueCast(std::string str, unsigned long long v) 
+Variable& valueCast(std::string str, Variable& v)
 {
     if (str.compare("char") == 0) {
-        return (int8_t)v;
+        v.value = (int8_t)v.value;
+        v.uData.uSize = BbSize(1, 0);
+        return v;
     }
     else if (str.compare("signed char") == 0) {
-        return (int8_t)v;
+        v.value = (int8_t)v.value;
+        v.uData.uSize = BbSize(1, 0);
+        return v;
     }
     else if (str.compare("unsigned char") == 0) {
-        return (uint8_t)v;
+        v.value = (uint8_t)v.value;
+        v.uData.uSize = BbSize(1, 0);
+        return v;
     }
     else if (str.compare("short") == 0) {
-        return (int16_t)v;
+        v.value = (int16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("short int") == 0) {
-        return (int16_t)v;
+        v.value = (int16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("signed short") == 0) {
-        return (int16_t)v;
+        v.value = (int16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("signed short int") == 0) {
-        return (int16_t)v;
+        v.value = (int16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("unsigned short") == 0) {
-        return (uint16_t)v;
+        v.value = (uint16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("unsigned short int") == 0) {
-        return (uint16_t)v;
+        v.value = (uint16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("int") == 0) {
-        return (int16_t)v;
+        v.value = (int16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("signed") == 0) {
-        return (int16_t)v;
+        v.value = (int16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("signed int") == 0) {
-        return (int16_t)v;
+        v.value = (int16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("unsigned") == 0) {
-        return (uint16_t)v;
+        v.value = (uint16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("unsigned int") == 0) {
-        return (uint16_t)v;
+        v.value = (uint16_t)v.value;
+        v.uData.uSize = BbSize(2, 0);
+        return v;
     }
     else if (str.compare("long") == 0) {
-        return (int32_t)v;
+        v.value = (int32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("signed long") == 0) {
-        return (int32_t)v;
+        v.value = (int32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("signed long int") == 0) {
-        return (int32_t)v;
+        v.value = (int32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("unsigned long") == 0) {
-        return (uint32_t)v;
+        v.value = (uint32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("unsigned long int") == 0) {
-        return (uint32_t)v;
+        v.value = (uint32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("long long") == 0) {
-        return (int32_t)v;
+        v.value = (int32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("long long int") == 0) {
-        return (int32_t)v;
+        v.value = (int32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("signed long long") == 0) {
-        return (int32_t)v;
+        v.value = (int32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("signed long long int") == 0) {
-        return (int32_t)v;
+        v.value = (int32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("unsigned long long") == 0) {
-        return (uint32_t)v;
+        v.value = (uint32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("unsigned long long int") == 0) {
-        return (uint32_t)v;
+        v.value = (uint32_t)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("float") == 0) {
-        return (float)v;
+        v.value = (float)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("double") == 0) {
-        return (double)v;
+        v.value = (float)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
     else if (str.compare("long double") == 0) {
-        return (double)v;
+        v.value = (float)v.value;
+        v.uData.uSize = BbSize(4, 0);
+        return v;
     }
-    /* At this point we have encountered a typedef cast 
-    like a = 1; where a is a u8 a and u8 is a typedef. 
-    So we search the typedef, and we get the type. 
+    /* At this point we have encountered a typedef cast
+    like a = 1; where a is a u8 a and u8 is a typedef.
+    So we search the typedef, and we get the type.
     the "final" type should be a builtin or a pointer.
     Otherwise there shoukld be an explicit cast and that is handled otherwise.*/
 
@@ -572,21 +652,29 @@ void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*
 BbSize setVariableOffset(Variable* v, BbSize vOffset) {
     v->uData.myParent = myP;
     if (v->typeEnum == Variable::typeEnum_t::isArray) {
+        v->uData.uSize = 0;
+        v->uData.uOffset = vOffset;
         for (auto it = v->array.begin(); it != v->array.end(); it++) {
-            (&*it)->uData.uOffset = vOffset;
             vOffset = setVariableOffset(&*it, vOffset);
+            v->uData.uSize += (&*it)->uData.uSize;
         }
     }
     else if (v->typeEnum == Variable::typeEnum_t::isStruct) {
+        v->uData.uSize = 0;
+        v->uData.uOffset = vOffset;
         for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
-            (&*it)->uData.uOffset = vOffset;
             vOffset = setVariableOffset(&*it, vOffset);
+            v->uData.uSize += (&*it)->uData.uSize;
         }
     }
     else if (v->typeEnum == Variable::typeEnum_t::isUnion) {
+        v->uData.uSize = 0;
         for (auto it = v->intStruct.begin(); it != v->intStruct.end(); it++) {
             (&*it)->uData.uOffset = vOffset;
             setVariableOffset(&*it, vOffset);
+            if (v->uData.uSize < (&*it)->uData.uSize) {
+                v->uData.uSize = (&*it)->uData.uSize;
+            }
         }
     }
     else {
@@ -617,6 +705,10 @@ void cleanTestStorage() {
     vShadowedVar.shadows.push_back(v);
     vStruct.clear();
     vTypeDef.clear();
+    vUnion.clear();
+    vParams.clear();
+    vEnum.clear();
+    vFunction.clear();
     shadowLevel = 0;
 }
 void setSourceLocations(Node* tempNode, std::string str) {
@@ -782,15 +874,25 @@ Variable fVarDecl(Node* node) {
     return *vback;
 }
 Variable fIntegerLiteral(Node* node) {
-    unsigned long long integral;
     Variable ret;
     std::smatch smIntegralType;
     std::regex_search(node->text, smIntegralType, eIntegralType);
-    integral = std::stoull(smIntegralType[2]);
-    ret.value = valueCast(smIntegralType[1], integral);
+    ret.value = std::stoll(smIntegralType[2]);
     ret.type = smIntegralType[1];
-    signExtend(&ret);
+    //valueCast(smIntegralType[1], ret);
+    //signExtend(&ret);
     ret.typeEnum = Variable::typeEnum_t::isValue;
+    return ret;
+}
+Variable fFloatingLiteral(Node* node) {
+    Variable ret;
+    std::smatch smIntegralType;
+    std::regex_search(node->text, smIntegralType, eIntegralType);
+    ret.valueDouble = std::stof(smIntegralType[2]);
+    valueCast(smIntegralType[1], ret);
+    ret.type = smIntegralType[1];
+    ret.typeEnum = Variable::typeEnum_t::isValue;
+    ret.ValueEnum = Variable::ValueEnum_t::isFloat;
     return ret;
 }
 Variable fTypedefDecl(Node* node) {
@@ -831,8 +933,6 @@ Variable fTypedefDecl(Node* node) {
     temp.name = smTypeDef[2];
     temp.type = rawType;
     temp.used = true;
-    myP = &temp;
-    setVariableOffset(&temp);
 
     /*
     //    if (smGenericType[5].length() > 0) {
@@ -895,6 +995,8 @@ Variable fTypedefDecl(Node* node) {
     vTypeDef.push_back(temp);
     vback = &vTypeDef.back();
     vback->myAddressDebug = vback;
+    myP = vback;
+    setVariableOffset(vback);
     return temp;
 }
 Variable fDeclRefExpr(Node* node) {
@@ -981,6 +1083,10 @@ Variable fImplicitCastExpr(Node* node) {
         // Leave the pointer as it is, it's already a pointer to array.
         return ret;
     }
+    else if (smImplicitCastExpr[2].compare("FunctionToPointerDecay") == 0) {
+        // Leave the pointer as it is, it's already a pointer to function.
+        return ret;
+    }
     else if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
         if (ret.typeEnum == Variable::typeEnum_t::isArray) {
             return ret.pointsTo->array[ret.pointsTo->arrayIx];
@@ -992,7 +1098,7 @@ Variable fImplicitCastExpr(Node* node) {
         Skip casting for enums, it makes no sense ... :( ?
         */
         if ((ret.typeEnum == Variable::typeEnum_t::isEnum) == false) {
-            ret.value = valueCast(smImplicitCastExpr[1].str(), ret.value);
+            valueCast(smImplicitCastExpr[1].str(), ret);
         }
         ret.type = smImplicitCastExpr[1];
         signExtend(&ret);
@@ -1047,19 +1153,10 @@ Variable fBinaryOperator(Node* node) {
     Variable ret;
     opa = visit(node->child);
     opb = visit(node->child->nextSib);
-    if (boperator.compare("<") == 0) {
-        ret.value = opa.value < opb.value;
-        ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
-    }
-    if (boperator.compare("+") == 0) {
-        ret.value = opa.value + opb.value;
-        ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
-    }
+    ret = opa;
     if (boperator.compare("=") == 0) {
         std::string saveName = opa.pointsTo->name;
-        Variable * saveParent = opa.pointsTo->uData.myParent;
+        Variable* saveParent = opa.pointsTo->uData.myParent;
         struct unionData saveUData = opa.pointsTo->uData;
         *opa.pointsTo = opb;
         opa.pointsTo->uData.myParent = saveParent;
@@ -1067,6 +1164,69 @@ Variable fBinaryOperator(Node* node) {
         opa.pointsTo->uData = saveUData;
         careUnions(opa.pointsTo);
         ret = *opa.pointsTo;
+    }
+    else if (boperator.compare("<") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.value = opa.valueDouble < opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value < opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("+") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.valueDouble = opa.valueDouble + opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value + opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("-") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.valueDouble = opa.valueDouble - opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value - opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("*") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.valueDouble = opa.valueDouble * opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value * opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("/") == 0) {
+        if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
+            ret.valueDouble = opa.valueDouble / opb.valueDouble;
+        }
+        else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+            ret.value = opa.value / opb.value;
+        }
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("<<") == 0) {
+        ret.value = opa.value << opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare(">>") == 0) {
+        ret.value = opa.value >> opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else {
+        throw std::string("Unknown binary operator at ast row " + std::to_string(node->astFileRow) + " " + node->text);
     }
     return ret;
 }
@@ -1253,6 +1413,7 @@ Variable fCompoundStmt(Node* node) {
     vShadowedVar.shadows.push_back(v);
     for (auto next = node->child; next != NULL; next = next->nextSib) {
         temp = visit(next);
+        if (temp.returnSignalled == true) break;
     }
     vVar = &vShadowedVar.shadows.back();
     // For each variable that will go out of scope it searches if there are 
@@ -1279,6 +1440,9 @@ Variable fArraySubscriptExpr(Node* node) {
     Variable ret;
     Variable pArray = visit(node->child);
     int ix = visit(node->child->nextSib).value;
+    if (ix >= pArray.pointsTo->array.size()) {
+        throw std::string("Array index error " + std::to_string(ix ) + " > " + std::to_string(pArray.pointsTo->array.size()));
+    }
     ret.pointsTo = &pArray.pointsTo->array[ix];
     ret.typeEnum = Variable::typeEnum_t::isRef;
     return ret;
@@ -1286,12 +1450,13 @@ Variable fArraySubscriptExpr(Node* node) {
 Variable fFunctionDecl(Node* node) {
     Variable temp;
     Variable func;
+    Node* node2;
+    bool hasBody = false;
     std::smatch smFunctionDecl;
     std::regex_search(node->text, smFunctionDecl, eFunctionDecl);
     func.name = smFunctionDecl[1];
     func.typeEnum = Variable::typeEnum_t::isFunction;
     func.type = smFunctionDecl[2];
-    Node* node2;
     /* Make sure it's not a function declaration*/
     if (node->child) {
         node2 = node->child;
@@ -1305,14 +1470,29 @@ Variable fFunctionDecl(Node* node) {
             catch (Variable v) {
                 v;
             }
+            catch (std::string str) {
+                std::cout << str;
+                throw;
+            }
+            /*
+            catch (...) {
+                std::cout << "???????" << node->astFileRow << " " << node->text;
+                throw;
+            }
+            */
             if (node2->astType.compare("ParmVarDecl") == 0) {
                 func.intStruct.push_back(temp);
             }
+            else if (node2->astType.compare("CompoundStmt") == 0) {
+                hasBody = true;
+            }
             node2 = node2->nextSib;
         }
-        for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
-            for (auto itit = it->begin(); itit != it->end(); itit++) {
-                itit->print();
+        if (hasBody) {
+            for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+                for (auto itit = it->begin(); itit != it->end(); itit++) {
+                    itit->print();
+                }
             }
         }
     }
@@ -1448,8 +1628,29 @@ However I like to keep them separated
 
 }
 Variable fCallExpr(Node* node) {
-    Variable call;
+    Variable call, arg;
+    Node* node2;
+    std::string prefix;
+    std::vector<Variable> arguments;
     call = visit(node->child);
+    node2 = node->child->nextSib;
+    while (node2) {
+        arg = visit(node2);
+        arguments.push_back(arg);
+        node2 = node2->nextSib;
+    }
+    auto itPar = call.pointsTo->intStruct.begin();
+    auto itArg = arguments.begin();
+    prefix = "Calling function " + call.pointsTo->name + "\n";
+    //std::cout << prefix;
+    for ( ;itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
+        prefix +=  "\tArg " + itPar->name + " = " + "";
+        itArg->print(prefix, "");
+        prefix = "";
+    }
+        
+    
+
     return call;
 }
 Variable fParenExpr(Node* node) {
@@ -1462,10 +1663,99 @@ Variable fParenExpr(Node* node) {
 Variable fReturnStmt(Node* node) {
     Variable retV;
     retV = visit(node->child);
-    /*
-    Throw it !!!
-    FunctionDecl will catch it... hopefully
-    */
-    throw retV;
+    retV.returnSignalled = true;
+    return retV;
+}
+Variable fCStyleCastExprt(Node* node) {
+    Variable ret;
+    std::smatch smCStyleCastExprt;
+    std::string firstType;
+    std::string secondType;
+    std::string typeOfCast;
+
+    std::regex_search(node->text, smCStyleCastExprt, eCStyleCastExprt);
+    firstType = smCStyleCastExprt[1];
+    secondType = smCStyleCastExprt[2];
+    typeOfCast = smCStyleCastExprt[3];
+    if (secondType.length() == 0) {
+        secondType = firstType;
+    }
+    if (typeOfCast.compare("IntegralCast") == 0) {
+        ret = visit(node->child);
+        valueCast(secondType, ret);
+        return ret;
+    }
+    else if (typeOfCast.compare("ToVoid") == 0) {
+        visit(node->child);
+        return Variable();
+    }
+    else if (typeOfCast.compare("FloatingToIntegral") == 0) {
+        ret = visit(node->child);
+        ret.value = ret.valueDouble;
+        ret.ValueEnum = Variable::ValueEnum_t::isInteger;
+        valueCast(secondType, ret);
+        return ret;
+    }
+    else if (typeOfCast.compare("NoOp") == 0) {
+        ret = visit(node->child);
+        return ret;
+    }
+    else if (typeOfCast.compare("FloatingCast") == 0) {
+        ret = visit(node->child);
+        valueCast(secondType, ret);
+        return ret;
+    }
+    else if (typeOfCast.compare("IntegralToFloating") == 0) {
+        ret = visit(node->child);
+        ret.valueDouble = ret.value;
+        ret.ValueEnum = Variable::ValueEnum_t::isFloat;
+        valueCast(secondType, ret);
+        return ret;
+    }
+    else {
+        throw std::string("unknown cast to " + typeOfCast + " at row " + std::to_string(node->astFileRow) + " " + node->text);
+    }
+
+
+}
+Variable fCompoundAssignOperator(Node* node) {
+    std::smatch smCompoundAssignOperator;
+    std::regex_search(node->text, smCompoundAssignOperator, eCompoundAssignOperator);
+    std::string castTo = smCompoundAssignOperator[1];
+    std::string boperator = smCompoundAssignOperator[2];
+    Variable opa, opb;
+    Variable ret;
+    opa = visit(node->child);
+    opb = visit(node->child->nextSib);
+    ret = opa;
+    if (boperator.compare("|=") == 0) {
+        opa.pointsTo->value |= opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+}
+Variable fWhileStmt(Node* node) {
+    Variable cond, vtrue, vfalse;
+    Node* node2;
+    int iterationCount = 0;
+    node2 = node->child;
+    while (node2->astType.compare("<<<NULL") == 0) {
+        node2 = node2->nextSib;
+    }
+    //cond = visit(node->child->nextSib->nextSib);  You may see this version <<NULL>>
+    cond = visit(node2);
+    while (cond.value) {
+        if (node2->nextSib) {
+            //vtrue = visit(node->child->nextSib->nextSib->nextSib); You may see this version <<NULL>>
+            vtrue = visit(node2->nextSib);
+        }
+        iterationCount++; 
+        /*
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Break on endless loops ?
+        */
+        if (iterationCount > 1000) break; 
+    }
+    return Variable();
 }
 

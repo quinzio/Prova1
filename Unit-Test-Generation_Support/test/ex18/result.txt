@@ -857,8 +857,6 @@ Null pointer
 v9 = 0
 v9[0] = 0
 Null pointer
-k = 0
-Null pointer
 var1 = 0
 var2 = 0
 f3 = 0
@@ -1710,8 +1708,12 @@ Null pointer
 v9 = 0
 v9[0] = 0
 Null pointer
-k = 0
-Null pointer
+Calling function f6
+Arg l1 = 
+ = 16960
+Calling function f2
+Arg a = 
+ = 10
 var1 = 0
 var2 = 0
 f3 = 0
