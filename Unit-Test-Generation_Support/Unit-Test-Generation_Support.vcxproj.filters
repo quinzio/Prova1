@@ -74,4 +74,9 @@
       <Filter>File di origine</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="IntegrazioneWx.txt">
+      <Filter>File di origine</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

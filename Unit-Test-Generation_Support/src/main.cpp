@@ -89,3 +89,7 @@ void testCompare(std::string testFolder)
 		std::cout << "\tProblems opening result or expected files.\n";
 	}
 }
+
+int provaWX() {
+	return 10;
+};

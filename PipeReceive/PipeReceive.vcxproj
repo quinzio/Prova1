@@ -20,11 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{AA21FDC1-F851-44FD-956A-13EAEA0AC58F}</ProjectGuid>
+    <ProjectGuid>{3418899D-C474-4626-9C06-0E929D7ED8B1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Prova1</RootNamespace>
+    <RootNamespace>PipeReceive</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Unit-Test-Generation-Support</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -72,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -91,8 +90,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <Optimization>Disabled</Optimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,10 +104,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <CompileAsManaged>false</CompileAsManaged>
-      <Optimization>Disabled</Optimization>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,8 +120,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <Optimization>MaxSpeed</Optimization>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,9 +138,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <CompileAsManaged>false</CompileAsManaged>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,31 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ResourceCompile Include="Unit-Test-Generation_Support.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\AsciiArt.cpp" />
-    <ClCompile Include="src\BbSize.cpp" />
-    <ClCompile Include="src\CoreTypes.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Node.cpp" />
-    <ClCompile Include="src\SizeofTypes.cpp" />
-    <ClCompile Include="src\Unit-Test-Generation-Support.cpp" />
-    <ClCompile Include="src\Variable.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\BbSize.h" />
-    <ClInclude Include="src\CoreTypes.h" />
-    <ClInclude Include="src\RegexCollCoreTypes.h" />
-    <ClInclude Include="src\main.h" />
-    <ClInclude Include="src\Node.h" />
-    <ClInclude Include="src\RegexColl.h" />
-    <ClInclude Include="src\SizeofTypes.h" />
-    <ClInclude Include="src\Unit-Test-Generation-Support.h" />
-    <ClInclude Include="src\Variabile.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="IntegrazioneWx.txt" />
+    <ClCompile Include="PipeReceive.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
