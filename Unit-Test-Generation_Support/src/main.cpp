@@ -4,15 +4,15 @@
 #include <fstream>
 #include "main.h"
 
-std::string targetFunction;
+std::string targetFunction = "main";
 
 int main(int argc, char* argv[]) {
 	std::string testFolder;
 	try
 	{
-		targetFunction = "ACM_DoFrequencyRampPU";
+		targetFunction = "main";
 
-		//testCompare("ex01");	getchar();
+		testCompare("ex01");	getchar();
 		//testCompare("ex02");	getchar();
 		//testCompare("ex03");	getchar();
 		//testCompare("ex04");	getchar();
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 		//testCompare("ex19");	getchar();
 		//testCompare("ex20");	getchar();
 		//testCompare("ex21");	getchar();
-		testCompare("final");	getchar();
+		//testCompare("final");	getchar();
 
 	}
 	catch (const std::exception& e)
@@ -45,10 +45,12 @@ int main(int argc, char* argv[]) {
 void testCompare(std::string testFolder)
 {
 	std::string inner_argv[3];
-	std::ifstream resultFile("test/" + testFolder + "/result.txt");
-	std::ifstream expectedFile("test/" + testFolder + "/expected.txt");
-	inner_argv[1] = ("test/" + testFolder + "/ast.txt").c_str();
-	inner_argv[2] = ("test/" + testFolder + "/result.txt").c_str();
+	//std::string baseDir = "";
+	std::string baseDir = "../Unit-Test-Generation_Support/";
+	std::ifstream resultFile(baseDir + "test/" + testFolder + "/result.txt");
+	std::ifstream expectedFile(baseDir + "test/" + testFolder + "/expected.txt");
+	inner_argv[1] = (baseDir + "test/" + testFolder + "/ast.txt").c_str();
+	inner_argv[2] = (baseDir + "test/" + testFolder + "/result.txt").c_str();
 	int	argc = 3;
 	cleanTestStorage();
 	inner_main(argc, inner_argv);
@@ -88,8 +90,7 @@ void testCompare(std::string testFolder)
 	else {
 		std::cout << "\tProblems opening result or expected files.\n";
 	}
+
 }
 
-int provaWX() {
-	return 10;
-};
+
