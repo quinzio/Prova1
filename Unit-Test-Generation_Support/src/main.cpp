@@ -6,7 +6,7 @@
 #include "main.h"
 #include "forGUI.h"
 
-std::string targetFunction = "main";
+std::string targetFunction = "ACM_DoFrequencyRampPU";
 HANDLE hEventReqGuiLine;
 HANDLE hEventReqValue;
 forGui_c forGui;
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	{
 		targetFunction = "main";
 
-		testCompare("ex22");	getchar();
+		//testCompare("ex01");	getchar();
 		//testCompare("ex02");	getchar();
 		//testCompare("ex03");	getchar();
 		//testCompare("ex04");	getchar();
@@ -38,7 +38,8 @@ int main(int argc, char* argv[]) {
 		//testCompare("ex19");	getchar();
 		//testCompare("ex20");	getchar();
 		//testCompare("ex21");	getchar();
-		//testCompare("final");	getchar();
+		//testCompare("ex22");	getchar();
+		testCompare("final");	getchar();
 
 	}
 	catch (const std::exception& e)
@@ -58,7 +59,7 @@ void testCompare(std::string testFolder)
 	inner_argv[2] = (baseDir + "test/" + testFolder + "/result.txt").c_str();
 	int	argc = 3;
 
-	// Events to the graohic interface
+	// Events to the graphic interface
 	hEventReqGuiLine = OpenEvent(EVENT_MODIFY_STATE | SYNCHRONIZE, FALSE, TEXT("SetGuiLine"));
 	if (!hEventReqGuiLine) {
 		std::cout << "Can't create event SetGuiLine\n";

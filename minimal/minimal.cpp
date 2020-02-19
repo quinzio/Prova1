@@ -84,7 +84,7 @@ wxThread::ExitCode MyThreadEvent::Entry()
 
 wxThread::ExitCode MyThreadTest::Entry()
 {
-    testCompare("ex22");
+    testCompare("final");
     return NULL;
 }
 
@@ -115,7 +115,7 @@ public:
     void OnAbout(wxCommandEvent& event);
     void OnThreadEvent(wxThreadEvent& event);
     void OnClick(wxCommandEvent& event);
-    void OnKey(wxKeyEvent& event);
+    void OnKeyMy(wxCommandEvent& event);
 
 private:
     wxStaticText* m_st;
@@ -157,7 +157,7 @@ EVT_MENU(Minimal_Quit, MyFrame::OnQuit)
 EVT_MENU(Minimal_About, MyFrame::OnAbout)
 EVT_THREAD(wxID_ANY, MyFrame::OnThreadEvent)
 EVT_BUTTON(BUTTON_Event, MyFrame::OnClick)
-EVT_CHAR_HOOK(MyFrame::OnKey)
+EVT_TEXT_ENTER(wxID_ANY, MyFrame::OnKeyMy)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWidgets to create
@@ -267,20 +267,18 @@ MyFrame::MyFrame(const wxString& title)
     attr.SetBackgroundColour(*wxYELLOW);
 
     VarValue = new wxTextCtrl(panel, TEXT_Value, "Enter value", wxPoint(0, 20), wxSize(60, 28),
-        0x0000, wxDefaultValidator, wxTextCtrlNameStr);
+        wxTE_PROCESS_ENTER, wxDefaultValidator, wxTextCtrlNameStr);
     VarValue->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
     ValButton = new wxButton(panel, BUTTON_Event, _T("Accept"), wxPoint(70, 20), wxSize(50, 28), 0);
 
-    MainEditBox = new wxTextCtrl(panel, TEXT_Main, "Hi!", wxPoint(0, 50), wxSize(400, 400),
-        wxTE_MULTILINE | wxTE_RICH2, wxDefaultValidator, wxTextCtrlNameStr);
+    MainEditBox = new wxTextCtrl(panel, TEXT_Main, "Hi!", wxPoint(0, 50), wxSize(1200, 400),
+        wxTE_MULTILINE | wxTE_RICH2 | wxTE_DONTWRAP, wxDefaultValidator, wxTextCtrlNameStr);
     MainEditBox->SetStyle(0, 10, attr);
     MainEditBox->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
-
+    
 }
-
-
 
 
 // event handlers
@@ -290,22 +288,24 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
     static int counter = 1;
     int position, positionHighlightB;
     wxTextAttr attr;
+    int guiLineT;
     attr.SetTextColour(*wxRED);
     attr.SetBackgroundColour(*wxYELLOW);
 
-
-    m_st->SetLabel(forGui.varName);
+    m_st->SetLabel(forGui.varName + " " + std::to_string(forGui.line) + " " + std::to_string(forGui.col));
     if (loadedFile.compare(forGui.filename) != 0) {
         MainEditBox->LoadFile(forGui.filename);
         loadedFile = forGui.filename;
     }
-    positionHighlightB = MainEditBox->XYToPosition(forGui.col, forGui.line);
-    MainEditBox->SetStyle(positionHighlightB-1, positionHighlightB + forGui.len+1, attr);
-    forGui.line -= 3;
-    if (forGui.line < 0) forGui.line = 0;
-    position = MainEditBox->XYToPosition(0, forGui.line);
+    guiLineT = forGui.line - 3;
+    if (guiLineT < 0) guiLineT = 0;
+    // Execute the next line 2 times because 
+    // the first time it fails ?? !!!
+    position = MainEditBox->XYToPosition(0, guiLineT);
+    position = MainEditBox->XYToPosition(0, guiLineT);
     MainEditBox->ShowPosition(position);
-    m_st->SetLabel(std::to_string(counter++));
+    positionHighlightB = MainEditBox->XYToPosition(forGui.col, forGui.line);
+    MainEditBox->SetStyle(positionHighlightB - 1, positionHighlightB + forGui.len, attr);
     //MainEditBox->AppendText(wxString::Format("pass %d\n", counter++));
     //MainEditBox->SetScrollbar(wxVERTICAL, 0, 16, 50);
     //MainEditBox->SetScrollPos(wxVERTICAL, 0);
@@ -329,10 +329,10 @@ void  MyFrame::OnClick(wxCommandEvent& WXUNUSED(event)) {
     SetEvent(hSetValue);
 }
 
-void MyFrame::OnKey(wxKeyEvent& event)
+void MyFrame::OnKeyMy(wxCommandEvent& event)
 {
-    if (event.GetKeyCode() == WXK_RETURN) {
-        wxMessageBox("enter key");
-    }
-
+    std::string temp = VarValue->GetValue().mb_str();
+    VarValue->SetValue("");
+    forGui.ValueFromGui = std::stoul(temp);
+    SetEvent(hSetValue);
 }

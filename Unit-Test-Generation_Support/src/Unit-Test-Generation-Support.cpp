@@ -1110,7 +1110,7 @@ Variable fImplicitCastExpr(Node* node) {
             WaitForSingleObject(hEventReqValue, INFINITE);
             //Sleep(2000);
             userValue = forGui.ValueFromGui;
-            std::cin >> userValue;
+            //std::cin >> userValue;
         }
         if (ret.typeEnum == Variable::typeEnum_t::isArray) {
             if (localUsedInTest == false) {
@@ -1770,8 +1770,19 @@ Variable fCallExpr(Node* node) {
     }
     /* For the moment, every function returns 100, 
     so to prevent error because of division by zero. */
-    std::cout << "Enter return value (line " << node->sourceRef.Name.line << "): ";
-    std::cin >> call.valueDouble;
+    Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
+    forGui.line = node->sourceRef.ExtBegin.line - 1;
+    forGui.col = node->sourceRef.ExtBegin.col;
+    forGui.varName = call.pointsTo->name;
+    forGui.len = call.pointsTo->name.length();
+
+    SetEvent(hEventReqGuiLine);
+    //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
+    WaitForSingleObject(hEventReqValue, INFINITE);
+    //Sleep(2000);
+    call.valueDouble = forGui.ValueFromGui;
+    //std::cin >> userValue;
+
     call.value = call.valueDouble;
     return call;
 }
