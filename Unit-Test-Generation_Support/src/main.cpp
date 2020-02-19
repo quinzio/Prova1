@@ -8,6 +8,7 @@
 
 std::string targetFunction = "main";
 HANDLE hEventReqGuiLine;
+HANDLE hEventReqValue;
 forGui_c forGui;
 
 int main(int argc, char* argv[]) {
@@ -58,8 +59,13 @@ void testCompare(std::string testFolder)
 	int	argc = 3;
 
 	// Events to the graohic interface
-	hEventReqGuiLine = OpenEvent(EVENT_MODIFY_STATE, FALSE, TEXT("Global\\SetGuiLine"));
+	hEventReqGuiLine = OpenEvent(EVENT_MODIFY_STATE | SYNCHRONIZE, FALSE, TEXT("SetGuiLine"));
 	if (!hEventReqGuiLine) {
+		std::cout << "Can't create event SetGuiLine\n";
+		throw std::string("Can't create event");
+	}
+	hEventReqValue = OpenEvent(EVENT_MODIFY_STATE | SYNCHRONIZE, FALSE, TEXT("SetValue"));
+	if (!hEventReqValue) {
 		std::cout << "Can't create event SetGuiLine\n";
 		throw std::string("Can't create event");
 	}

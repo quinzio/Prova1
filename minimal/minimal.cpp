@@ -45,9 +45,11 @@
 // ----------------------------------------------------------------------------
 #include <wx/thread.h>
 
+#include <string>
 #include "forGUI.h"
 std::string loadedFile = "";
-HANDLE h;
+HANDLE hSetGuiLine;
+HANDLE hSetValue;
 
 // a thread class that will periodically send events to the GUI thread
 class MyThreadEvent : public wxThread {
@@ -71,7 +73,7 @@ wxThread::ExitCode MyThreadEvent::Entry()
     for (unsigned n = 0; n < 100; n++)
     {
         // notify the main thread
-        WaitForSingleObject(h, INFINITE);
+        WaitForSingleObject(hSetGuiLine, INFINITE);
         wxThreadEvent* evt = new wxThreadEvent(wxEVT_THREAD);
         evt->SetInt(n);
         m_parent->QueueEvent(evt);
@@ -112,10 +114,14 @@ public:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnThreadEvent(wxThreadEvent& event);
+    void OnClick(wxCommandEvent& event);
+    void OnKey(wxKeyEvent& event);
 
 private:
     wxStaticText* m_st;
     wxTextCtrl* MainEditBox;
+    wxTextCtrl* VarValue;
+    wxButton* ValButton;
 
     // any class wishing to process wxWidgets events must use this macro
     DECLARE_EVENT_TABLE()
@@ -134,7 +140,9 @@ enum
     // it is important for the id corresponding to the "About" command to have
     // this standard value as otherwise it won't be handled properly under Mac
     // (where it is special and put into the "Apple" menu)
-    Minimal_About = wxID_ABOUT
+    Minimal_About = wxID_ABOUT,
+    BUTTON_Event = wxID_HIGHEST + 1,
+
 };
 
 // ----------------------------------------------------------------------------
@@ -148,6 +156,8 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 EVT_MENU(Minimal_Quit, MyFrame::OnQuit)
 EVT_MENU(Minimal_About, MyFrame::OnAbout)
 EVT_THREAD(wxID_ANY, MyFrame::OnThreadEvent)
+EVT_BUTTON(BUTTON_Event, MyFrame::OnClick)
+EVT_CHAR_HOOK(MyFrame::OnKey)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWidgets to create
@@ -180,9 +190,14 @@ bool MyApp::OnInit()
     // created initially)
     frame->Show(true);
 
-    h = CreateEvent(NULL, false, false, L"Global\\SetGuiLine");
-    if (!h) {
-        std::cout << "Can't create OpenEvent\n";
+    hSetGuiLine = CreateEvent(NULL, false, false, TEXT("SetGuiLine"));
+    if (!hSetGuiLine) {
+        std::cout << "Can't create Global\\SetGuiLine\n";
+        return -1;
+    }
+    hSetValue = CreateEvent(NULL, false, false, TEXT("SetValue"));
+    if (!hSetValue) {
+        std::cout << "Can't create Global\\SetValue\n";
         return -1;
     }
 
@@ -241,18 +256,27 @@ MyFrame::MyFrame(const wxString& title)
 #endif // wxUSE_STATUSBAR
 
     wxPanel* panel = new wxPanel(this, wxID_ANY);
-    m_st = new wxStaticText(panel, wxID_ANY, "stringa di prova", wxPoint(10, 10), wxSize(80, 18));
+    m_st = new wxStaticText(panel, wxID_ANY, "stringa di prova", wxPoint(0, 0), wxSize(40, 18));
     m_st->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
     wxWindowID TEXT_Main = 1234;
+    wxWindowID TEXT_Value = 1235;
+    wxWindowID BUTTON_Val = 1236;
     long start, end;
     wxTextAttr attr;
     attr.SetTextColour(*wxRED);
     attr.SetBackgroundColour(*wxYELLOW);
 
-    MainEditBox = new wxTextCtrl(panel, TEXT_Main, "Hi!", wxPoint(00, 50), wxSize(400, 400),
+    VarValue = new wxTextCtrl(panel, TEXT_Value, "Enter value", wxPoint(0, 20), wxSize(60, 28),
+        0x0000, wxDefaultValidator, wxTextCtrlNameStr);
+    VarValue->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+
+    ValButton = new wxButton(panel, BUTTON_Event, _T("Accept"), wxPoint(70, 20), wxSize(50, 28), 0);
+
+    MainEditBox = new wxTextCtrl(panel, TEXT_Main, "Hi!", wxPoint(0, 50), wxSize(400, 400),
         wxTE_MULTILINE | wxTE_RICH2, wxDefaultValidator, wxTextCtrlNameStr);
     MainEditBox->SetStyle(0, 10, attr);
     MainEditBox->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+
 
 }
 
@@ -281,6 +305,7 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
     if (forGui.line < 0) forGui.line = 0;
     position = MainEditBox->XYToPosition(0, forGui.line);
     MainEditBox->ShowPosition(position);
+    m_st->SetLabel(std::to_string(counter++));
     //MainEditBox->AppendText(wxString::Format("pass %d\n", counter++));
     //MainEditBox->SetScrollbar(wxVERTICAL, 0, 16, 50);
     //MainEditBox->SetScrollPos(wxVERTICAL, 0);
@@ -296,4 +321,18 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
+}
+
+void  MyFrame::OnClick(wxCommandEvent& WXUNUSED(event)) {
+    std::string temp = VarValue->GetValue().mb_str();
+    forGui.ValueFromGui = std::stoul(temp);
+    SetEvent(hSetValue);
+}
+
+void MyFrame::OnKey(wxKeyEvent& event)
+{
+    if (event.GetKeyCode() == WXK_RETURN) {
+        wxMessageBox("enter key");
+    }
+
 }

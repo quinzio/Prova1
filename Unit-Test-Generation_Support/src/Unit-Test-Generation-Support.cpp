@@ -1104,9 +1104,12 @@ Variable fImplicitCastExpr(Node* node) {
             forGui.col = node->sourceRef.Name.col;
             forGui.varName = ret.pointsTo->name;
             forGui.len = ret.pointsTo->name.length();
-            Sleep(1000);
+            
             SetEvent(hEventReqGuiLine);
-            std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
+            //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
+            WaitForSingleObject(hEventReqValue, INFINITE);
+            //Sleep(2000);
+            userValue = forGui.ValueFromGui;
             std::cin >> userValue;
         }
         if (ret.typeEnum == Variable::typeEnum_t::isArray) {
