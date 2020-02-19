@@ -14,6 +14,7 @@ debugging.
 #include <utility>
 #include <algorithm> 
 #include <cstdint>
+#include <windows.h>
 
 #include "Unit-Test-Generation-Support.h"
 #include "Variabile.h"
@@ -21,6 +22,9 @@ debugging.
 #include "CoreTypes.h"
 #include "RegexColl.h"
 #include "SizeofTypes.h"
+#include "Logger.h"
+#include "main.h"
+#include "forGUI.h"
 
 extern std::string targetFunction;
 
@@ -1095,6 +1099,13 @@ Variable fImplicitCastExpr(Node* node) {
             localUsedInTest = ret.pointsTo->usedInTest;
         }
         if (localUsedInTest == false) {
+            Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
+            forGui.line = node->sourceRef.Name.line-1;
+            forGui.col = node->sourceRef.Name.col;
+            forGui.varName = ret.pointsTo->name;
+            forGui.len = ret.pointsTo->name.length();
+            Sleep(1000);
+            SetEvent(hEventReqGuiLine);
             std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
             std::cin >> userValue;
         }

@@ -1,4 +1,5 @@
 #pragma once
 
-void testCompare(std::string testFolder);
+extern HANDLE hEventReqGuiLine;
+
 

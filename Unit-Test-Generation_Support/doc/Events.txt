@@ -1,0 +1,24 @@
+
+
+send
+//Create the event
+    HANDLE hEvent1 = CreateEvent(NULL, FALSE, false, L"MyEvent1");
+    if (!hEvent1) {
+        std::cout << "Can't create event MyEvent1\n";
+        return -1;
+    }
+//Fire the event    
+    SetEvent(hEvent1);
+
+Receive
+//Create the event
+
+    HANDLE h = OpenEvent(EVENT_MODIFY_STATE, FALSE, TEXT("MyEvent1"));
+    if (!h) {
+        std::cout << "Can't create OpenEvent\n";
+        return - 1;
+    }
+
+//Wait for the event
+    WaitForSingleObject(h, INFINITE);
+

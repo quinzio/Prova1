@@ -2,9 +2,13 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <windows.h>
 #include "main.h"
+#include "forGUI.h"
 
 std::string targetFunction = "main";
+HANDLE hEventReqGuiLine;
+forGui_c forGui;
 
 int main(int argc, char* argv[]) {
 	std::string testFolder;
@@ -12,7 +16,7 @@ int main(int argc, char* argv[]) {
 	{
 		targetFunction = "main";
 
-		testCompare("ex01");	getchar();
+		testCompare("ex22");	getchar();
 		//testCompare("ex02");	getchar();
 		//testCompare("ex03");	getchar();
 		//testCompare("ex04");	getchar();
@@ -52,6 +56,16 @@ void testCompare(std::string testFolder)
 	inner_argv[1] = (baseDir + "test/" + testFolder + "/ast.txt").c_str();
 	inner_argv[2] = (baseDir + "test/" + testFolder + "/result.txt").c_str();
 	int	argc = 3;
+
+	// Events to the graohic interface
+	hEventReqGuiLine = OpenEvent(EVENT_MODIFY_STATE, FALSE, TEXT("Global\\SetGuiLine"));
+	if (!hEventReqGuiLine) {
+		std::cout << "Can't create event SetGuiLine\n";
+		throw std::string("Can't create event");
+	}
+	forGui.filename = baseDir + "test/" + testFolder + "/temp.c";
+	forGui.line = 0;
+
 	cleanTestStorage();
 	inner_main(argc, inner_argv);
 	std::cout << "Comparing results for test " << testFolder << "\n";

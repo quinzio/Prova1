@@ -45,38 +45,44 @@
 // ----------------------------------------------------------------------------
 #include <wx/thread.h>
 
-void testCompare(std::string);
+#include "forGUI.h"
+std::string loadedFile = "";
+HANDLE h;
 
 // a thread class that will periodically send events to the GUI thread
-class MyThread : public wxThread
-{
+class MyThreadEvent : public wxThread {
 protected:
     wxEvtHandler* m_parent;
-
 public:
-    MyThread(wxEvtHandler* parent) : wxThread(), m_parent(parent)
-    {
-    };
-
+    MyThreadEvent(wxEvtHandler* parent) : wxThread(), m_parent(parent) {    };
+    ExitCode Entry();
+};
+class MyThreadTest : public wxThread {
+protected:
+    wxEvtHandler* m_parent;
+public:
+    MyThreadTest(wxEvtHandler* parent) : wxThread(), m_parent(parent) {    };
     ExitCode Entry();
 };
 
 
-wxThread::ExitCode MyThread::Entry()
+wxThread::ExitCode MyThreadEvent::Entry()
 {
     for (unsigned n = 0; n < 100; n++)
     {
         // notify the main thread
+        WaitForSingleObject(h, INFINITE);
         wxThreadEvent* evt = new wxThreadEvent(wxEVT_THREAD);
         evt->SetInt(n);
         m_parent->QueueEvent(evt);
-        
-
-        testCompare("ex01");
-
-        this->Sleep(1000);
+        //this->Sleep(1000);
     }
+    return NULL;
+}
 
+wxThread::ExitCode MyThreadTest::Entry()
+{
+    testCompare("ex22");
     return NULL;
 }
 
@@ -174,6 +180,24 @@ bool MyApp::OnInit()
     // created initially)
     frame->Show(true);
 
+    h = CreateEvent(NULL, false, false, L"Global\\SetGuiLine");
+    if (!h) {
+        std::cout << "Can't create OpenEvent\n";
+        return -1;
+    }
+
+    MyThreadEvent* threadEvent = new MyThreadEvent(frame);
+    MyThreadTest* threadTest = new MyThreadTest(frame);
+    //MyThread* thread = new MyThread(this);
+    if (threadEvent->Create() == wxTHREAD_NO_ERROR)
+    {
+        threadEvent->Run();
+    }
+    if (threadTest->Create() == wxTHREAD_NO_ERROR)
+    {
+        threadTest->Run();
+    }
+
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
     // application would exit immediately.
@@ -217,21 +241,18 @@ MyFrame::MyFrame(const wxString& title)
 #endif // wxUSE_STATUSBAR
 
     wxPanel* panel = new wxPanel(this, wxID_ANY);
-    m_st = new wxStaticText(panel, wxID_ANY, "stringa di prova", wxPoint(10, 10), wxSize(80, 14));
-
+    m_st = new wxStaticText(panel, wxID_ANY, "stringa di prova", wxPoint(10, 10), wxSize(80, 18));
+    m_st->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
     wxWindowID TEXT_Main = 1234;
     long start, end;
     wxTextAttr attr;
     attr.SetTextColour(*wxRED);
     attr.SetBackgroundColour(*wxYELLOW);
 
-    MainEditBox = new wxTextCtrl(panel, TEXT_Main, "Hi!", wxPoint(00, 50), wxSize(200, 200),
+    MainEditBox = new wxTextCtrl(panel, TEXT_Main, "Hi!", wxPoint(00, 50), wxSize(400, 400),
         wxTE_MULTILINE | wxTE_RICH2, wxDefaultValidator, wxTextCtrlNameStr);
-    MainEditBox->AppendText(
-        "ssssssssssssssssssssssssssssssssssssssssssssss\n"
-        "cccccccccccccccccccccccccccccccccccccc\b"
-    );
     MainEditBox->SetStyle(0, 10, attr);
+    MainEditBox->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
 }
 
@@ -243,11 +264,27 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
 {
     wxLogDebug("thread event: %d", event.GetInt());
     static int counter = 1;
-    m_st->SetLabel(wxString::Format("pass %d", counter++));
-    MainEditBox->AppendText(wxString::Format("pass %d\n", counter++));
+    int position, positionHighlightB;
+    wxTextAttr attr;
+    attr.SetTextColour(*wxRED);
+    attr.SetBackgroundColour(*wxYELLOW);
+
+
+    m_st->SetLabel(forGui.varName);
+    if (loadedFile.compare(forGui.filename) != 0) {
+        MainEditBox->LoadFile(forGui.filename);
+        loadedFile = forGui.filename;
+    }
+    positionHighlightB = MainEditBox->XYToPosition(forGui.col, forGui.line);
+    MainEditBox->SetStyle(positionHighlightB-1, positionHighlightB + forGui.len+1, attr);
+    forGui.line -= 3;
+    if (forGui.line < 0) forGui.line = 0;
+    position = MainEditBox->XYToPosition(0, forGui.line);
+    MainEditBox->ShowPosition(position);
+    //MainEditBox->AppendText(wxString::Format("pass %d\n", counter++));
     //MainEditBox->SetScrollbar(wxVERTICAL, 0, 16, 50);
-    MainEditBox->SetScrollPos(wxVERTICAL, 0);
-    MainEditBox->ScrollLines(-100);
+    //MainEditBox->SetScrollPos(wxVERTICAL, 0);
+    //MainEditBox->ScrollLines(-100);
     //MainEditBox->ShowPosition(400);
 }
 
@@ -259,10 +296,4 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    MyThread* thread = new MyThread(this);
-
-    if (thread->Create() == wxTHREAD_NO_ERROR)
-    {
-        thread->Run();
-    }
 }

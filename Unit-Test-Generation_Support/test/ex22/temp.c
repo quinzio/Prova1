@@ -1,0 +1,41 @@
+int a;
+int b;
+int c;
+int d;
+int e;
+int f;
+int g;
+int h;
+int i;
+int j;
+int k;
+int l;
+int m;
+int n;
+int o;
+int p;
+int q;
+int r;
+    
+int main() {
+    a = b;
+    b = c;
+    c = d;
+    d = e;
+    e = f;
+    f = g;
+    g = h;
+    h = i;
+    i = j;
+    j = k;
+    k = l;
+    l = m;
+    m = n;
+    n = o;
+    o = p;
+    p = q;
+    q = r;
+    r = c;
+    c = a + b;
+    return 0;
+}
