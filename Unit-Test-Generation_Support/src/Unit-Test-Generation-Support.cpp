@@ -27,6 +27,7 @@ debugging.
 #include "main.h"
 #include "forGUI.h"
 #include "ValuesFile.h"
+#include "TestRunner.h"
 
 extern std::string targetFunction;
 
@@ -49,6 +50,7 @@ int shadowLevel = 0;
 struct SourceRef_s::SourcePoint_s globalSource;
 extern std::string splash;
 Variable* myP;
+TestRunner testRunner;
 
 unsigned long long cast(std::string str, unsigned long long v);
 
@@ -68,7 +70,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
         std::cout << "string literal matched\n";
 
     Variable::outputFile.open(argv[2], std::ios_base::trunc);
-    if (!Variable::outputFile) { 
+    if (!Variable::outputFile) {
 #if __GNUC__
         throw std::exception();
 #else
@@ -99,21 +101,21 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     std::cout << "\n\nGlobal variables list and internal ast building\n\n";
     while (std::getline(infile, str)) {
         if (std::regex_search(str, smCatchGlobals, eCatchGlobals) && smCatchGlobals.size() >= 2) {
-            if  (   (   smCatchGlobals[1].length() == 2  // Will found only functions and global variables and skip local ones
-                        && 
-                            (smCatchGlobals[2].compare("VarDecl") == 0 
-                            || 
-                            smCatchGlobals[2].compare("FunctionDecl") == 0))
+            if ((smCatchGlobals[1].length() == 2  // Will found only functions and global variables and skip local ones
+                &&
+                (smCatchGlobals[2].compare("VarDecl") == 0
                     ||
-                    (   smCatchGlobals[1].length() == 8
-                        &&  // These are local variables
-                        smCatchGlobals[2].compare("VarDecl") == 0)
+                    smCatchGlobals[2].compare("FunctionDecl") == 0))
+                ||
+                (smCatchGlobals[1].length() == 8
+                    &&  // These are local variables
+                    smCatchGlobals[2].compare("VarDecl") == 0)
                 )
             {
                 if (std::regex_search(str, smCatchGlobalName, eCatchGlobalName)) {
                     if (smCatchGlobals[1].length() == 2)
                         std::cout << "Found global ";
-                    else 
+                    else
                         std::cout << "  Found local ";
                     std::cout << "name:type " << std::setw(30) << smCatchGlobalName[1] << ":" << smCatchGlobalName[2] << "\n";
                 }
@@ -166,7 +168,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     */
     Variable t;
 
-    /* Assigna predefined size to all globals vectors. 
+    /* Assigna predefined size to all globals vectors.
     That will prevent the addresses to be changed because of reallocation.
     */
     createBuiltInTypes();
@@ -176,25 +178,57 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
 
     if (myRoot.child) {
         do {
-            Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
-            forGui.line = myRoot.child->sourceRef.Name.line - 1;
-            forGui.col = myRoot.child->sourceRef.Name.col;
-            forGui.varName = "Begin";
-            forGui.len = 0;
-            forGui.strComm = "resetHL";
-            vf.writeFile();
+            testRunner.cleanSetByUser = false;
+            if (testRunner.freeRunning == false) {
+                Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
+                forGui.line = myRoot.child->sourceRef.Name.line - 1;
+                forGui.col = myRoot.child->sourceRef.Name.col;
+                forGui.varName = "Begin";
+                forGui.len = 0;
+                vf.writeFile();
 
-            SetEvent(hEventReqGuiLine);
-            WaitForSingleObject(hEventReqValue, INFINITE);
+                SetEvent(hEventReqGuiLine);
+                WaitForSingleObject(hEventReqValue, INFINITE);
+                if (forGui.ValueFromGui == 1) {
+                    break; 
+                }
+                else if (forGui.ValueFromGui == 2) {
+                    forGui.strComm = "resetHL";
+                    testRunner.cleanSetByUser = true;
+                    SetEvent(hEventReqGuiLine);
+                    WaitForSingleObject(hEventReqValue, INFINITE);
+                }
+            }
+            if (testRunner.freeRunning == true) {
+                testRunner.buildGlobals = false;
+                testRunner.freeRunning = false;
+            }
 
-            cleanTestStorage();
+            //cleanTestStorage();
+            for (auto it = vShadowedVar.shadows.begin(); it != vShadowedVar.shadows.end(); it++) {
+                for (auto itit = (*it).begin(); itit != (*it).end(); itit++) {
+                    recurseVariable(*itit, NULL,
+                        [](Variable* va, Variable* vb) {
+                            va->usedInTest = false;
+                            va->value = 0;
+                            va->valueDouble = 0;
+                            if (testRunner.cleanSetByUser == true) {
+                                va->setByUser = false;
+                            }
+                        }
+                    );
+                }
+            }
+            forGui.strComm = "";
+            testRunner.cleanSetByUser = false;
+
             t = visit(myRoot.child);
-        } while (forGui.ValueFromGui);
+        } while (1);
 
     }
-     infile.close();
-     Variable::outputFile.close();
-     return 0;
+    infile.close();
+    Variable::outputFile.close();
+    return 0;
 }
 void createBuiltInTypes(void)
 {
@@ -671,6 +705,7 @@ void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*
             recurseVariable(&*it, ref, fp);
         }
     }
+    fp(v, ref);
 }
 BbSize setVariableOffset(Variable* v, BbSize vOffset) {
     v->uData.myParent = myP;
@@ -778,6 +813,43 @@ void setGlobalLocation(std::smatch smSourcePoint) {
         globalSource.col = std::stoi(smSourcePoint[2]);
     }
 }
+void interactionWGui(Variable& ret, Node* node)
+{
+    unsigned long long userValue = 0;
+    bool localUsedInTest = false;
+    localUsedInTest = ret.pointsTo->usedInTest;
+    if (localUsedInTest == false && testRunner.freeRunning == false) {
+
+        if (ret.pointsTo->setByUser == true) {
+            userValue = ret.pointsTo->value = ret.pointsTo->valueByUser;
+            userValue = ret.pointsTo->valueDouble = ret.pointsTo->valueDoubleByUser;
+        }
+        else {
+            Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
+            forGui.line = node->sourceRef.Name.line - 1;
+            forGui.col = node->sourceRef.Name.col;
+            forGui.varName = ret.pointsTo->name;
+            forGui.len = ret.pointsTo->name.length();
+            forGui.strComm = "void";
+            vf.writeFile();
+
+            SetEvent(hEventReqGuiLine);
+            //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
+            WaitForSingleObject(hEventReqValue, INFINITE);
+            //Sleep(2000);
+            userValue = forGui.ValueFromGui;
+            //std::cin >> userValue; 
+            testRunner.freeRunning = true;
+            ret.pointsTo->setByUser = true;
+            ret.pointsTo->valueDoubleByUser = userValue;
+            ret.pointsTo->valueByUser = userValue;
+        }
+        ret.pointsTo->usedInTest = true;
+        ret.pointsTo->value = userValue;
+        ret.pointsTo->valueDouble = userValue;
+    }
+}
+
 Variable getTypDef(std::string uType) {
     std::smatch smTypeDef;
     std::smatch smStructType;
@@ -888,13 +960,16 @@ Variable fVarDecl(Node* node) {
 //    }
 */
 
-    // Add Variable to store
-    vShadowedVar.shadows[shadowLevel].push_back(&temp);
-    vback = vShadowedVar.shadows[shadowLevel].back();
-    vback->myAddressDebug = vback;
-    myP = vback;
-    setVariableOffset(vback);
-    return *vback;
+    // Add Variable to store if it's not a free running test
+    if (testRunner.buildGlobals == true) {
+        vShadowedVar.shadows[shadowLevel].push_back(&temp);
+        vback = vShadowedVar.shadows[shadowLevel].back();
+        vback->myAddressDebug = vback;
+        myP = vback;
+        setVariableOffset(vback);
+        return *vback;
+    }
+    return Variable();
 }
 Variable fIntegerLiteral(Node* node) {
     Variable ret;
@@ -1113,43 +1188,10 @@ Variable fImplicitCastExpr(Node* node) {
         // Leave the pointer as it is, it's already a pointer to function.
     }
     else if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
-        unsigned long long userValue;
-        bool localUsedInTest = false;
         if (ret.typeEnum == Variable::typeEnum_t::isArray) {
-            localUsedInTest = ret.pointsTo->array[ret.pointsTo->arrayIx].usedInTest;
+            ret.pointsTo = &ret.pointsTo->array[ret.pointsTo->arrayIx];
         }
-        else {
-            localUsedInTest = ret.pointsTo->usedInTest;
-        }
-        if (localUsedInTest == false) {
-            Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
-            forGui.line = node->sourceRef.Name.line-1;
-            forGui.col = node->sourceRef.Name.col;
-            forGui.varName = ret.pointsTo->name;
-            forGui.len = ret.pointsTo->name.length();
-            forGui.strComm = "void";
-            vf.writeFile();
-                
-            SetEvent(hEventReqGuiLine);
-            //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
-            WaitForSingleObject(hEventReqValue, INFINITE);
-            //Sleep(2000);
-            userValue = forGui.ValueFromGui;
-            //std::cin >> userValue;
-        }
-        if (ret.typeEnum == Variable::typeEnum_t::isArray) {
-            if (localUsedInTest == false) {
-                ret.pointsTo->array[ret.pointsTo->arrayIx].usedInTest = true;
-                ret.pointsTo->array[ret.pointsTo->arrayIx].value = userValue;
-                ret.pointsTo->array[ret.pointsTo->arrayIx].valueDouble = userValue;
-            }
-            return ret.pointsTo->array[ret.pointsTo->arrayIx];
-        }
-        if (localUsedInTest == false) {
-            ret.pointsTo->usedInTest = true;
-            ret.pointsTo->value = userValue;
-            ret.pointsTo->valueDouble = userValue;
-        }
+        interactionWGui(ret, node);
         ret = *ret.pointsTo;
     }
     else if (smImplicitCastExpr[2].compare("IntegralCast") == 0) {
@@ -1232,11 +1274,19 @@ Variable fBinaryOperator(Node* node) {
         std::string saveName = opa.pointsTo->name;
         Variable* saveParent = opa.pointsTo->uData.myParent;
         struct unionData saveUData = opa.pointsTo->uData;
+        bool setByUser = opa.pointsTo->setByUser;
+        unsigned long long valueByUser = opa.pointsTo->valueByUser;
+        float valueDoubleByUser = opa.pointsTo->valueDoubleByUser;
+
         *opa.pointsTo = opb;
+
         opa.pointsTo->uData.myParent = saveParent;
         opa.pointsTo->name = saveName;
         opa.pointsTo->uData = saveUData;
         opa.pointsTo->usedInTest = true;
+        opa.pointsTo->setByUser = setByUser;
+        opa.pointsTo->valueByUser = valueByUser;
+        opa.pointsTo->valueDoubleByUser = valueDoubleByUser;
         careUnions(opa.pointsTo);
         ret = *opa.pointsTo;
     }
@@ -1552,8 +1602,11 @@ Variable fCompoundStmt(Node* node) {
         if (temp.returnSignalled == true) break;
     }
     vVar = &vShadowedVar.shadows.back();
-    // For each variable that will go out of scope it searches if there are 
-    // pointer that points to it and will set them to NULL.
+    /* For each variable that will go out of scope it searches if there are 
+    pointer that points to it and will set them to NULL.
+    Otherwise during e.g. the printing of the variable, the procedure will 
+    follow dangling pointers.
+    */
     for (auto var = vVar->begin(); var != vVar->end(); var++) {
         for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
             for (auto itit = it->begin(); itit != it->end(); itit++) {

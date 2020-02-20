@@ -344,11 +344,8 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
         positionHighlightB = CodeBox->XYToPosition(forGui.col, forGui.line);
         CodeBox->SetStyle(positionHighlightB - 1, positionHighlightB + forGui.len, attr);
     }
-    //CodeBox->AppendText(wxString::Format("pass %d\n", counter++));
-    //CodeBox->SetScrollbar(wxVERTICAL, 0, 16, 50);
-    //CodeBox->SetScrollPos(wxVERTICAL, 0);
-    //CodeBox->ScrollLines(-100);
-    //CodeBox->ShowPosition(400);
+
+
 }
 
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))

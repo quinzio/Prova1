@@ -21,6 +21,7 @@ BbSize setVariableOffset(Variable* v, BbSize vOffset = BbSize());
 void updateUnion(Variable* v);
 void signExtend(Variable* v);
 void careUnions(Variable* v);
+void interactionWGui(Variable& ret, Node* node);
 Variable visit(Node* node);
 Variable getTypDef(std::string uType);
 Variable fVarDecl(Node* node);

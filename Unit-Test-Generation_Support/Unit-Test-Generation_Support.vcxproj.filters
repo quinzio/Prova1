@@ -50,6 +50,9 @@
     <ClCompile Include="src\ValuesFile.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\TestRunner.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\RegexColl.h">
@@ -86,6 +89,9 @@
       <Filter>File di origine</Filter>
     </ClInclude>
     <ClInclude Include="src\ValuesFile.h">
+      <Filter>File di origine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestRunner.h">
       <Filter>File di origine</Filter>
     </ClInclude>
   </ItemGroup>
