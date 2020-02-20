@@ -169,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="src\AsciiArt.cpp" />
     <ClCompile Include="src\BbSize.cpp" />
+    <ClCompile Include="src\ValuesFile.cpp" />
     <ClCompile Include="src\CoreTypes.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -179,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BbSize.h" />
+    <ClInclude Include="src\ValuesFile.h" />
     <ClInclude Include="src\CoreTypes.h" />
     <ClInclude Include="src\forGUI.h" />
     <ClInclude Include="src\Logger.h" />
@@ -189,9 +191,6 @@
     <ClInclude Include="src\SizeofTypes.h" />
     <ClInclude Include="src\Unit-Test-Generation-Support.h" />
     <ClInclude Include="src\Variabile.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="IntegrazioneWx.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

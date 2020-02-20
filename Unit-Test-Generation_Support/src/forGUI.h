@@ -11,11 +11,17 @@ Objects to be used by the GUI
 */
 class forGui_c {
 public:
+    /* TestMachine --> GUI */
+    std::string codeFileName;
+    std::string astFileName;
+    std::string valueFileName;
     int line;
     int col;
     int len;
     std::string varName;
-    std::string filename;
+    std::string strComm;
+
+    /* GUI --> TestMachine */
     unsigned long long ValueFromGui;
 };
 

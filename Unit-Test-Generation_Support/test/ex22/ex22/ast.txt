@@ -1,0 +1,118 @@
+TranslationUnitDecl 0x18077d64b68 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x18077d65400 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x18077d65100 '__int128'
+|-TypedefDecl 0x18077d65470 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x18077d65120 'unsigned __int128'
+|-TypedefDecl 0x18077d65798 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x18077d65550 'struct __NSConstantString_tag'
+|   `-Record 0x18077d654c8 '__NSConstantString_tag'
+|-TypedefDecl 0x18077d65808 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x18077d64d40 'unsigned long long'
+|-TypedefDecl 0x18077d658a0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x18077d65860 'char *'
+|   `-BuiltinType 0x18077d64c00 'char'
+|-TypedefDecl 0x18077d65910 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x18077d65860 'char *'
+|   `-BuiltinType 0x18077d64c00 'char'
+|-VarDecl 0x18077d65980 <temp.c:1:1, col:5> col:5 used variable_a 'int'
+|-VarDecl 0x18077d65a48 <line:2:1, col:5> col:5 used variable_b 'int'
+|-VarDecl 0x18077d65ac8 <line:3:1, col:5> col:5 used variable_c 'int'
+|-VarDecl 0x18077dc7ee0 <line:4:1, col:5> col:5 used variable_d 'int'
+|-VarDecl 0x18077dc7f60 <line:5:1, col:5> col:5 used variable_e 'int'
+|-VarDecl 0x18077dc7fe0 <line:6:1, col:5> col:5 used variable_f 'int'
+|-VarDecl 0x18077dc8060 <line:7:1, col:5> col:5 used variable_g 'int'
+|-VarDecl 0x18077dc80e0 <line:8:1, col:5> col:5 used variable_h 'int'
+|-VarDecl 0x18077dc8160 <line:9:1, col:5> col:5 used variable_i 'int'
+|-VarDecl 0x18077dc81e0 <line:10:1, col:5> col:5 used variable_j 'int'
+|-VarDecl 0x18077dc8260 <line:11:1, col:5> col:5 used variable_k 'int'
+|-VarDecl 0x18077dc82e0 <line:12:1, col:5> col:5 used variable_l 'int'
+|-VarDecl 0x18077dc8360 <line:13:1, col:5> col:5 used variable_m 'int'
+|-VarDecl 0x18077dc83e0 <line:14:1, col:5> col:5 used variable_n 'int'
+|-VarDecl 0x18077dc8460 <line:15:1, col:5> col:5 used variable_o 'int'
+|-VarDecl 0x18077dc84e0 <line:16:1, col:5> col:5 used variable_p 'int'
+|-VarDecl 0x18077dc8560 <line:17:1, col:5> col:5 used variable_q 'int'
+|-VarDecl 0x18077dc85e0 <line:18:1, col:5> col:5 used variable_r 'int'
+`-FunctionDecl 0x18077dc86a0 <line:20:1, line:41:1> line:20:5 main 'int ()'
+  `-CompoundStmt 0x18077dcc0f8 <col:12, line:41:1>
+    |-BinaryOperator 0x18077dc8798 <line:21:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8740 <col:5> 'int' lvalue Var 0x18077d65980 'variable_a' 'int'
+    | `-ImplicitCastExpr 0x18077dc8780 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8760 <col:18> 'int' lvalue Var 0x18077d65a48 'variable_b' 'int'
+    |-BinaryOperator 0x18077dc8810 <line:22:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc87b8 <col:5> 'int' lvalue Var 0x18077d65a48 'variable_b' 'int'
+    | `-ImplicitCastExpr 0x18077dc87f8 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc87d8 <col:18> 'int' lvalue Var 0x18077d65ac8 'variable_c' 'int'
+    |-BinaryOperator 0x18077dc8888 <line:23:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8830 <col:5> 'int' lvalue Var 0x18077d65ac8 'variable_c' 'int'
+    | `-ImplicitCastExpr 0x18077dc8870 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8850 <col:18> 'int' lvalue Var 0x18077dc7ee0 'variable_d' 'int'
+    |-BinaryOperator 0x18077dc8900 <line:24:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc88a8 <col:5> 'int' lvalue Var 0x18077dc7ee0 'variable_d' 'int'
+    | `-ImplicitCastExpr 0x18077dc88e8 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc88c8 <col:18> 'int' lvalue Var 0x18077dc7f60 'variable_e' 'int'
+    |-BinaryOperator 0x18077dc8978 <line:25:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8920 <col:5> 'int' lvalue Var 0x18077dc7f60 'variable_e' 'int'
+    | `-ImplicitCastExpr 0x18077dc8960 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8940 <col:18> 'int' lvalue Var 0x18077dc7fe0 'variable_f' 'int'
+    |-BinaryOperator 0x18077dc89f0 <line:26:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8998 <col:5> 'int' lvalue Var 0x18077dc7fe0 'variable_f' 'int'
+    | `-ImplicitCastExpr 0x18077dc89d8 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc89b8 <col:18> 'int' lvalue Var 0x18077dc8060 'variable_g' 'int'
+    |-BinaryOperator 0x18077dc8a68 <line:27:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8a10 <col:5> 'int' lvalue Var 0x18077dc8060 'variable_g' 'int'
+    | `-ImplicitCastExpr 0x18077dc8a50 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8a30 <col:18> 'int' lvalue Var 0x18077dc80e0 'variable_h' 'int'
+    |-BinaryOperator 0x18077dc8ae0 <line:28:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8a88 <col:5> 'int' lvalue Var 0x18077dc80e0 'variable_h' 'int'
+    | `-ImplicitCastExpr 0x18077dc8ac8 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8aa8 <col:18> 'int' lvalue Var 0x18077dc8160 'variable_i' 'int'
+    |-BinaryOperator 0x18077dc8b58 <line:29:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8b00 <col:5> 'int' lvalue Var 0x18077dc8160 'variable_i' 'int'
+    | `-ImplicitCastExpr 0x18077dc8b40 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8b20 <col:18> 'int' lvalue Var 0x18077dc81e0 'variable_j' 'int'
+    |-BinaryOperator 0x18077dc8bd0 <line:30:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8b78 <col:5> 'int' lvalue Var 0x18077dc81e0 'variable_j' 'int'
+    | `-ImplicitCastExpr 0x18077dc8bb8 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8b98 <col:18> 'int' lvalue Var 0x18077dc8260 'variable_k' 'int'
+    |-BinaryOperator 0x18077dc8c48 <line:31:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8bf0 <col:5> 'int' lvalue Var 0x18077dc8260 'variable_k' 'int'
+    | `-ImplicitCastExpr 0x18077dc8c30 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8c10 <col:18> 'int' lvalue Var 0x18077dc82e0 'variable_l' 'int'
+    |-BinaryOperator 0x18077dc8cc0 <line:32:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8c68 <col:5> 'int' lvalue Var 0x18077dc82e0 'variable_l' 'int'
+    | `-ImplicitCastExpr 0x18077dc8ca8 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8c88 <col:18> 'int' lvalue Var 0x18077dc8360 'variable_m' 'int'
+    |-BinaryOperator 0x18077dc8d38 <line:33:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8ce0 <col:5> 'int' lvalue Var 0x18077dc8360 'variable_m' 'int'
+    | `-ImplicitCastExpr 0x18077dc8d20 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8d00 <col:18> 'int' lvalue Var 0x18077dc83e0 'variable_n' 'int'
+    |-BinaryOperator 0x18077dc8db0 <line:34:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8d58 <col:5> 'int' lvalue Var 0x18077dc83e0 'variable_n' 'int'
+    | `-ImplicitCastExpr 0x18077dc8d98 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8d78 <col:18> 'int' lvalue Var 0x18077dc8460 'variable_o' 'int'
+    |-BinaryOperator 0x18077dc8e28 <line:35:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8dd0 <col:5> 'int' lvalue Var 0x18077dc8460 'variable_o' 'int'
+    | `-ImplicitCastExpr 0x18077dc8e10 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8df0 <col:18> 'int' lvalue Var 0x18077dc84e0 'variable_p' 'int'
+    |-BinaryOperator 0x18077dc8ea0 <line:36:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8e48 <col:5> 'int' lvalue Var 0x18077dc84e0 'variable_p' 'int'
+    | `-ImplicitCastExpr 0x18077dc8e88 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dc8e68 <col:18> 'int' lvalue Var 0x18077dc8560 'variable_q' 'int'
+    |-BinaryOperator 0x18077dcbf58 <line:37:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dc8ec0 <col:5> 'int' lvalue Var 0x18077dc8560 'variable_q' 'int'
+    | `-ImplicitCastExpr 0x18077dcbf40 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dcbf20 <col:18> 'int' lvalue Var 0x18077dc85e0 'variable_r' 'int'
+    |-BinaryOperator 0x18077dcbfd0 <line:38:5, col:18> 'int' '='
+    | |-DeclRefExpr 0x18077dcbf78 <col:5> 'int' lvalue Var 0x18077dc85e0 'variable_r' 'int'
+    | `-ImplicitCastExpr 0x18077dcbfb8 <col:18> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x18077dcbf98 <col:18> 'int' lvalue Var 0x18077d65ac8 'variable_c' 'int'
+    |-BinaryOperator 0x18077dcc0a0 <line:39:5, col:31> 'int' '='
+    | |-DeclRefExpr 0x18077dcbff0 <col:5> 'int' lvalue Var 0x18077d65ac8 'variable_c' 'int'
+    | `-BinaryOperator 0x18077dcc080 <col:18, col:31> 'int' '+'
+    |   |-ImplicitCastExpr 0x18077dcc050 <col:18> 'int' <LValueToRValue>
+    |   | `-DeclRefExpr 0x18077dcc010 <col:18> 'int' lvalue Var 0x18077d65980 'variable_a' 'int'
+    |   `-ImplicitCastExpr 0x18077dcc068 <col:31> 'int' <LValueToRValue>
+    |     `-DeclRefExpr 0x18077dcc030 <col:31> 'int' lvalue Var 0x18077d65a48 'variable_b' 'int'
+    `-ReturnStmt 0x18077dcc0e8 <line:40:5, col:12>
+      `-IntegerLiteral 0x18077dcc0c0 <col:12> 'int' 0
+C:\Users\Davide\AppData\Local\Temp\temp-3a0343.o : fatal error LNK1136: invalid or corrupt file

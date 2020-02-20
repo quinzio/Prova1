@@ -5,17 +5,18 @@
 #include <windows.h>
 #include "main.h"
 #include "forGUI.h"
+#include "ValuesFile.h"
 
-std::string targetFunction = "ACM_DoFrequencyRampPU";
+std::string targetFunction = "main";
 HANDLE hEventReqGuiLine;
 HANDLE hEventReqValue;
 forGui_c forGui;
+ValuesFile vf;
 
 int main(int argc, char* argv[]) {
 	std::string testFolder;
 	try
 	{
-		targetFunction = "main";
 
 		//testCompare("ex01");	getchar();
 		//testCompare("ex02");	getchar();
@@ -39,7 +40,8 @@ int main(int argc, char* argv[]) {
 		//testCompare("ex20");	getchar();
 		//testCompare("ex21");	getchar();
 		//testCompare("ex22");	getchar();
-		testCompare("final");	getchar();
+		testCompare("ex23");	getchar();
+		//testCompare("final");	getchar();
 
 	}
 	catch (const std::exception& e)
@@ -70,7 +72,9 @@ void testCompare(std::string testFolder)
 		std::cout << "Can't create event SetGuiLine\n";
 		throw std::string("Can't create event");
 	}
-	forGui.filename = baseDir + "test/" + testFolder + "/temp.c";
+	forGui.codeFileName = baseDir + "test/" + testFolder + "/temp.c";
+	forGui.astFileName = baseDir + "test/" + testFolder + "/ast.txt";
+	forGui.valueFileName = baseDir + "test/" + testFolder + "/value.txt";
 	forGui.line = 0;
 
 	cleanTestStorage();

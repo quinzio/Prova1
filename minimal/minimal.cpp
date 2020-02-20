@@ -46,8 +46,14 @@
 #include <wx/thread.h>
 
 #include <string>
+#include <fstream>
+#include <sstream>
+#include "wx/grid.h"
+
 #include "forGUI.h"
-std::string loadedFile = "";
+
+std::string codeLoadedFile = "";
+std::string astLoadedFile = "";
 HANDLE hSetGuiLine;
 HANDLE hSetValue;
 
@@ -84,7 +90,7 @@ wxThread::ExitCode MyThreadEvent::Entry()
 
 wxThread::ExitCode MyThreadTest::Entry()
 {
-    testCompare("final");
+    testCompare("ex23");
     return NULL;
 }
 
@@ -119,7 +125,8 @@ public:
 
 private:
     wxStaticText* m_st;
-    wxTextCtrl* MainEditBox;
+    wxTextCtrl* CodeBox;
+    wxGrid* AstBox;
     wxTextCtrl* VarValue;
     wxButton* ValButton;
 
@@ -184,7 +191,7 @@ bool MyApp::OnInit()
         return false;
 
     // create the main application window
-    MyFrame* frame = new MyFrame("Minimal wxWidgets App");
+    MyFrame* frame = new MyFrame("Unit Test Generator Support");
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
@@ -229,7 +236,8 @@ MyFrame::MyFrame(const wxString& title)
 {
     // set the frame icon
     SetIcon(wxICON(sample));
-
+    // set size
+    SetSize(wxSize(1240, 800));
 #if wxUSE_MENUS
     // create a menu bar
     wxMenu* fileMenu = new wxMenu;
@@ -256,7 +264,7 @@ MyFrame::MyFrame(const wxString& title)
 #endif // wxUSE_STATUSBAR
 
     wxPanel* panel = new wxPanel(this, wxID_ANY);
-    m_st = new wxStaticText(panel, wxID_ANY, "stringa di prova", wxPoint(0, 0), wxSize(40, 18));
+    m_st = new wxStaticText(panel, wxID_ANY, "stringa di prova", wxPoint(10, 0), wxSize(40, 18));
     m_st->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
     wxWindowID TEXT_Main = 1234;
     wxWindowID TEXT_Value = 1235;
@@ -266,18 +274,23 @@ MyFrame::MyFrame(const wxString& title)
     attr.SetTextColour(*wxRED);
     attr.SetBackgroundColour(*wxYELLOW);
 
-    VarValue = new wxTextCtrl(panel, TEXT_Value, "Enter value", wxPoint(0, 20), wxSize(60, 28),
+    VarValue = new wxTextCtrl(panel, TEXT_Value, "Enter value", wxPoint(10, 20), wxSize(60, 28),
         wxTE_PROCESS_ENTER, wxDefaultValidator, wxTextCtrlNameStr);
     VarValue->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
-    ValButton = new wxButton(panel, BUTTON_Event, _T("Accept"), wxPoint(70, 20), wxSize(50, 28), 0);
+    ValButton = new wxButton(panel, BUTTON_Event, _T("Accept"), wxPoint(80, 20), wxSize(50, 28), 0);
 
-    MainEditBox = new wxTextCtrl(panel, TEXT_Main, "Hi!", wxPoint(0, 50), wxSize(1200, 400),
+    CodeBox = new wxTextCtrl(panel, TEXT_Main, "Loading module under test", wxPoint(10, 50), wxSize(1200, 400),
         wxTE_MULTILINE | wxTE_RICH2 | wxTE_DONTWRAP, wxDefaultValidator, wxTextCtrlNameStr);
-    MainEditBox->SetStyle(0, 10, attr);
-    MainEditBox->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+    CodeBox->SetStyle(0, 10, attr);
+    CodeBox->SetFont(wxFont(12, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
-    
+    AstBox = new wxGrid(panel, wxID_ANY, wxPoint(10, 460), wxSize(1200, 400));
+    AstBox->CreateGrid(0, 0);
+    AstBox->AppendCols(2);
+    AstBox->AppendRows(30000);
+    AstBox->SetColSize(1, 1000);
+
 }
 
 
@@ -287,30 +300,55 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
     wxLogDebug("thread event: %d", event.GetInt());
     static int counter = 1;
     int position, positionHighlightB;
-    wxTextAttr attr;
+    wxTextAttr attr, attrReset;
     int guiLineT;
     attr.SetTextColour(*wxRED);
     attr.SetBackgroundColour(*wxYELLOW);
+    attrReset.SetTextColour(*wxBLACK);
+    attrReset.SetBackgroundColour(*wxWHITE);
 
     m_st->SetLabel(forGui.varName + " " + std::to_string(forGui.line) + " " + std::to_string(forGui.col));
-    if (loadedFile.compare(forGui.filename) != 0) {
-        MainEditBox->LoadFile(forGui.filename);
-        loadedFile = forGui.filename;
+    if (codeLoadedFile.compare(forGui.codeFileName) != 0) {
+        CodeBox->LoadFile(forGui.codeFileName);
+        codeLoadedFile = forGui.codeFileName;
+    }
+    if (astLoadedFile.compare(forGui.astFileName) != 0) {
+        std::ifstream isAst(forGui.astFileName);
+        std::string strAst;
+        int ix = 0;
+        while (std::getline(isAst, strAst)) {
+            if (ix < 10000)
+                AstBox->SetCellValue(wxGridCellCoords(ix++, 1), strAst);
+        }
+    }
+    /* Always load values (all the file for now) */
+    std::ifstream isValues(forGui.valueFileName);
+    std::string strVal;
+    int ix = 0;
+    while (std::getline(isValues, strVal)) {
+        if (ix < 10000)
+            AstBox->SetCellValue(wxGridCellCoords(ix++, 0), strVal);
     }
     guiLineT = forGui.line - 3;
     if (guiLineT < 0) guiLineT = 0;
     // Execute the next line 2 times because 
     // the first time it fails ?? !!!
-    position = MainEditBox->XYToPosition(0, guiLineT);
-    position = MainEditBox->XYToPosition(0, guiLineT);
-    MainEditBox->ShowPosition(position);
-    positionHighlightB = MainEditBox->XYToPosition(forGui.col, forGui.line);
-    MainEditBox->SetStyle(positionHighlightB - 1, positionHighlightB + forGui.len, attr);
-    //MainEditBox->AppendText(wxString::Format("pass %d\n", counter++));
-    //MainEditBox->SetScrollbar(wxVERTICAL, 0, 16, 50);
-    //MainEditBox->SetScrollPos(wxVERTICAL, 0);
-    //MainEditBox->ScrollLines(-100);
-    //MainEditBox->ShowPosition(400);
+    position = CodeBox->XYToPosition(0, guiLineT);
+    position = CodeBox->XYToPosition(0, guiLineT);
+    CodeBox->ShowPosition(position);
+
+    if (forGui.strComm.compare("resetHL") == 0) {
+        CodeBox->SetStyle(1, CodeBox->GetLastPosition()-1, attrReset);
+    }
+    else {
+        positionHighlightB = CodeBox->XYToPosition(forGui.col, forGui.line);
+        CodeBox->SetStyle(positionHighlightB - 1, positionHighlightB + forGui.len, attr);
+    }
+    //CodeBox->AppendText(wxString::Format("pass %d\n", counter++));
+    //CodeBox->SetScrollbar(wxVERTICAL, 0, 16, 50);
+    //CodeBox->SetScrollPos(wxVERTICAL, 0);
+    //CodeBox->ScrollLines(-100);
+    //CodeBox->ShowPosition(400);
 }
 
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -333,6 +371,6 @@ void MyFrame::OnKeyMy(wxCommandEvent& event)
 {
     std::string temp = VarValue->GetValue().mb_str();
     VarValue->SetValue("");
-    forGui.ValueFromGui = std::stoul(temp);
+    forGui.ValueFromGui = std::stoll(temp);
     SetEvent(hSetValue);
 }

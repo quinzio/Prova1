@@ -8,6 +8,7 @@ debugging.
 #include <fstream>
 #include <regex>
 #include <iomanip>
+#include <sstream>
 #include <vector>
 #include <string>
 #include <set>
@@ -25,6 +26,7 @@ debugging.
 #include "Logger.h"
 #include "main.h"
 #include "forGUI.h"
+#include "ValuesFile.h"
 
 extern std::string targetFunction;
 
@@ -168,11 +170,31 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     That will prevent the addresses to be changed because of reallocation.
     */
     createBuiltInTypes();
-    if (myRoot.child) 
-        t = visit(myRoot.child);
+
+    // Write down ast node values
+    vf = ValuesFile(forGui.valueFileName, myRoot.child);
+
+    if (myRoot.child) {
+        do {
+            Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
+            forGui.line = myRoot.child->sourceRef.Name.line - 1;
+            forGui.col = myRoot.child->sourceRef.Name.col;
+            forGui.varName = "Begin";
+            forGui.len = 0;
+            forGui.strComm = "resetHL";
+            vf.writeFile();
+
+            SetEvent(hEventReqGuiLine);
+            WaitForSingleObject(hEventReqValue, INFINITE);
+
+            cleanTestStorage();
+            t = visit(myRoot.child);
+        } while (forGui.ValueFromGui);
+
+    }
      infile.close();
      Variable::outputFile.close();
-    return 0;
+     return 0;
 }
 void createBuiltInTypes(void)
 {
@@ -635,7 +657,6 @@ Variable buildVariable(struct coreType_str& CoreTypes, Node* node) {
     }
     return temp;
 }
-
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*)) {
     if (v->typeEnum == Variable::typeEnum_t::isRef) {
         fp(v, ref);
@@ -884,17 +905,21 @@ Variable fIntegerLiteral(Node* node) {
     //valueCast(smIntegralType[1], ret);
     //signExtend(&ret);
     ret.typeEnum = Variable::typeEnum_t::isValue;
+    ret.ValueEnum = Variable::ValueEnum_t::isInteger;
+    node->setValue(ret.value);
     return ret;
 }
 Variable fFloatingLiteral(Node* node) {
     Variable ret;
     std::smatch smIntegralType;
-    std::regex_search(node->text, smIntegralType, eIntegralType);
+    std::regex_search(node->text, smIntegralType, eFloatLIteral);
     ret.valueDouble = std::stof(smIntegralType[2]);
     valueCast(smIntegralType[1], ret);
     ret.type = smIntegralType[1];
     ret.typeEnum = Variable::typeEnum_t::isValue;
     ret.ValueEnum = Variable::ValueEnum_t::isFloat;
+    // Write node value
+    node->setValueDouble(ret.valueDouble);
     return ret;
 }
 Variable fTypedefDecl(Node* node) {
@@ -1083,11 +1108,9 @@ Variable fImplicitCastExpr(Node* node) {
     ret = visit(node->child);
     if (smImplicitCastExpr[2].compare("ArrayToPointerDecay") == 0) {
         // Leave the pointer as it is, it's already a pointer to array.
-        return ret;
     }
     else if (smImplicitCastExpr[2].compare("FunctionToPointerDecay") == 0) {
         // Leave the pointer as it is, it's already a pointer to function.
-        return ret;
     }
     else if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
         unsigned long long userValue;
@@ -1104,7 +1127,9 @@ Variable fImplicitCastExpr(Node* node) {
             forGui.col = node->sourceRef.Name.col;
             forGui.varName = ret.pointsTo->name;
             forGui.len = ret.pointsTo->name.length();
-            
+            forGui.strComm = "void";
+            vf.writeFile();
+                
             SetEvent(hEventReqGuiLine);
             //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
             WaitForSingleObject(hEventReqValue, INFINITE);
@@ -1125,7 +1150,7 @@ Variable fImplicitCastExpr(Node* node) {
             ret.pointsTo->value = userValue;
             ret.pointsTo->valueDouble = userValue;
         }
-        return *ret.pointsTo;
+        ret = *ret.pointsTo;
     }
     else if (smImplicitCastExpr[2].compare("IntegralCast") == 0) {
         /*
@@ -1136,9 +1161,19 @@ Variable fImplicitCastExpr(Node* node) {
         }
         ret.type = smImplicitCastExpr[1];
         signExtend(&ret);
-        return ret;
     }
-
+    else if (smImplicitCastExpr[2].compare("IntegralToFloating") == 0)
+    {
+        ret.valueDouble = ret.value;
+        ret.ValueEnum = Variable::ValueEnum_t::isFloat;
+    }
+    // Write node result value
+    if (ret.ValueEnum == Variable::ValueEnum_t::isInteger) {
+        node->setValue(ret.value);
+    }
+    else {
+        node->setValueDouble(ret.valueDouble);
+    }
     /* No cast should be necessary as the type is not changed by 
     ImplicitCastExpr */
     return ret;
@@ -1210,10 +1245,9 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.valueDouble < opb.valueDouble;
         }
         else if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
-            ret.value = opa.value < opb.value;
+            ret.value = (signed long long)opa.value < (signed long long)opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("<=") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1223,7 +1257,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value <= opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare(">") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1233,7 +1266,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value > opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare(">=") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1243,7 +1275,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value >= opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("==") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1253,7 +1284,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value == opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("!=") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1263,7 +1293,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value != opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("+") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1273,7 +1302,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value + opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("-") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1283,7 +1311,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value - opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("*") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1293,7 +1320,6 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value * opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("/") == 0) {
         if (opb.ValueEnum == Variable::ValueEnum_t::isFloat) {
@@ -1303,35 +1329,36 @@ Variable fBinaryOperator(Node* node) {
             ret.value = opa.value / opb.value;
         }
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("<<") == 0) {
         ret.value = opa.value << opb.value;
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare(">>") == 0) {
         ret.value = opa.value >> opb.value;
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("&") == 0) {
         ret.value = opa.value & opb.value;
         ret.typeEnum = Variable::typeEnum_t::isValue;
-        return ret;
     }
     else if (boperator.compare("||") == 0) {
-    ret.value = opa.value || opb.value;
-    ret.typeEnum = Variable::typeEnum_t::isValue;
-    return ret;
+        ret.value = opa.value || opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
     }
     else if (boperator.compare("&&") == 0) {
-    ret.value = opa.value || opb.value;
-    ret.typeEnum = Variable::typeEnum_t::isValue;
-    return ret;
+        ret.value = opa.value && opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
     }
     else {
         throw std::string("Unknown binary operator at ast row " + std::to_string(node->astFileRow) + " " + node->text);
+    }
+    // Write node result value
+    if (opb.ValueEnum == Variable::ValueEnum_t::isInteger) {
+        node->setValue(ret.value);
+    }
+    else {
+        node->setValueDouble(ret.valueDouble);
     }
     return ret;
 }
@@ -1554,6 +1581,9 @@ Variable fArraySubscriptExpr(Node* node) {
     }
     ret.pointsTo = &pArray.pointsTo->array[ix];
     ret.typeEnum = Variable::typeEnum_t::isRef;
+    // Write node result value 
+    node->setValue(ret.pointsTo->value);
+    node->setValueDouble(ret.pointsTo->valueDouble);
     return ret;
 }
 Variable fFunctionDecl(Node* node) {
@@ -1816,39 +1846,41 @@ Variable fCStyleCastExprt(Node* node) {
     if (typeOfCast.compare("IntegralCast") == 0) {
         ret = visit(node->child);
         valueCast(secondType, ret);
-        return ret;
     }
     else if (typeOfCast.compare("ToVoid") == 0) {
         visit(node->child);
-        return Variable();
+        ret = Variable();
     }
     else if (typeOfCast.compare("FloatingToIntegral") == 0) {
         ret = visit(node->child);
         ret.value = ret.valueDouble;
         ret.ValueEnum = Variable::ValueEnum_t::isInteger;
         valueCast(secondType, ret);
-        return ret;
     }
     else if (typeOfCast.compare("NoOp") == 0) {
         ret = visit(node->child);
-        return ret;
     }
     else if (typeOfCast.compare("FloatingCast") == 0) {
         ret = visit(node->child);
         valueCast(secondType, ret);
-        return ret;
     }
     else if (typeOfCast.compare("IntegralToFloating") == 0) {
         ret = visit(node->child);
         ret.valueDouble = ret.value;
         ret.ValueEnum = Variable::ValueEnum_t::isFloat;
         valueCast(secondType, ret);
-        return ret;
     }
     else {
         throw std::string("unknown cast to " + typeOfCast + " at row " + std::to_string(node->astFileRow) + " " + node->text);
     }
-
+    // Write node result value
+    if (ret.ValueEnum == Variable::ValueEnum_t::isInteger) {
+        node->setValue(ret.value);
+    }
+    else {
+        node->setValueDouble(ret.valueDouble);
+    }
+    return ret;
 
 }
 Variable fCompoundAssignOperator(Node* node) {

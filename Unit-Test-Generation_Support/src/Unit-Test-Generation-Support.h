@@ -13,6 +13,7 @@ Variable& valueCast(std::string str, Variable& v);
 void recurseVariable(Variable* v, Variable* ref, void (*fp)(Variable*, Variable*));
 void nullifyPointer(Variable* v, Variable* ref);
 void cleanTestStorage();
+void expThrow(std::string mex);
 void setSourceLocations(Node* tempNode, std::string str);
 void setGlobalLocation(std::smatch smSourcePoint);
 Variable buildVariable(struct coreType_str& CoreTypes, Node* node = NULL);

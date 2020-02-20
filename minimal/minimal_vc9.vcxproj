@@ -527,6 +527,11 @@
   <ItemGroup>
     <ClInclude Include="minimal.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Unit-Test-Generation_Support\Unit-Test-Generation_Support.vcxproj">
+      <Project>{aa21fdc1-f851-44fd-956a-13eaea0ac58f}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

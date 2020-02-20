@@ -9,9 +9,16 @@ struct SourceRef_s {
     }ExtBegin, ExtEnd, Name;
 };
 
+
+
 class Node
 {
 public:
+    enum ValueEnum_t {
+        isInteger,
+        isFloat, 
+        isNothing
+    };
     Node();
     ~Node();
     Node* prevSib = NULL;
@@ -23,4 +30,15 @@ public:
     int astFileRow;
     std::string astType;
     struct SourceRef_s sourceRef;
+    void setValue(unsigned long long value);
+    unsigned long long getValue();
+    void setValueDouble(float value);
+    float getValueDouble();
+    ValueEnum_t get_type();
+private:
+    unsigned long long value;
+    float valueDouble;
+    ValueEnum_t type;
 };
+
+

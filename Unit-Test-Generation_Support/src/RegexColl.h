@@ -91,6 +91,10 @@ std::regex eCatchGlobalName(
 std::regex eIntegralType(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s(\d+))###");
 
+/* Last part will match a floating point number */
+std::regex eFloatLIteral(
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?))###");
+
 std::regex eVarDecl(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
 

@@ -1,0 +1,41 @@
+int variable_a;
+int variable_b;
+int variable_c;
+int variable_d;
+int variable_e;
+int variable_f;
+int variable_g;
+int variable_h;
+int variable_i;
+int variable_j;
+int variable_k;
+int variable_l;
+int variable_m;
+int variable_n;
+int variable_o;
+int variable_p;
+int variable_q;
+int variable_r;
+    
+int main() {
+    variable_a = variable_b;
+    variable_b = variable_c;
+    variable_c = variable_d;
+    variable_d = variable_e;
+    variable_e = variable_f;
+    variable_f = variable_g;
+    variable_g = variable_h;
+    variable_h = variable_i;
+    variable_i = variable_j;
+    variable_j = variable_k;
+    variable_k = variable_l;
+    variable_l = variable_m;
+    variable_m = variable_n;
+    variable_n = variable_o;
+    variable_o = variable_p;
+    variable_p = variable_q;
+    variable_q = variable_r;
+    variable_r = variable_c;
+    variable_c = variable_a + variable_b;
+    return 0;
+}

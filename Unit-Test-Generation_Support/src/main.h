@@ -1,5 +1,6 @@
 #pragma once
+#include "ValuesFile.h"
 
-extern HANDLE hEventReqGuiLine;
+extern ValuesFile vf;
 
 
