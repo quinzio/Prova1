@@ -7,7 +7,6 @@
 #include "forGUI.h"
 #include "ValuesFile.h"
 
-std::string targetFunction = "main";
 HANDLE hEventReqGuiLine;
 HANDLE hEventReqValue;
 forGui_c forGui;

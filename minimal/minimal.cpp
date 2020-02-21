@@ -90,7 +90,12 @@ wxThread::ExitCode MyThreadEvent::Entry()
 
 wxThread::ExitCode MyThreadTest::Entry()
 {
-    testCompare("ex23");
+    //testCompare("ex01");
+    //testCompare("ex02");
+    //testCompare("ex03");
+    //testCompare("ex04");
+    //testCompare("ex23");
+    testCompare("final");
     return NULL;
 }
 
@@ -288,7 +293,7 @@ MyFrame::MyFrame(const wxString& title)
     AstBox = new wxGrid(panel, wxID_ANY, wxPoint(10, 460), wxSize(1200, 400));
     AstBox->CreateGrid(0, 0);
     AstBox->AppendCols(2);
-    AstBox->AppendRows(30000);
+    AstBox->AppendRows(40000);
     AstBox->SetColSize(1, 1000);
 
 }
@@ -317,7 +322,7 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
         std::string strAst;
         int ix = 0;
         while (std::getline(isAst, strAst)) {
-            if (ix < 10000)
+            if (ix < 40000)
                 AstBox->SetCellValue(wxGridCellCoords(ix++, 1), strAst);
         }
     }
@@ -326,7 +331,7 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
     std::string strVal;
     int ix = 0;
     while (std::getline(isValues, strVal)) {
-        if (ix < 10000)
+        if (ix < 40000)
             AstBox->SetCellValue(wxGridCellCoords(ix++, 0), strVal);
     }
     guiLineT = forGui.line - 3;
@@ -344,7 +349,9 @@ void MyFrame::OnThreadEvent(wxThreadEvent& event)
         positionHighlightB = CodeBox->XYToPosition(forGui.col, forGui.line);
         CodeBox->SetStyle(positionHighlightB - 1, positionHighlightB + forGui.len, attr);
     }
-
+    AstBox->MakeCellVisible(forGui.astLine+100, 0);
+    AstBox->MakeCellVisible(forGui.astLine-5, 0);
+    AstBox->SelectRow(forGui.astLine);
 
 }
 

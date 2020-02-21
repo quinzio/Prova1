@@ -18,6 +18,7 @@ public:
     int line;
     int col;
     int len;
+    int astLine;
     std::string varName;
     std::string strComm;
 

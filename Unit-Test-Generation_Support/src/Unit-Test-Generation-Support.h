@@ -22,6 +22,7 @@ void updateUnion(Variable* v);
 void signExtend(Variable* v);
 void careUnions(Variable* v);
 void interactionWGui(Variable& ret, Node* node);
+void ResetGlobals(void);
 Variable visit(Node* node);
 Variable getTypDef(std::string uType);
 Variable fVarDecl(Node* node);

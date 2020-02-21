@@ -96,7 +96,14 @@ std::regex eFloatLIteral(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'\s([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?))###");
 
 std::regex eVarDecl(
-    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)')###");
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s(?:col:\d+|line:\d+:\d+)(?:\sused)?\s(\w+)\s'([^']+)'(?:\s(cinit))?)###");
+/* Capture groups 
+1: Source location of the variable
+2: used
+3: name
+4: type of the variable
+5: cinit
+*/
 
 /* Matches something as
 |-ParmVarDecl 0x2e6392983e0 <col:8, col:12> col:12 used a 'int'

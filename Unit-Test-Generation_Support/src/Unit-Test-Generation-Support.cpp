@@ -29,8 +29,6 @@ debugging.
 #include "ValuesFile.h"
 #include "TestRunner.h"
 
-extern std::string targetFunction;
-
 // vVariable contains all the global and local variables defined.
 VariableShadow vShadowedVar;
 // vStruct contains all the struct definition
@@ -176,59 +174,148 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     // Write down ast node values
     vf = ValuesFile(forGui.valueFileName, myRoot.child);
 
+    testRunner.testState = TestRunner::TestState_enum::Init;
+
     if (myRoot.child) {
-        do {
-            testRunner.cleanSetByUser = false;
-            if (testRunner.freeRunning == false) {
-                Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
+        bool runWhile = true;
+        while (runWhile) {
+            /* Pre visit processing*/
+            switch (testRunner.testState) {
+            case (TestRunner::TestState_enum::Init): {
+                break;
+            }
+            case TestRunner::TestState_enum::BuildVariable: {
+                testRunner.buildGlobals = true;
+                /* This will prevent from entering and executing 
+                a test. */
+                std::string targetFunction = "";
+                break;
+            }
+            case TestRunner::TestState_enum::BeginOfFunction: {
+                testRunner.cleanSetByUser = false;
+                // The first time it enters here freeRunning is false
+                //Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
                 forGui.line = myRoot.child->sourceRef.Name.line - 1;
                 forGui.col = myRoot.child->sourceRef.Name.col;
-                forGui.varName = "Begin";
+                forGui.astLine = 0;
+                forGui.varName = "BeginOfFunction";
                 forGui.len = 0;
                 vf.writeFile();
 
                 SetEvent(hEventReqGuiLine);
                 WaitForSingleObject(hEventReqValue, INFINITE);
-                if (forGui.ValueFromGui == 1) {
-                    break; 
+                if (forGui.ValueFromGui == 0) {
+                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.buildGlobals = false;
+                    testRunner.freeRunning = true;
+                    testRunner.testState = TestRunner::TestState_enum::FreeRun;
+                }
+                else if (forGui.ValueFromGui == 1) {
+                    testRunner.testState = TestRunner::TestState_enum::Finish;
                 }
                 else if (forGui.ValueFromGui == 2) {
                     forGui.strComm = "resetHL";
-                    testRunner.cleanSetByUser = true;
+                    /*This request of user interaction is required to 
+                    effectively clean the highlighted part of code in the GUI */
                     SetEvent(hEventReqGuiLine);
                     WaitForSingleObject(hEventReqValue, INFINITE);
+                    testRunner.cleanSetByUser = true;
+                    ResetGlobals();
+                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.buildGlobals = false;
+                    testRunner.freeRunning = true;
+                    testRunner.testState = TestRunner::TestState_enum::FreeRun;
                 }
+                break;
             }
-            if (testRunner.freeRunning == true) {
+            case TestRunner::TestState_enum::FreeRun: {
+                testRunner.buildGlobals = false;
+                testRunner.freeRunning = true;
+                testRunner.cleanSetByUser = false;
+                ResetGlobals();
+                break;
+            }
+            case TestRunner::TestState_enum::LockedRun: {
                 testRunner.buildGlobals = false;
                 testRunner.freeRunning = false;
+                testRunner.cleanSetByUser = false;
+                ResetGlobals();
+                break;
+            }
+            case TestRunner::TestState_enum::Finish: { 
+                // Don't exaust the microprocessor
+                Sleep(100); 
+            }
             }
 
-            //cleanTestStorage();
-            for (auto it = vShadowedVar.shadows.begin(); it != vShadowedVar.shadows.end(); it++) {
-                for (auto itit = (*it).begin(); itit != (*it).end(); itit++) {
-                    recurseVariable(*itit, NULL,
-                        [](Variable* va, Variable* vb) {
-                            va->usedInTest = false;
-                            va->value = 0;
-                            va->valueDouble = 0;
-                            if (testRunner.cleanSetByUser == true) {
-                                va->setByUser = false;
-                            }
-                        }
-                    );
+            /* Visit and execute the test */
+            switch (testRunner.testState) {
+            case TestRunner::TestState_enum::BuildVariable:
+            case TestRunner::TestState_enum::LockedRun:
+            case TestRunner::TestState_enum::FreeRun:
+            {
+                t = visit(myRoot.child);
+                break;
+            }
+            }
+
+            /* After visit processing*/
+            switch (testRunner.testState) {
+            case TestRunner::TestState_enum::Init: {
+                testRunner.testState = TestRunner::TestState_enum::BuildVariable;
+                break;
+            }
+            case TestRunner::TestState_enum::BuildVariable: {
+                testRunner.buildGlobals = false;
+                testRunner.testState = TestRunner::TestState_enum::BeginOfFunction;
+                break;
+            }
+            case TestRunner::TestState_enum::LockedRun: {
+                vf.writeFile();
+
+                /* If, at the end of a locked run, the freeRunning flag is still false, 
+                it means that no interaction was required by the user, so the test has no 
+                more variables to set, so this test run is finished or at least it makes no 
+                sense to run it again. */
+                if (testRunner.freeRunning == false) {
+                    testRunner.testState = TestRunner::TestState_enum::BeginOfFunction;
                 }
+                else {
+                    testRunner.testState = TestRunner::TestState_enum::FreeRun;
+                }
+                break;
             }
-            forGui.strComm = "";
-            testRunner.cleanSetByUser = false;
-
-            t = visit(myRoot.child);
-        } while (1);
-
+            case TestRunner::TestState_enum::FreeRun: {
+                vf.writeFile();
+                testRunner.testState = TestRunner::TestState_enum::LockedRun;
+                break;
+            }
+            case TestRunner::TestState_enum::Finish: {
+                runWhile = false;
+                break;
+            }
+            }
+        } 
     }
     infile.close();
     Variable::outputFile.close();
     return 0;
+}
+void ResetGlobals(void) {
+    for (auto it = vShadowedVar.shadows.begin(); it != vShadowedVar.shadows.end(); it++) {
+        for (auto itit = (*it).begin(); itit != (*it).end(); itit++) {
+            recurseVariable(*itit, NULL,
+                [](Variable* va, Variable* vb) {
+                    va->usedInTest = false;
+                    va->value = 0;
+                    va->valueDouble = 0;
+                    if (testRunner.cleanSetByUser == true) {
+                        va->setByUser = false;
+                    }
+                }
+            );
+        }
+    }
 }
 void createBuiltInTypes(void)
 {
@@ -243,6 +330,7 @@ void createBuiltInTypes(void)
 }
 Variable visit(Node *node)
 {
+    //Logger(std::to_string(node->astFileRow));
     //std::cout << node->astFileRow << "\n";
     if (node->astFileRow == 23318) {
         myP++;
@@ -818,16 +906,18 @@ void interactionWGui(Variable& ret, Node* node)
     unsigned long long userValue = 0;
     bool localUsedInTest = false;
     localUsedInTest = ret.pointsTo->usedInTest;
+    /* Local variable cannot be set by user */
+    if (ret.pointsTo->braceNested > 0) localUsedInTest = true;
     if (localUsedInTest == false && testRunner.freeRunning == false) {
-
         if (ret.pointsTo->setByUser == true) {
             userValue = ret.pointsTo->value = ret.pointsTo->valueByUser;
             userValue = ret.pointsTo->valueDouble = ret.pointsTo->valueDoubleByUser;
         }
         else {
-            Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
-            forGui.line = node->sourceRef.Name.line - 1;
-            forGui.col = node->sourceRef.Name.col;
+            Logger(std::string("requested user") + " " + ret.pointsTo->name + " " + __FILE__ + " " + std::to_string(__LINE__));
+            forGui.line = node->sourceRef.ExtBegin.line - 1;
+            forGui.col = node->sourceRef.ExtBegin.col;
+            forGui.astLine = node->astFileRow;
             forGui.varName = ret.pointsTo->name;
             forGui.len = ret.pointsTo->name.length();
             forGui.strComm = "void";
@@ -902,6 +992,19 @@ Variable fVarDecl(Node* node) {
     temp.name = smVarDecl[1];
     temp.type = rawType;
     temp.used = true;
+    temp.braceNested = shadowLevel;
+    /* Try to initialize the variable, but only for value type of variable 
+    smVarDecl[5] is the cinit */
+    if (smVarDecl[5].compare("cinit")) {
+        Variable init;
+        if (node->child && node->astType.compare("IntegerLiteral") == 0) {
+            init = visit(node->child);
+            temp.value = init.value;
+            temp.valueDouble = init.valueDouble;
+            temp.ValueEnum = init.ValueEnum;
+        }
+    }
+
 
 /*
 //    if (smGenericType[5].length() > 0) {
@@ -960,8 +1063,10 @@ Variable fVarDecl(Node* node) {
 //    }
 */
 
-    // Add Variable to store if it's not a free running test
-    if (testRunner.buildGlobals == true) {
+    /* Add Variable to store if it's not a free running test 
+    Pay attention, only for globals. Since local variables are 
+    deallocated each time, then always rebuild them. */
+    if (testRunner.buildGlobals == true || shadowLevel > 0) {
         vShadowedVar.shadows[shadowLevel].push_back(&temp);
         vback = vShadowedVar.shadows[shadowLevel].back();
         vback->myAddressDebug = vback;
@@ -1114,7 +1219,7 @@ Variable fDeclRefExpr(Node* node) {
                 if ((**itit).name.compare(varName) == 0) {
                     ret.pointsTo = *itit;
                     ret.typeEnum = Variable::typeEnum_t::isRef;
-                    return ret;
+                    break;
                 }
             }
         }
@@ -1132,9 +1237,9 @@ Variable fDeclRefExpr(Node* node) {
                 if (itit->hexID.compare(hexID) == 0) {
                     /* Enum constants returns directly the value and
                     no reference. */
-                    ret = *itit;
+                    ret.pointsTo = &*itit;
                     ret.typeEnum = Variable::typeEnum_t::isEnum;
-                    return ret;
+                    break;
                 }
             }
         }
@@ -1151,7 +1256,7 @@ Variable fDeclRefExpr(Node* node) {
             if (it->name.compare(name) == 0) {
                 ret.pointsTo = &*it;
                 ret.typeEnum = Variable::typeEnum_t::isRef;
-                return ret;
+                break;
             }
         }
     }
@@ -1167,12 +1272,38 @@ Variable fDeclRefExpr(Node* node) {
             if (it->name.compare(name) == 0) {
                 ret.pointsTo = &*it;
                 ret.typeEnum = Variable::typeEnum_t::isRef;
-                return ret;
+                break;
             }
         }
     }
-    expThrow("DeclRefExpr failed");
-    return Variable();
+    else {
+        expThrow("DeclRefExpr failed");
+    }
+    // Write node result value
+    /*  Can be the case where the test is in free running 
+    but the variable was set by user. Then we want to show the user set 
+    value before the L to R conversion. The conversion may even never happen 
+    if the variable is to be assigned by a var = 1 kind of instruction */
+    if (ret.pointsTo) {
+        if (ret.pointsTo->usedInTest == false && ret.pointsTo->setByUser) {
+            if (ret.pointsTo->ValueEnum == Variable::ValueEnum_t::isInteger) {
+                node->setValue(ret.pointsTo->valueByUser);
+            }
+            else {
+                node->setValueDouble(ret.pointsTo->valueDoubleByUser);
+            }
+        }
+        else {
+            if (ret.pointsTo->ValueEnum == Variable::ValueEnum_t::isInteger) {
+                node->setValue(ret.pointsTo->value);
+            }
+            else {
+                node->setValueDouble(ret.pointsTo->valueDouble);
+            }
+        }
+    }
+
+    return ret;
 }
 Variable fImplicitCastExpr(Node* node) {
     Variable ret;
@@ -1621,7 +1752,10 @@ Variable fCompoundStmt(Node* node) {
 Variable fTranslationUnitDecl(Node* node) {
     Variable temp;
     for (auto next = node->child; next != NULL; next = next->nextSib) {
-        temp = visit(next);
+        if ((next->astType.compare("FunctionDecl") == 0) 
+            || (testRunner.buildGlobals == true)) {
+            temp = visit(next);
+        }
     }
     return Variable();
 }
@@ -1653,7 +1787,7 @@ Variable fFunctionDecl(Node* node) {
         node2 = node->child;
         while (node2) {
             /* Do only if target function */
-            if ((node2->astType.compare("CompoundStmt") != 0) || (func.name.compare(targetFunction) == 0))
+            if ((node2->astType.compare("CompoundStmt") != 0) || (func.name.compare(testRunner.targetFunction) == 0))
             {
                 /* Visit all, there will be parameters first and then
                 the function body.
@@ -1853,20 +1987,9 @@ Variable fCallExpr(Node* node) {
     }
     /* For the moment, every function returns 100, 
     so to prevent error because of division by zero. */
-    Logger(std::string("requested user") + " " + __FILE__ + " " + std::to_string(__LINE__));
-    forGui.line = node->sourceRef.ExtBegin.line - 1;
-    forGui.col = node->sourceRef.ExtBegin.col;
-    forGui.varName = call.pointsTo->name;
-    forGui.len = call.pointsTo->name.length();
 
-    SetEvent(hEventReqGuiLine);
-    //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
-    WaitForSingleObject(hEventReqValue, INFINITE);
-    //Sleep(2000);
-    call.valueDouble = forGui.ValueFromGui;
-    //std::cin >> userValue;
+    interactionWGui(call, node);
 
-    call.value = call.valueDouble;
     return call;
 }
 Variable fParenExpr(Node* node) {
