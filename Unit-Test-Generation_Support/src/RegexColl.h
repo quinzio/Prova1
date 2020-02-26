@@ -218,7 +218,7 @@ std::regex eDeclRefExprFunction(
     |   `-DeclRefExpr 0x24f1aec4030 <col:12> 'int' lvalue ParmVar 0x24f1aec3e08 'a' 'int'
 */
 std::regex eDeclRefExprParmVar(
-    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')\slvalue\sParmVar\s(0x[\da-f]{6,11})\s'([\w\d]+)'\s'([\w\d]+)')###"
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'([^']+)')?\slvalue\sParmVar\s(?:0x[\da-f]{6,11})\s'([\w\d]+)'\s'([\w\d]+)')###"
 );
 
 std::regex eImplicitCastExpr(

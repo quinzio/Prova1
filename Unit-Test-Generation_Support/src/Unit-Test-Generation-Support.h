@@ -6,6 +6,8 @@
 #include "Node.h"
 #include "Unit-Test-Generation-Support.h"
 
+extern VariableShadow vShadowedVar;
+
 int inner_main(int argc, std::string argv[]) throw (const std::exception&);
 
 void createBuiltInTypes(void);

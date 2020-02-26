@@ -8,6 +8,9 @@ public:
 	bool cleanSetByUser;
 	bool freeRunning;
 	std::string targetFunction;
+	std::string inputValuesFile;
+	std::string tempValuesFile;
+	std::string expectedValuesFile;
 
 	enum class TestState_enum {
 		Init,

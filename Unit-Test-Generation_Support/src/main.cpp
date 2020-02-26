@@ -39,9 +39,9 @@ int main(int argc, char* argv[]) {
 		//testCompare("ex20");	getchar();
 		//testCompare("ex21");	getchar();
 		//testCompare("ex22");	getchar();
-		testCompare("ex23");	getchar();
+		//testCompare("ex23");	getchar();
+		testCompare("ex24");	getchar();
 		//testCompare("final");	getchar();
-
 	}
 	catch (const std::exception& e)
 	{
@@ -51,14 +51,16 @@ int main(int argc, char* argv[]) {
 
 void testCompare(std::string testFolder)
 {
-	std::string inner_argv[3];
+	std::string inner_argv[5];
 	//std::string baseDir = "";
 	std::string baseDir = "../Unit-Test-Generation_Support/";
 	std::ifstream resultFile(baseDir + "test/" + testFolder + "/result.txt");
 	std::ifstream expectedFile(baseDir + "test/" + testFolder + "/expected.txt");
 	inner_argv[1] = (baseDir + "test/" + testFolder + "/ast.txt").c_str();
 	inner_argv[2] = (baseDir + "test/" + testFolder + "/result.txt").c_str();
-	int	argc = 3;
+	inner_argv[3] = baseDir.c_str();
+	inner_argv[4] = testFolder.c_str();
+	int	argc = 5;
 
 	// Events to the graphic interface
 	hEventReqGuiLine = OpenEvent(EVENT_MODIFY_STATE | SYNCHRONIZE, FALSE, TEXT("SetGuiLine"));

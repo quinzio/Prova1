@@ -14,11 +14,12 @@ debugging.
 #include <set>
 #include <utility>
 #include <algorithm> 
+#include <experimental/filesystem>
 #include <cstdint>
 #include <windows.h>
 
-#include "Unit-Test-Generation-Support.h"
 #include "Variabile.h"
+#include "Unit-Test-Generation-Support.h"
 #include "Node.h"
 #include "CoreTypes.h"
 #include "RegexColl.h"
@@ -54,7 +55,13 @@ unsigned long long cast(std::string str, unsigned long long v);
 
 int inner_main(int argc, std::string argv[]) throw (const std::exception&)
 {
-    if (argc != 3) {
+    /*
+    argv[1] = ast complete filename
+    argv[2] = result complete filename
+    argv[3] = base directory
+    argv[4] = test folder 
+    */
+    if (argc != 5) {
 #if __GNUC__
         throw std::exception();
 #else
@@ -174,6 +181,11 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     // Write down ast node values
     vf = ValuesFile(forGui.valueFileName, myRoot.child);
 
+    std::string baseDir = argv[3];
+    std::string testFolder = argv[4];
+    testRunner.inputValuesFile = baseDir + "test/" + testFolder + "/input.txt";
+    testRunner.expectedValuesFile = baseDir + "test/" + testFolder + "/expected.txt";
+    testRunner.tempValuesFile = baseDir + "test/" + testFolder + "/temp.txt";
     testRunner.testState = TestRunner::TestState_enum::Init;
 
     if (myRoot.child) {
@@ -205,7 +217,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 SetEvent(hEventReqGuiLine);
                 WaitForSingleObject(hEventReqValue, INFINITE);
                 if (forGui.ValueFromGui == 0) {
-                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.targetFunction = "fun1";
+                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
@@ -221,7 +234,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                     WaitForSingleObject(hEventReqValue, INFINITE);
                     testRunner.cleanSetByUser = true;
                     ResetGlobals();
-                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.targetFunction = "fun1";
+                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
@@ -262,6 +276,9 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
             /* After visit processing*/
             switch (testRunner.testState) {
             case TestRunner::TestState_enum::Init: {
+                /* Copy variables values to input file */
+                std::experimental::filesystem::copy(testRunner.tempValuesFile, testRunner.inputValuesFile);
+                Variable::outputFile.close();
                 testRunner.testState = TestRunner::TestState_enum::BuildVariable;
                 break;
             }
@@ -291,6 +308,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 break;
             }
             case TestRunner::TestState_enum::Finish: {
+                /* Copy variables values to expected file */
+                std::experimental::filesystem::copy(testRunner.tempValuesFile, testRunner.expectedValuesFile);
                 runWhile = false;
                 break;
             }
@@ -305,6 +324,20 @@ void ResetGlobals(void) {
     for (auto it = vShadowedVar.shadows.begin(); it != vShadowedVar.shadows.end(); it++) {
         for (auto itit = (*it).begin(); itit != (*it).end(); itit++) {
             recurseVariable(*itit, NULL,
+                [](Variable* va, Variable* vb) {
+                    va->usedInTest = false;
+                    va->value = 0;
+                    va->valueDouble = 0;
+                    if (testRunner.cleanSetByUser == true) {
+                        va->setByUser = false;
+                    }
+                }
+            );
+        }
+    }
+    for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+        for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
+            recurseVariable(&*itit, NULL,
                 [](Variable* va, Variable* vb) {
                     va->usedInTest = false;
                     va->value = 0;
@@ -332,7 +365,7 @@ Variable visit(Node *node)
 {
     //Logger(std::to_string(node->astFileRow));
     //std::cout << node->astFileRow << "\n";
-    if (node->astFileRow == 23318) {
+    if (node->astFileRow == 20106) {
         myP++;
     }
     if (node->astType.compare("IntegerLiteral") == 0) {
@@ -1252,11 +1285,16 @@ Variable fDeclRefExpr(Node* node) {
         4: type
         */
         std::string name = smDeclRefExprParmVar[3];
-        for (auto it = vParams.begin(); it != vParams.end(); it++) {
-            if (it->name.compare(name) == 0) {
-                ret.pointsTo = &*it;
-                ret.typeEnum = Variable::typeEnum_t::isRef;
-                break;
+        
+        for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+            if (testRunner.targetFunction.compare(it->name) == 0) {
+                for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
+                    if (itit->name.compare(name) == 0) {
+                        ret.pointsTo = &*itit;
+                        ret.typeEnum = Variable::typeEnum_t::isRef;
+                        break;
+                    }
+                }
             }
         }
     }
@@ -1808,8 +1846,10 @@ Variable fFunctionDecl(Node* node) {
                     throw;
                 }
                 */
-                if (node2->astType.compare("ParmVarDecl") == 0) {
-                    func.intStruct.push_back(temp);
+                if (testRunner.buildGlobals == true) {
+                    if (node2->astType.compare("ParmVarDecl") == 0) {
+                        func.intStruct.push_back(temp);
+                    }
                 }
                 else if (node2->astType.compare("CompoundStmt") == 0) {
                     hasBody = true;
@@ -1817,14 +1857,16 @@ Variable fFunctionDecl(Node* node) {
             } 
             node2 = node2->nextSib;
         }
-        if (hasBody) {
-            /* Has bofy will be false if we didn't 
+        if (hasBody || testRunner.buildGlobals == true) {
+            /* Has body will be false if we didn't
             traverse the body. */
+            Variable::outputFile = std::ofstream(testRunner.tempValuesFile);
             for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
                 for (auto itit = it->begin(); itit != it->end(); itit++) {
                     (**itit).print();
                 }
             }
+            Variable::outputFile.close();
         }
     }
     vFunction.push_back(func);

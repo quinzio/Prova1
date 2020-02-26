@@ -17,6 +17,7 @@ class Variable
 {
 public:
     static std::ofstream outputFile;
+    static std::ofstream outputFileDir;
     /* The (partial) name of the variable*/
     std::string name;
     /* ID in hex base taken from ast */

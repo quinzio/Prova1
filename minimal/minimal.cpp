@@ -90,12 +90,32 @@ wxThread::ExitCode MyThreadEvent::Entry()
 
 wxThread::ExitCode MyThreadTest::Entry()
 {
-    //testCompare("ex01");
-    //testCompare("ex02");
-    //testCompare("ex03");
-    //testCompare("ex04");
-    //testCompare("ex23");
-    testCompare("final");
+    //testCompare("ex01");	getchar();
+    //testCompare("ex02");	getchar();
+    //testCompare("ex03");	getchar();
+    //testCompare("ex04");	getchar();
+    //testCompare("ex05");	getchar();
+    //testCompare("ex06");	getchar();
+    //testCompare("ex07");	getchar();
+    //testCompare("ex08");	getchar();
+    //testCompare("ex09");	getchar();
+    //testCompare("ex10");	getchar();
+    //testCompare("ex11");	getchar();
+    //testCompare("ex12");	getchar();
+    //testCompare("ex13");	getchar();
+    //testCompare("ex14");	getchar();
+    //testCompare("ex15");	getchar();
+    //testCompare("ex16");	getchar();
+    //testCompare("ex17");	getchar();
+    //testCompare("ex18");	getchar();
+    //testCompare("ex19");	getchar();
+    //testCompare("ex20");	getchar();
+    //testCompare("ex21");	getchar();
+    //testCompare("ex22");	getchar();
+    //testCompare("ex23");	getchar();
+    testCompare("ex24");	getchar();
+    //testCompare("final");	getchar();
+
     return NULL;
 }
 
