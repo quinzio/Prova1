@@ -185,7 +185,9 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     std::string testFolder = argv[4];
     testRunner.inputValuesFile = baseDir + "test/" + testFolder + "/input.txt";
     testRunner.expectedValuesFile = baseDir + "test/" + testFolder + "/expected.txt";
-    testRunner.tempValuesFile = baseDir + "test/" + testFolder + "/temp.txt";
+    testRunner.tempValuesFile = baseDir + "test/" + testFolder + "/neutral.txt";
+    testRunner.callsFile = baseDir + "test/" + testFolder + "/calls.txt";
+
     testRunner.testState = TestRunner::TestState_enum::Init;
 
     if (myRoot.child) {
@@ -198,9 +200,10 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
             }
             case TestRunner::TestState_enum::BuildVariable: {
                 testRunner.buildGlobals = true;
-                /* This will prevent from entering and executing 
+                /* This will prevent from entering and executing
                 a test. */
-                std::string targetFunction = "";
+                //testRunner.targetFunction = "fun1";
+                testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                 break;
             }
             case TestRunner::TestState_enum::BeginOfFunction: {
@@ -217,10 +220,13 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 SetEvent(hEventReqGuiLine);
                 WaitForSingleObject(hEventReqValue, INFINITE);
                 if (forGui.ValueFromGui == 0) {
-                    testRunner.targetFunction = "fun1";
-                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    //testRunner.targetFunction = "fun1";
+                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
+                    /* Remove the calls file
+                    */
+                    std::experimental::filesystem::remove(testRunner.callsFile);
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
                 }
                 else if (forGui.ValueFromGui == 1) {
@@ -234,8 +240,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                     WaitForSingleObject(hEventReqValue, INFINITE);
                     testRunner.cleanSetByUser = true;
                     ResetGlobals();
-                    testRunner.targetFunction = "fun1";
-                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    //testRunner.targetFunction = "fun1";
+                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
@@ -276,9 +282,6 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
             /* After visit processing*/
             switch (testRunner.testState) {
             case TestRunner::TestState_enum::Init: {
-                /* Copy variables values to input file */
-                std::experimental::filesystem::copy(testRunner.tempValuesFile, testRunner.inputValuesFile);
-                Variable::outputFile.close();
                 testRunner.testState = TestRunner::TestState_enum::BuildVariable;
                 break;
             }
@@ -308,8 +311,22 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 break;
             }
             case TestRunner::TestState_enum::Finish: {
+                /* Copy variables values to input file */
+                Variable::outputFile = std::ofstream(testRunner.inputValuesFile);
+                for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+                    for (auto itit = it->begin(); itit != it->end(); itit++) {
+                        (*itit)->print(true);
+                    }
+                }
+                Variable::outputFile.close();
                 /* Copy variables values to expected file */
-                std::experimental::filesystem::copy(testRunner.tempValuesFile, testRunner.expectedValuesFile);
+                Variable::outputFile = std::ofstream(testRunner.expectedValuesFile);
+                for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+                    for (auto itit = it->begin(); itit != it->end(); itit++) {
+                        (*itit)->print(false);
+                    }
+                }
+                Variable::outputFile.close();
                 runWhile = false;
                 break;
             }
@@ -326,8 +343,10 @@ void ResetGlobals(void) {
             recurseVariable(*itit, NULL,
                 [](Variable* va, Variable* vb) {
                     va->usedInTest = false;
-                    va->value = 0;
-                    va->valueDouble = 0;
+                    if (va->typeEnum != Variable::typeEnum_t::isEnum) {
+                        va->value = va->valueDefault;
+                        va->valueDouble = va->valueDoubleDefault;
+                    }
                     if (testRunner.cleanSetByUser == true) {
                         va->setByUser = false;
                     }
@@ -340,8 +359,10 @@ void ResetGlobals(void) {
             recurseVariable(&*itit, NULL,
                 [](Variable* va, Variable* vb) {
                     va->usedInTest = false;
-                    va->value = 0;
-                    va->valueDouble = 0;
+                    if (va->typeEnum != Variable::typeEnum_t::isEnum) {
+                        va->value = va->valueDefault;
+                        va->valueDouble = va->valueDoubleDefault;
+                    }
                     if (testRunner.cleanSetByUser == true) {
                         va->setByUser = false;
                     }
@@ -365,7 +386,7 @@ Variable visit(Node *node)
 {
     //Logger(std::to_string(node->astFileRow));
     //std::cout << node->astFileRow << "\n";
-    if (node->astFileRow == 20106) {
+    if (node->astFileRow == 22096) {
         myP++;
     }
     if (node->astType.compare("IntegerLiteral") == 0) {
@@ -934,8 +955,9 @@ void setGlobalLocation(std::smatch smSourcePoint) {
         globalSource.col = std::stoi(smSourcePoint[2]);
     }
 }
-void interactionWGui(Variable& ret, Node* node)
+bool interactionWGui(Variable& ret, Node* node)
 {
+    bool retVal = false;
     unsigned long long userValue = 0;
     bool localUsedInTest = false;
     localUsedInTest = ret.pointsTo->usedInTest;
@@ -959,6 +981,7 @@ void interactionWGui(Variable& ret, Node* node)
             SetEvent(hEventReqGuiLine);
             //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
             WaitForSingleObject(hEventReqValue, INFINITE);
+            retVal = true;
             //Sleep(2000);
             userValue = forGui.ValueFromGui;
             //std::cin >> userValue; 
@@ -971,6 +994,7 @@ void interactionWGui(Variable& ret, Node* node)
         ret.pointsTo->value = userValue;
         ret.pointsTo->valueDouble = userValue;
     }
+    return retVal;
 }
 
 Variable getTypDef(std::string uType) {
@@ -1357,7 +1381,7 @@ Variable fImplicitCastExpr(Node* node) {
         // Leave the pointer as it is, it's already a pointer to function.
     }
     else if (smImplicitCastExpr[2].compare("LValueToRValue") == 0) {
-        if (ret.typeEnum == Variable::typeEnum_t::isArray) {
+        if (ret.pointsTo->typeEnum == Variable::typeEnum_t::isArray) {
             ret.pointsTo = &ret.pointsTo->array[ret.pointsTo->arrayIx];
         }
         interactionWGui(ret, node);
@@ -1800,9 +1824,10 @@ Variable fTranslationUnitDecl(Node* node) {
 Variable fArraySubscriptExpr(Node* node) {
     Variable ret;
     Variable pArray = visit(node->child);
-    int ix = visit(node->child->nextSib).value;
+    int ix = visit(node->child->nextSib).pointsTo->value;
     if (ix >= pArray.pointsTo->array.size()) {
-        throw std::string("Array index error " + std::to_string(ix ) + " > " + std::to_string(pArray.pointsTo->array.size()));
+        Logger(std::to_string(ix));
+        throw std::string("Array index error " + std::to_string(ix) + " > " + std::to_string(pArray.pointsTo->array.size()));
     }
     ret.pointsTo = &pArray.pointsTo->array[ix];
     ret.typeEnum = Variable::typeEnum_t::isRef;
@@ -1824,8 +1849,17 @@ Variable fFunctionDecl(Node* node) {
     if (node->child) {
         node2 = node->child;
         while (node2) {
-            /* Do only if target function */
-            if ((node2->astType.compare("CompoundStmt") != 0) || (func.name.compare(testRunner.targetFunction) == 0))
+
+            if  (   (node2->astType.compare("CompoundStmt") == 0)
+                    &&
+                    func.name.compare(testRunner.targetFunction) == 0
+                    && 
+                    (testRunner.buildGlobals == false)
+                ||
+                    (node2->astType.compare("ParmVarDecl") == 0)
+                    && 
+                    (testRunner.buildGlobals == true)
+                )
             {
                 /* Visit all, there will be parameters first and then
                 the function body.
@@ -1863,13 +1897,15 @@ Variable fFunctionDecl(Node* node) {
             Variable::outputFile = std::ofstream(testRunner.tempValuesFile);
             for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
                 for (auto itit = it->begin(); itit != it->end(); itit++) {
-                    (**itit).print();
+                    (*itit)->print(testRunner.buildGlobals);
                 }
             }
             Variable::outputFile.close();
         }
     }
-    vFunction.push_back(func);
+    if (testRunner.buildGlobals == true) {
+        vFunction.push_back(func);
+    }
     /* Clear all parameters declared  */
     vParams.clear();
     return temp;
@@ -2009,6 +2045,7 @@ However I like to keep them separated
 Variable fCallExpr(Node* node) {
     Variable call, arg;
     Node* node2;
+    bool interactionOccour = false;
     std::string prefix;
     std::vector<Variable> arguments;
     call = visit(node->child);
@@ -2018,21 +2055,34 @@ Variable fCallExpr(Node* node) {
         arguments.push_back(arg);
         node2 = node2->nextSib;
     }
-    auto itPar = call.pointsTo->intStruct.begin();
-    auto itArg = arguments.begin();
-    prefix = "Calling function " + call.pointsTo->name + "\n";
-    std::cout << prefix;
-    for ( ;itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
-        prefix +=  "\tArg " + itPar->name + " = " + "";
-        itArg->print(prefix, "");
-        prefix = "";
-    }
     /* For the moment, every function returns 100, 
     so to prevent error because of division by zero. */
 
-    interactionWGui(call, node);
+    interactionOccour = interactionWGui(call, node);
+    if (interactionOccour) {
+        auto itPar = call.pointsTo->intStruct.begin();
+        auto itArg = arguments.begin();
+        std::string cantataCall = "\"" + call.pointsTo->name + "\"\t\"";
+        cantataCall +=
+            "#s_r_" +
+            std::to_string(call.pointsTo->value);
+        Variable::outputFile = std::ofstream(testRunner.callsFile, std::ofstream::out | std::ofstream::app);
+        prefix = "Calling function " + call.pointsTo->name + "\n";
+        Variable::outputFile << prefix;
+        prefix = "";
+        for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
+            prefix += "\tArg " + itPar->name + " = " + "";
+            itArg->print(prefix, "", false);
+            prefix = "";
+            cantataCall += "_p_" + std::to_string(itArg->value);
+        }
+        cantataCall += "\"\n";
+        Variable::outputFile << "\tReturn = " << std::to_string(call.pointsTo->value) << "\n";
+        Variable::outputFile << cantataCall;
+        Variable::outputFile.close();
+    }
 
-    return call;
+    return *call.pointsTo;
 }
 Variable fParenExpr(Node* node) {
     Variable temp;

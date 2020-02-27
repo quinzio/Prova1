@@ -3,47 +3,60 @@
 #include "Variabile.h"
 #include "Unit-Test-Generation-Support.h"
 
-std::string Variable::print() {
+std::string Variable::print(bool replaceWSetByUser) {
 	std::string prefix = "";
 	std::string postfix = "";
-	this->print(prefix, postfix);
+	this->print(prefix, postfix, replaceWSetByUser);
 	return "";
 }
 
-std:: string Variable::print(std::string prefix, std::string postfix) {
+std:: string Variable::print(std::string prefix, std::string postfix, bool replaceWSetByUser) {
 	std::string tempPrefix;
 	std::string tempPostfix;
 	std::string res;
+	unsigned long long localValue;
 	bool unsignedType = false;
 	if (std::regex_search(this->type, std::regex("(.*)unsigned"))) {
 		unsignedType = true;
 	}
+	if (replaceWSetByUser) {
+		if (this->setByUser) {
+			localValue = this->valueDefault;
+		}
+		else
+		{
+			localValue = this->valueByUser;
+		}
+	}
+	else {
+		localValue = this->value;
+	}
 	if (this->uData.uSize.getBytes() == 4) {
 		if (unsignedType) {
-			res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)this->value) + "\n";
+			res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)localValue) + "\n";
 		}
 		else {
-			res = prefix + this->name + postfix + " = " + std::to_string((int32_t)this->value) + "\n";
+			res = prefix + this->name + postfix + " = " + std::to_string((int32_t)localValue) + "\n";
 		}
 	}
 	else if (this->uData.uSize.getBytes() == 2) {
 		if (unsignedType) {
-			res = prefix + this->name + postfix + " = " + std::to_string((uint16_t)this->value) + "\n";
+			res = prefix + this->name + postfix + " = " + std::to_string((uint16_t)localValue) + "\n";
 		}
 		else {
-			res = prefix + this->name + postfix + " = " + std::to_string((int16_t)this->value) + "\n";
+			res = prefix + this->name + postfix + " = " + std::to_string((int16_t)localValue) + "\n";
 		}
 	}
 	else if (this->uData.uSize.getBytes() == 1) {
 		if (unsignedType) {
-			res = prefix + this->name + postfix + " = " + std::to_string((uint8_t)this->value) + "\n";
+			res = prefix + this->name + postfix + " = " + std::to_string((uint8_t)localValue) + "\n";
 		}
 		else {
-			res = prefix + this->name + postfix + " = " + std::to_string((int8_t)this->value) + "\n";
+			res = prefix + this->name + postfix + " = " + std::to_string((int8_t)localValue) + "\n";
 		}
 	}
 	else {
-		res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)this->value) + "\n";
+		res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)localValue) + "\n";
 	}
 	if (this->usedInTest == true) {
 		std::cout << res;
@@ -67,7 +80,7 @@ std:: string Variable::print(std::string prefix, std::string postfix) {
 				lastDiff = ix;
 				tempPrefix = prefix + this->name + "[" + std::to_string(ix) + "]";
 				tempPostfix = postfix;
-				v->print(tempPrefix, tempPostfix);
+				v->print(tempPrefix, tempPostfix, replaceWSetByUser);
 			}
 			ix++;
 		}
@@ -76,21 +89,21 @@ std:: string Variable::print(std::string prefix, std::string postfix) {
 		for (auto v = this->intStruct.begin(); v != this->intStruct.end(); v++) {
 			tempPrefix = prefix + this->name + ".";
 			tempPostfix = postfix;
-			v->print(tempPrefix, tempPostfix);
+			v->print(tempPrefix, tempPostfix, replaceWSetByUser);
 		}
 	}
 	if (this->typeEnum == Variable::typeEnum_t::isUnion) {
 		for (auto v = this->intStruct.begin(); v != this->intStruct.end(); v++) {
 			tempPrefix = prefix + this->name + ".";
 			tempPostfix = postfix;
-			v->print(tempPrefix, tempPostfix);
+			v->print(tempPrefix, tempPostfix, replaceWSetByUser);
 		}
 	}
 	if (this->typeEnum == Variable::typeEnum_t::isRef) {
 		if (this->pointsTo) {
 			tempPrefix = prefix + this->name + "->";
 			tempPostfix = postfix;
-			this->pointsTo->print(tempPrefix, postfix);
+			this->pointsTo->print(tempPrefix, postfix, replaceWSetByUser);
 		}
 		else {
 			std::cout << "Null pointer\n";

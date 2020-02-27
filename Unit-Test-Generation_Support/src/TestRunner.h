@@ -11,6 +11,7 @@ public:
 	std::string inputValuesFile;
 	std::string tempValuesFile;
 	std::string expectedValuesFile;
+	std::string callsFile;
 
 	enum class TestState_enum {
 		Init,

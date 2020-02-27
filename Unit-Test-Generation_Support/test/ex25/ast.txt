@@ -1,0 +1,75 @@
+TranslationUnitDecl 0x24b20762d68 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x24b20763600 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x24b20763300 '__int128'
+|-TypedefDecl 0x24b20763670 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x24b20763320 'unsigned __int128'
+|-TypedefDecl 0x24b20763978 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x24b20763750 'struct __NSConstantString_tag'
+|   `-Record 0x24b207636c8 '__NSConstantString_tag'
+|-TypedefDecl 0x24b207639e8 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x24b20762f40 'unsigned long long'
+|-TypedefDecl 0x24b20763a80 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x24b20763a40 'char *'
+|   `-BuiltinType 0x24b20762e00 'char'
+|-TypedefDecl 0x24b20763af0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x24b20763a40 'char *'
+|   `-BuiltinType 0x24b20762e00 'char'
+|-FunctionDecl 0x24b20806240 <temp.c:1:1, col:33> col:5 used f1 'int (int, int, int)'
+| |-ParmVarDecl 0x24b20763b60 <col:8, col:12> col:12 f1a 'int'
+| |-ParmVarDecl 0x24b20763be0 <col:17, col:21> col:21 f1b 'int'
+| `-ParmVarDecl 0x24b20763c60 <col:26, col:30> col:30 f1c 'int'
+|-FunctionDecl 0x24b20806500 <line:2:1, col:33> col:5 used f2 'int (int, int, int)'
+| |-ParmVarDecl 0x24b20806358 <col:8, col:12> col:12 f2a 'int'
+| |-ParmVarDecl 0x24b208063d8 <col:17, col:21> col:21 f2b 'int'
+| `-ParmVarDecl 0x24b20806458 <col:26, col:30> col:30 f2c 'int'
+|-FunctionDecl 0x24b20806778 <line:3:1, col:33> col:5 used f3 'int (int, int, int)'
+| |-ParmVarDecl 0x24b208065d0 <col:8, col:12> col:12 f3a 'int'
+| |-ParmVarDecl 0x24b20806650 <col:17, col:21> col:21 f3b 'int'
+| `-ParmVarDecl 0x24b208066d0 <col:26, col:30> col:30 f3c 'int'
+|-VarDecl 0x24b20806848 <line:5:1, col:5> col:5 used a 'int'
+|-VarDecl 0x24b208068c8 <line:6:1, col:5> col:5 used b 'int'
+|-VarDecl 0x24b20806948 <line:7:1, col:5> col:5 used c 'int'
+`-FunctionDecl 0x24b20806a90 <line:9:1, line:17:1> line:9:5 fun1 'int (int)'
+  |-ParmVarDecl 0x24b208069c8 <col:10, col:14> col:14 used par1 'int'
+  `-CompoundStmt 0x24b20807088 <col:20, line:17:1>
+    |-CallExpr 0x24b20806c10 <line:10:2, col:15> 'int'
+    | |-ImplicitCastExpr 0x24b20806bf8 <col:2> 'int (*)(int, int, int)' <FunctionToPointerDecay>
+    | | `-DeclRefExpr 0x24b20806b38 <col:2> 'int (int, int, int)' Function 0x24b20806240 'f1' 'int (int, int, int)'
+    | |-IntegerLiteral 0x24b20806b58 <col:5> 'int' 1
+    | |-IntegerLiteral 0x24b20806b80 <col:8> 'int' 2
+    | `-ImplicitCastExpr 0x24b20806c48 <col:11> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x24b20806ba8 <col:11> 'int' lvalue ParmVar 0x24b208069c8 'par1' 'int'
+    |-BinaryOperator 0x24b20806d78 <line:11:2, col:21> 'int' '='
+    | |-DeclRefExpr 0x24b20806c60 <col:2> 'int' lvalue Var 0x24b20806848 'a' 'int'
+    | `-CallExpr 0x24b20806d28 <col:6, col:21> 'int'
+    |   |-ImplicitCastExpr 0x24b20806d10 <col:6> 'int (*)(int, int, int)' <FunctionToPointerDecay>
+    |   | `-DeclRefExpr 0x24b20806c80 <col:6> 'int (int, int, int)' Function 0x24b20806500 'f2' 'int (int, int, int)'
+    |   |-IntegerLiteral 0x24b20806ca0 <col:9> 'int' 10
+    |   |-IntegerLiteral 0x24b20806cc8 <col:13> 'int' 20
+    |   `-ImplicitCastExpr 0x24b20806d60 <col:17> 'int' <LValueToRValue>
+    |     `-DeclRefExpr 0x24b20806cf0 <col:17> 'int' lvalue ParmVar 0x24b208069c8 'par1' 'int'
+    |-BinaryOperator 0x24b20806eb0 <line:12:2, col:21> 'int' '='
+    | |-DeclRefExpr 0x24b20806d98 <col:2> 'int' lvalue Var 0x24b208068c8 'b' 'int'
+    | `-CallExpr 0x24b20806e60 <col:6, col:21> 'int'
+    |   |-ImplicitCastExpr 0x24b20806e48 <col:6> 'int (*)(int, int, int)' <FunctionToPointerDecay>
+    |   | `-DeclRefExpr 0x24b20806db8 <col:6> 'int (int, int, int)' Function 0x24b20806778 'f3' 'int (int, int, int)'
+    |   |-IntegerLiteral 0x24b20806dd8 <col:9> 'int' 11
+    |   |-IntegerLiteral 0x24b20806e00 <col:13> 'int' 12
+    |   `-ImplicitCastExpr 0x24b20806e98 <col:17> 'int' <LValueToRValue>
+    |     `-DeclRefExpr 0x24b20806e28 <col:17> 'int' lvalue ParmVar 0x24b208069c8 'par1' 'int'
+    |-IfStmt 0x24b20807038 <line:13:5, line:15:5>
+    | |-BinaryOperator 0x24b20806f40 <line:13:9, col:13> 'int' '>'
+    | | |-ImplicitCastExpr 0x24b20806f10 <col:9> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0x24b20806ed0 <col:9> 'int' lvalue Var 0x24b20806848 'a' 'int'
+    | | `-ImplicitCastExpr 0x24b20806f28 <col:13> 'int' <LValueToRValue>
+    | |   `-DeclRefExpr 0x24b20806ef0 <col:13> 'int' lvalue Var 0x24b208068c8 'b' 'int'
+    | `-CompoundStmt 0x24b20807020 <col:16, line:15:5>
+    |   `-BinaryOperator 0x24b20807000 <line:14:9, col:15> 'int' '='
+    |     |-DeclRefExpr 0x24b20806f60 <col:9> 'int' lvalue Var 0x24b20806948 'c' 'int'
+    |     `-BinaryOperator 0x24b20806fe0 <col:13, col:15> 'int' '+'
+    |       |-ImplicitCastExpr 0x24b20806fc8 <col:13> 'int' <LValueToRValue>
+    |       | `-DeclRefExpr 0x24b20806f80 <col:13> 'int' lvalue Var 0x24b20806848 'a' 'int'
+    |       `-IntegerLiteral 0x24b20806fa0 <col:15> 'int' 1
+    `-ReturnStmt 0x24b20807078 <line:16:2, col:9>
+      `-IntegerLiteral 0x24b20807050 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-c915b7.o : fatal error LNK1136: file danneggiato o non valido

@@ -40,8 +40,8 @@ int main(int argc, char* argv[]) {
 		//testCompare("ex21");	getchar();
 		//testCompare("ex22");	getchar();
 		//testCompare("ex23");	getchar();
-		testCompare("ex24");	getchar();
-		//testCompare("final");	getchar();
+		//testCompare("ex24");	getchar();
+		testCompare("final");	getchar();
 	}
 	catch (const std::exception& e)
 	{

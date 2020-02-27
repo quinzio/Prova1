@@ -9,6 +9,7 @@
 
 int a;
 int b;
+int c;
 int fun1(int par1) {
 	b = a + par1;
 	return 0;

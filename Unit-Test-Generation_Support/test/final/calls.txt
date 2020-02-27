@@ -1,0 +1,6 @@
+Calling function ACM_Get_u16FreqRampPU
+	Return = 13
+"ACM_Get_u16FreqRampPU"	"#s_r_13"
+Calling function Temp_Get_BOOLSOATemperatureCorr
+	Return = 0
+"Temp_Get_BOOLSOATemperatureCorr"	"#s_r_0"

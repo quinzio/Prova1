@@ -22,10 +22,6 @@ public:
     std::string name;
     /* ID in hex base taken from ast */
     std::string hexID;
-    /* The integer value */
-    unsigned long long value;
-    /* The double value */
-    double valueDouble;
     /* Which of the two values shoud I use ? Integer or float ? */
     enum ValueEnum_t {
         isInteger,
@@ -40,10 +36,18 @@ public:
     bool usedInTest = false;
     /* Variable was set by user during a previous test */
     bool setByUser = false;
+    /* The integer value */
+    unsigned long long value = 0x55555555ULL;
+    /* The double value */
+    double valueDouble = 0.0;
     /* The integer valueset by user during a previous test */
-    unsigned long long valueByUser;
+    unsigned long long valueByUser = 0x55555555ULL;
     /* The double value set by user during a previous test */
-    double valueDoubleByUser;
+    double valueDoubleByUser = 0.0;
+    /* The integer default value */
+    unsigned long long valueDefault = 0x55555555ULL;
+    /* The double deafult value */
+    double valueDoubleDefault = 0.0;
     /* The test has hit return, it's time to quit */
     int returnSignalled = false;
     /* Type of generic variable */
@@ -79,8 +83,8 @@ public:
     /* Public methods */
     void updateCommonArea(void);
     void updateUnion();
-    [[maybe_unused]] std::string print(std::string prefix, std::string postfix);
-    [[maybe_unused]] std::string print();
+    [[maybe_unused]] std::string print(std::string prefix, std::string postfix, bool replaceWSetByUser);
+    [[maybe_unused]] std::string print(bool replaceWSetByUser);
 
 private:
 };

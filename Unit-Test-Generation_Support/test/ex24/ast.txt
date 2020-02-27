@@ -1,31 +1,32 @@
-TranslationUnitDecl 0x2cd46974098 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x2cd46974930 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x2cd46974630 '__int128'
-|-TypedefDecl 0x2cd469749a0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x2cd46974650 'unsigned __int128'
-|-TypedefDecl 0x2cd46974ca8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x2cd46974a80 'struct __NSConstantString_tag'
-|   `-Record 0x2cd469749f8 '__NSConstantString_tag'
-|-TypedefDecl 0x2cd46974d18 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
-| `-BuiltinType 0x2cd46974270 'unsigned long long'
-|-TypedefDecl 0x2cd46974db0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x2cd46974d70 'char *'
-|   `-BuiltinType 0x2cd46974130 'char'
-|-TypedefDecl 0x2cd46974e20 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-| `-PointerType 0x2cd46974d70 'char *'
-|   `-BuiltinType 0x2cd46974130 'char'
-|-VarDecl 0x2cd46974e90 <temp.c:10:1, col:5> col:5 used a 'int'
-|-VarDecl 0x2cd46974f58 <line:11:1, col:5> col:5 used b 'int'
-`-FunctionDecl 0x2cd46ae8280 <line:12:1, line:15:1> line:12:5 fun1 'int (int)'
-  |-ParmVarDecl 0x2cd46974fd8 <col:10, col:14> col:14 used par1 'int'
-  `-CompoundStmt 0x2cd46ae8430 <col:20, line:15:1>
-    |-BinaryOperator 0x2cd46ae83d8 <line:13:2, col:10> 'int' '='
-    | |-DeclRefExpr 0x2cd46ae8328 <col:2> 'int' lvalue Var 0x2cd46974f58 'b' 'int'
-    | `-BinaryOperator 0x2cd46ae83b8 <col:6, col:10> 'int' '+'
-    |   |-ImplicitCastExpr 0x2cd46ae8388 <col:6> 'int' <LValueToRValue>
-    |   | `-DeclRefExpr 0x2cd46ae8348 <col:6> 'int' lvalue Var 0x2cd46974e90 'a' 'int'
-    |   `-ImplicitCastExpr 0x2cd46ae83a0 <col:10> 'int' <LValueToRValue>
-    |     `-DeclRefExpr 0x2cd46ae8368 <col:10> 'int' lvalue ParmVar 0x2cd46974fd8 'par1' 'int'
-    `-ReturnStmt 0x2cd46ae8420 <line:14:2, col:9>
-      `-IntegerLiteral 0x2cd46ae83f8 <col:9> 'int' 0
-C:\Users\munarid\AppData\Local\Temp\temp-df89ad.o : fatal error LNK1136: file danneggiato o non valido
+TranslationUnitDecl 0x1977f084ea8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1977f085740 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1977f085440 '__int128'
+|-TypedefDecl 0x1977f0857b0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1977f085460 'unsigned __int128'
+|-TypedefDecl 0x1977f085ab8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x1977f085890 'struct __NSConstantString_tag'
+|   `-Record 0x1977f085808 '__NSConstantString_tag'
+|-TypedefDecl 0x1977f085b28 <<invalid sloc>> <invalid sloc> implicit size_t 'unsigned long long'
+| `-BuiltinType 0x1977f085080 'unsigned long long'
+|-TypedefDecl 0x1977f085bc0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1977f085b80 'char *'
+|   `-BuiltinType 0x1977f084f40 'char'
+|-TypedefDecl 0x1977f085c30 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+| `-PointerType 0x1977f085b80 'char *'
+|   `-BuiltinType 0x1977f084f40 'char'
+|-VarDecl 0x1977f085ca0 <temp.c:10:1, col:5> col:5 used a 'int'
+|-VarDecl 0x1977f085d68 <line:11:1, col:5> col:5 used b 'int'
+|-VarDecl 0x1977f085de8 <line:12:1, col:5> col:5 c 'int'
+`-FunctionDecl 0x1977fad8330 <line:13:1, line:16:1> line:13:5 fun1 'int (int)'
+  |-ParmVarDecl 0x1977fad8260 <col:10, col:14> col:14 used par1 'int'
+  `-CompoundStmt 0x1977fad84e0 <col:20, line:16:1>
+    |-BinaryOperator 0x1977fad8488 <line:14:2, col:10> 'int' '='
+    | |-DeclRefExpr 0x1977fad83d8 <col:2> 'int' lvalue Var 0x1977f085d68 'b' 'int'
+    | `-BinaryOperator 0x1977fad8468 <col:6, col:10> 'int' '+'
+    |   |-ImplicitCastExpr 0x1977fad8438 <col:6> 'int' <LValueToRValue>
+    |   | `-DeclRefExpr 0x1977fad83f8 <col:6> 'int' lvalue Var 0x1977f085ca0 'a' 'int'
+    |   `-ImplicitCastExpr 0x1977fad8450 <col:10> 'int' <LValueToRValue>
+    |     `-DeclRefExpr 0x1977fad8418 <col:10> 'int' lvalue ParmVar 0x1977fad8260 'par1' 'int'
+    `-ReturnStmt 0x1977fad84d0 <line:15:2, col:9>
+      `-IntegerLiteral 0x1977fad84a8 <col:9> 'int' 0
+C:\Users\munarid\AppData\Local\Temp\temp-9d4f11.o : fatal error LNK1136: file danneggiato o non valido
