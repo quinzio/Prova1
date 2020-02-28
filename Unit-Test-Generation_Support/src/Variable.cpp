@@ -21,11 +21,11 @@ std:: string Variable::print(std::string prefix, std::string postfix, bool repla
 	}
 	if (replaceWSetByUser) {
 		if (this->setByUser) {
-			localValue = this->valueDefault;
+			localValue = this->valueByUser;
 		}
 		else
 		{
-			localValue = this->valueByUser;
+			localValue = this->valueDefault;
 		}
 	}
 	else {

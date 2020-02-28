@@ -8,8 +8,9 @@ public:
 	bool cleanSetByUser;
 	bool freeRunning;
 	std::string targetFunction;
+	std::string neutralValuesFile;
+	std::string startValuesFile;
 	std::string inputValuesFile;
-	std::string tempValuesFile;
 	std::string expectedValuesFile;
 	std::string callsFile;
 

@@ -1,0 +1,144 @@
+Calling function f1
+	Arg f1a =  = 1
+	Arg f1b =  = 2
+	Arg f1c = par1 = 1
+	Return = 2
+"f1"	"#s_r_2_p_1_p_2_p_1"
+IF_INSTANCE(
+"s_r_2_p_1_p_2_p_1"
+) {
+CHECK_S_INT(f1a, 1);
+CHECK_S_INT(f1b, 2);
+CHECK_S_INT(f1c, 1);
+return 2;
+}
+
+
+Calling function f2
+	Arg f2a =  = 10
+	Arg f2b =  = 20
+	Arg f2c = par1 = 1
+	Return = 3
+"f2"	"#s_r_3_p_10_p_20_p_1"
+IF_INSTANCE(
+"s_r_3_p_10_p_20_p_1"
+) {
+CHECK_S_INT(f2a, 10);
+CHECK_S_INT(f2b, 20);
+CHECK_S_INT(f2c, 1);
+return 3;
+}
+
+
+Calling function f3
+	Arg f3a =  = 11
+	Arg f3b =  = 12
+	Arg f3c = par1 = 2
+	Return = 4
+"f3"	"#s_r_4_p_11_p_12_p_2"
+IF_INSTANCE(
+"s_r_4_p_11_p_12_p_2"
+) {
+CHECK_S_INT(f3a, 11);
+CHECK_S_INT(f3b, 12);
+CHECK_S_INT(f3c, 2);
+return 4;
+}
+
+
+Calling function f3
+	Arg f3a =  = 11
+	Arg f3b =  = 12
+	Arg f3c = par1 = 3
+	Return = 5
+"f3"	"#s_r_5_p_11_p_12_p_3"
+IF_INSTANCE(
+"s_r_5_p_11_p_12_p_3"
+) {
+CHECK_S_INT(f3a, 11);
+CHECK_S_INT(f3b, 12);
+CHECK_S_INT(f3c, 3);
+return 5;
+}
+
+
+Calling function f3
+	Arg f3a =  = 11
+	Arg f3b =  = 12
+	Arg f3c = par1 = 4
+	Return = 6
+"f3"	"#s_r_6_p_11_p_12_p_4"
+IF_INSTANCE(
+"s_r_6_p_11_p_12_p_4"
+) {
+CHECK_S_INT(f3a, 11);
+CHECK_S_INT(f3b, 12);
+CHECK_S_INT(f3c, 4);
+return 6;
+}
+
+
+Calling function f3
+	Arg f3a =  = 11
+	Arg f3b =  = 12
+	Arg f3c = par1 = 5
+	Return = 7
+"f3"	"#s_r_7_p_11_p_12_p_5"
+IF_INSTANCE(
+"s_r_7_p_11_p_12_p_5"
+) {
+CHECK_S_INT(f3a, 11);
+CHECK_S_INT(f3b, 12);
+CHECK_S_INT(f3c, 5);
+return 7;
+}
+
+
+Calling function f3
+	Arg f3a =  = 11
+	Arg f3b =  = 12
+	Arg f3c = par1 = 6
+	Return = 8
+"f3"	"#s_r_8_p_11_p_12_p_6"
+IF_INSTANCE(
+"s_r_8_p_11_p_12_p_6"
+) {
+CHECK_S_INT(f3a, 11);
+CHECK_S_INT(f3b, 12);
+CHECK_S_INT(f3c, 6);
+return 8;
+}
+
+
+Calling function f2
+	Arg f2a =  = 10
+	Arg f2b =  = 20
+	Arg f2c = par1 = 7
+	Return = 9
+"f2"	"#s_r_9_p_10_p_20_p_7"
+IF_INSTANCE(
+"s_r_9_p_10_p_20_p_7"
+) {
+CHECK_S_INT(f2a, 10);
+CHECK_S_INT(f2b, 20);
+CHECK_S_INT(f2c, 7);
+return 9;
+}
+
+
+Calling function f3
+	Arg f3a =  = 11
+	Arg f3b =  = 12
+	Arg f3c = par1 = 8
+	Return = 10
+"f3"	"#s_r_10_p_11_p_12_p_8"
+IF_INSTANCE(
+"s_r_10_p_11_p_12_p_8"
+) {
+CHECK_S_INT(f3a, 11);
+CHECK_S_INT(f3b, 12);
+CHECK_S_INT(f3c, 8);
+return 10;
+}
+
+

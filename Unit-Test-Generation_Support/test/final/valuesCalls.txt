@@ -1,0 +1,56 @@
+Calling function ACM_Get_u16FreqRampPU
+	Return = 111
+"ACM_Get_u16FreqRampPU"	"#s_r_111"
+IF_INSTANCE(
+"s_r_111"
+) {
+return 111;
+}
+
+
+Calling function Temp_Get_BOOLSOATemperatureCorr
+	Return = 0
+"Temp_Get_BOOLSOATemperatureCorr"	"#s_r_0"
+IF_INSTANCE(
+"s_r_0"
+) {
+return 0;
+}
+
+
+Calling function ACM_Get_u16FreqRampPU
+	Return = 132
+"ACM_Get_u16FreqRampPU"	"#s_r_132"
+IF_INSTANCE(
+"s_r_132"
+) {
+return 132;
+}
+
+
+Calling function FIR_UpdateFilt
+	Arg enumFilt = SIGMA_FILT = 0
+	Arg s16NewInput = rampGenerator_u16FreqRampPU_tmp = 66
+	Return = 0
+"FIR_UpdateFilt"	"#s_r_0_p_0_p_66"
+IF_INSTANCE(
+"s_r_0_p_0_p_66"
+) {
+CHECK_S_INT(enumFilt, 0);
+CHECK_S_INT(s16NewInput, 66);
+return 0;
+}
+
+
+Calling function ACM_Set_u16FreqRampSmoothPU
+	Arg value = s16NewOutput = 182
+	Return = 7
+"ACM_Set_u16FreqRampSmoothPU"	"#s_r_7_p_182"
+IF_INSTANCE(
+"s_r_7_p_182"
+) {
+CHECK_S_INT(value, 182);
+return 7;
+}
+
+

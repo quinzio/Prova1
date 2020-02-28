@@ -74,14 +74,14 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
     if (std::regex_match("subject", std::regex("(sub)(.*)")))
         std::cout << "string literal matched\n";
 
-    Variable::outputFile.open(argv[2], std::ios_base::trunc);
-    if (!Variable::outputFile) {
-#if __GNUC__
-        throw std::exception();
-#else
-        throw std::exception("\n\n*** Cannot open output file. ***\n\n");
-#endif
-    }
+//    Variable::outputFile.open(argv[2], std::ios_base::trunc);
+//    if (!Variable::outputFile) {
+//#if __GNUC__
+//        throw std::exception();
+//#else
+//        throw std::exception("\n\n*** Cannot open output file. ***\n\n");
+//#endif
+//    }
 
     std::ifstream infile(argv[1]);
     if (!infile) {
@@ -183,10 +183,11 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
 
     std::string baseDir = argv[3];
     std::string testFolder = argv[4];
-    testRunner.inputValuesFile = baseDir + "test/" + testFolder + "/input.txt";
-    testRunner.expectedValuesFile = baseDir + "test/" + testFolder + "/expected.txt";
-    testRunner.tempValuesFile = baseDir + "test/" + testFolder + "/neutral.txt";
-    testRunner.callsFile = baseDir + "test/" + testFolder + "/calls.txt";
+    testRunner.inputValuesFile = baseDir + "test/" + testFolder + "/valuesInput.txt";
+    testRunner.expectedValuesFile = baseDir + "test/" + testFolder + "/valuesExpected.txt";
+    testRunner.neutralValuesFile = baseDir + "test/" + testFolder + "/valuesNeutral.txt";
+    testRunner.startValuesFile = baseDir + "test/" + testFolder + "/valuesStart.txt";
+    testRunner.callsFile = baseDir + "test/" + testFolder + "/valuesCalls.txt";
 
     testRunner.testState = TestRunner::TestState_enum::Init;
 
@@ -286,6 +287,13 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 break;
             }
             case TestRunner::TestState_enum::BuildVariable: {
+                /* Copy variables values to input file */
+                Variable::outputFile = std::ofstream(testRunner.startValuesFile);
+                for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
+                    for (auto itit = it->begin(); itit != it->end(); itit++) {
+                        (*itit)->print(false);
+                    }
+                }
                 testRunner.buildGlobals = false;
                 testRunner.testState = TestRunner::TestState_enum::BeginOfFunction;
                 break;
@@ -319,6 +327,15 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                     }
                 }
                 Variable::outputFile.close();
+                /* Append function under test parameters values to input files */
+                Variable::outputFile = std::ofstream(testRunner.inputValuesFile, std::ofstream::out | std::ofstream::app);
+                for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                    if (it->name.compare(testRunner.targetFunction) == 0) {
+                        for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
+                            itit->print(true);
+                        }
+                    }
+                }
                 /* Copy variables values to expected file */
                 Variable::outputFile = std::ofstream(testRunner.expectedValuesFile);
                 for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
@@ -386,7 +403,7 @@ Variable visit(Node *node)
 {
     //Logger(std::to_string(node->astFileRow));
     //std::cout << node->astFileRow << "\n";
-    if (node->astFileRow == 22096) {
+    if (node->astFileRow == 58) {
         myP++;
     }
     if (node->astType.compare("IntegerLiteral") == 0) {
@@ -955,6 +972,30 @@ void setGlobalLocation(std::smatch smSourcePoint) {
         globalSource.col = std::stoi(smSourcePoint[2]);
     }
 }
+unsigned long long interactionWGuiCore(Variable& ret, Node* node) {
+    unsigned long long userValue = 0;
+
+    Logger(std::string("requested user") + " " + ret.pointsTo->name + " " + __FILE__ + " " + std::to_string(__LINE__));
+    forGui.line = node->sourceRef.ExtBegin.line - 1;
+    forGui.col = node->sourceRef.ExtBegin.col;
+    forGui.astLine = node->astFileRow;
+    forGui.varName = ret.pointsTo->name;
+    forGui.len = ret.pointsTo->name.length();
+    forGui.strComm = "void";
+    vf.writeFile();
+
+    SetEvent(hEventReqGuiLine);
+    //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
+    WaitForSingleObject(hEventReqValue, INFINITE);
+    //Sleep(2000);
+    userValue = forGui.ValueFromGui;
+    //std::cin >> userValue; 
+    testRunner.freeRunning = true;
+    ret.pointsTo->setByUser = true;
+    ret.pointsTo->valueDoubleByUser = userValue;
+    ret.pointsTo->valueByUser = userValue;
+    return userValue;
+}
 bool interactionWGui(Variable& ret, Node* node)
 {
     bool retVal = false;
@@ -963,36 +1004,40 @@ bool interactionWGui(Variable& ret, Node* node)
     localUsedInTest = ret.pointsTo->usedInTest;
     /* Local variable cannot be set by user */
     if (ret.pointsTo->braceNested > 0) localUsedInTest = true;
-    if (localUsedInTest == false && testRunner.freeRunning == false) {
-        if (ret.pointsTo->setByUser == true) {
+    /* Function may return a different value each time,
+    so they are never set by uset and never use in test (?)
+    They always interact with user */
+    if (ret.pointsTo->typeEnum == Variable::typeEnum_t::isFunction) {
+        if (node->getCallExprEvaluated() == false
+            && testRunner.freeRunning == false
+            ) {
+            userValue = interactionWGuiCore(ret, node);
+            ret.pointsTo->value = userValue;
+            ret.pointsTo->valueDouble = userValue;
+            ret.pointsTo->setByUser = false;
+            ret.pointsTo->usedInTest = false;
+            node->setCallExprEvaluated(true);
+            retVal = true;
+        }
+        else {
             userValue = ret.pointsTo->value = ret.pointsTo->valueByUser;
             userValue = ret.pointsTo->valueDouble = ret.pointsTo->valueDoubleByUser;
         }
-        else {
-            Logger(std::string("requested user") + " " + ret.pointsTo->name + " " + __FILE__ + " " + std::to_string(__LINE__));
-            forGui.line = node->sourceRef.ExtBegin.line - 1;
-            forGui.col = node->sourceRef.ExtBegin.col;
-            forGui.astLine = node->astFileRow;
-            forGui.varName = ret.pointsTo->name;
-            forGui.len = ret.pointsTo->name.length();
-            forGui.strComm = "void";
-            vf.writeFile();
-
-            SetEvent(hEventReqGuiLine);
-            //std::cout << "Enter value (source line " << node->sourceRef.Name.line  << "): ";
-            WaitForSingleObject(hEventReqValue, INFINITE);
-            retVal = true;
-            //Sleep(2000);
-            userValue = forGui.ValueFromGui;
-            //std::cin >> userValue; 
-            testRunner.freeRunning = true;
-            ret.pointsTo->setByUser = true;
-            ret.pointsTo->valueDoubleByUser = userValue;
-            ret.pointsTo->valueByUser = userValue;
+    }
+    else {
+        if (localUsedInTest == false && testRunner.freeRunning == false) {
+            if (ret.pointsTo->setByUser == true) {
+                userValue = ret.pointsTo->value = ret.pointsTo->valueByUser;
+                userValue = ret.pointsTo->valueDouble = ret.pointsTo->valueDoubleByUser;
+            }
+            else {
+                userValue = interactionWGuiCore(ret, node);
+                retVal = true;
+            }
+            ret.pointsTo->usedInTest = true;
+            ret.pointsTo->value = userValue;
+            ret.pointsTo->valueDouble = userValue;
         }
-        ret.pointsTo->usedInTest = true;
-        ret.pointsTo->value = userValue;
-        ret.pointsTo->valueDouble = userValue;
     }
     return retVal;
 }
@@ -1293,8 +1338,9 @@ Variable fDeclRefExpr(Node* node) {
             for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
                 if (itit->hexID.compare(hexID) == 0) {
                     /* Enum constants returns directly the value and
-                    no reference. */
-                    ret.pointsTo = &*itit;
+                    no reference. 
+                    In the ast there will be no L to R value cast */
+                    ret = *itit;
                     ret.typeEnum = Variable::typeEnum_t::isEnum;
                     break;
                 }
@@ -1464,22 +1510,25 @@ Variable fBinaryOperator(Node* node) {
     opb = visit(node->child->nextSib);
     ret = opa;
     if (boperator.compare("=") == 0) {
+        /*
         std::string saveName = opa.pointsTo->name;
         Variable* saveParent = opa.pointsTo->uData.myParent;
         struct unionData saveUData = opa.pointsTo->uData;
         bool setByUser = opa.pointsTo->setByUser;
         unsigned long long valueByUser = opa.pointsTo->valueByUser;
         float valueDoubleByUser = opa.pointsTo->valueDoubleByUser;
-
-        *opa.pointsTo = opb;
-
+        */
+        opa.pointsTo->value = opb.value;
+        opa.pointsTo->valueDouble = opb.valueDouble;
+        opa.pointsTo->usedInTest = true;
+        /*
         opa.pointsTo->uData.myParent = saveParent;
         opa.pointsTo->name = saveName;
         opa.pointsTo->uData = saveUData;
-        opa.pointsTo->usedInTest = true;
         opa.pointsTo->setByUser = setByUser;
         opa.pointsTo->valueByUser = valueByUser;
         opa.pointsTo->valueDoubleByUser = valueDoubleByUser;
+        */
         careUnions(opa.pointsTo);
         ret = *opa.pointsTo;
     }
@@ -1823,8 +1872,18 @@ Variable fTranslationUnitDecl(Node* node) {
 }
 Variable fArraySubscriptExpr(Node* node) {
     Variable ret;
+    Variable temp;
     Variable pArray = visit(node->child);
-    int ix = visit(node->child->nextSib).pointsTo->value;
+    int ix;
+    temp = visit(node->child->nextSib);
+    /* If the index comes from a variable it will be passed here as a pointer, 
+    enums and other constant value must not be dereferenced. */
+    if (temp.typeEnum == Variable::typeEnum_t::isRef) {
+        ix = visit(node->child->nextSib).pointsTo->value;
+    } 
+    else {
+        ix = visit(node->child->nextSib).value;
+    }
     if (ix >= pArray.pointsTo->array.size()) {
         Logger(std::to_string(ix));
         throw std::string("Array index error " + std::to_string(ix) + " > " + std::to_string(pArray.pointsTo->array.size()));
@@ -1841,72 +1900,70 @@ Variable fFunctionDecl(Node* node) {
     Variable func;
     Node* node2;
     bool hasBody = false;
+    bool alreadyDeclared = false;
     std::smatch smFunctionDecl;
     std::regex_search(node->text, smFunctionDecl, eFunctionDecl);
     func.name = smFunctionDecl[1];
     func.typeEnum = Variable::typeEnum_t::isFunction;
     func.type = smFunctionDecl[2];
-    if (node->child) {
-        node2 = node->child;
-        while (node2) {
-
-            if  (   (node2->astType.compare("CompoundStmt") == 0)
-                    &&
-                    func.name.compare(testRunner.targetFunction) == 0
-                    && 
-                    (testRunner.buildGlobals == false)
-                ||
-                    (node2->astType.compare("ParmVarDecl") == 0)
-                    && 
-                    (testRunner.buildGlobals == true)
-                )
-            {
-                /* Visit all, there will be parameters first and then
-                the function body.
-                Parameters will be in vParams global vector */
-                try {
-                    temp = visit(node2);
-                }
-                catch (Variable v) {
-                    v;
-                }
-                catch (std::string str) {
-                    std::cout << str;
-                    throw;
-                }
-                /*
-                catch (...) {
-                    std::cout << "???????" << node->astFileRow << " " << node->text;
-                    throw;
-                }
-                */
-                if (testRunner.buildGlobals == true) {
-                    if (node2->astType.compare("ParmVarDecl") == 0) {
-                        func.intStruct.push_back(temp);
-                    }
-                }
-                else if (node2->astType.compare("CompoundStmt") == 0) {
-                    hasBody = true;
-                }
-            } 
-            node2 = node2->nextSib;
-        }
-        if (hasBody || testRunner.buildGlobals == true) {
-            /* Has body will be false if we didn't
-            traverse the body. */
-            Variable::outputFile = std::ofstream(testRunner.tempValuesFile);
-            for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
-                for (auto itit = it->begin(); itit != it->end(); itit++) {
-                    (*itit)->print(testRunner.buildGlobals);
-                }
-            }
-            Variable::outputFile.close();
+    /* Search if funtion was already declared, even if only as a prototype */
+    for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+        if (it->name.compare(func.name) == 0) {
+            alreadyDeclared = true;
         }
     }
-    if (testRunner.buildGlobals == true) {
+    /* This is the case where we are building the global variables and functions
+    Since functions can be declared more than once, we must search it the declaration
+    has already happend.
+    We should check also for functions overloaded, with same name but different parameters,
+    but we don't here. */
+    if (testRunner.buildGlobals == true && alreadyDeclared == false) {
+        if (node->child) {
+            node2 = node->child;
+            while (node2) {
+                if (node2->astType.compare("ParmVarDecl") == 0) {
+                    try {
+                        temp = visit(node2);
+                    }
+                    catch (Variable v) {
+                        v;
+                    }
+                    catch (std::string str) {
+                        std::cout << str;
+                        throw;
+                    }
+                    func.intStruct.push_back(temp);
+                }
+                node2 = node2->nextSib;
+            }
+        }
         vFunction.push_back(func);
     }
-    /* Clear all parameters declared  */
+
+    /* This is the case where we are executing the target function, either in freerunning mode
+    or in interactive mode.
+    Here we don't care if function are declared more than once, since only one instance can have a
+    body, and the ast compiler has already cared about it. */
+    if (testRunner.buildGlobals == false && func.name.compare(testRunner.targetFunction) == 0) {
+        if (node->child) {
+            node2 = node->child;
+            while (node2) {
+                if (node2->astType.compare("CompoundStmt") == 0) {
+                    try {
+                        temp = visit(node2);
+                    }
+                    catch (Variable v) {
+                        v;
+                    }
+                    catch (std::string str) {
+                        std::cout << str;
+                        throw;
+                    }
+                }
+                node2 = node2->nextSib;
+            }
+        }
+    }
     vParams.clear();
     return temp;
 }
@@ -2059,12 +2116,13 @@ Variable fCallExpr(Node* node) {
     so to prevent error because of division by zero. */
 
     interactionOccour = interactionWGui(call, node);
+    /* Calls must all be recorded because each time the return value may be different */
     if (interactionOccour) {
         auto itPar = call.pointsTo->intStruct.begin();
         auto itArg = arguments.begin();
-        std::string cantataCall = "\"" + call.pointsTo->name + "\"\t\"";
-        cantataCall +=
-            "#s_r_" +
+        std::string cantataCall = "\"" + call.pointsTo->name + "\"\t\"#";
+        std::string cantataCallInstance =
+            "s_r_" +
             std::to_string(call.pointsTo->value);
         Variable::outputFile = std::ofstream(testRunner.callsFile, std::ofstream::out | std::ofstream::app);
         prefix = "Calling function " + call.pointsTo->name + "\n";
@@ -2074,14 +2132,32 @@ Variable fCallExpr(Node* node) {
             prefix += "\tArg " + itPar->name + " = " + "";
             itArg->print(prefix, "", false);
             prefix = "";
-            cantataCall += "_p_" + std::to_string(itArg->value);
+            cantataCallInstance += "_p_" + std::to_string(itArg->value);
         }
-        cantataCall += "\"\n";
+        cantataCall += cantataCallInstance + "\"\n";
         Variable::outputFile << "\tReturn = " << std::to_string(call.pointsTo->value) << "\n";
         Variable::outputFile << cantataCall;
+        /* Build Cantata string value */
+        std::string cantataCheckInstance;
+        cantataCheckInstance += "IF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        itPar = call.pointsTo->intStruct.begin();
+        itArg = arguments.begin();
+        for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
+            cantataCheckInstance += 
+                "CHECK_S_INT(" + 
+                itPar->name + 
+                ", " + 
+                std::to_string(itArg->value) + 
+                ");\n";
+        }
+        cantataCheckInstance += 
+            "return " + 
+            std::to_string(call.pointsTo->value) + 
+            ";\n}\n\n\n";
+        Variable::outputFile << cantataCheckInstance;
+
         Variable::outputFile.close();
     }
-
     return *call.pointsTo;
 }
 Variable fParenExpr(Node* node) {
