@@ -79,7 +79,9 @@ public:
     struct unionData uData;
     /* The address, in test machine memory of this very object */
     Variable* myAddressDebug = NULL;
-
+    /* If Variable is a function whis will tell if the function has a body 
+    Otherwise, the meaning is not defined */
+    bool functionHasBody = false;
     /* Public methods */
     void updateCommonArea(void);
     void updateUnion();

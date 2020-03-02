@@ -18,6 +18,8 @@ debugging.
 #include <cstdint>
 #include <windows.h>
 
+#include "json.hpp"
+
 #include "Variabile.h"
 #include "Unit-Test-Generation-Support.h"
 #include "Node.h"
@@ -29,6 +31,7 @@ debugging.
 #include "forGUI.h"
 #include "ValuesFile.h"
 #include "TestRunner.h"
+
 
 // vVariable contains all the global and local variables defined.
 VariableShadow vShadowedVar;
@@ -203,8 +206,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 testRunner.buildGlobals = true;
                 /* This will prevent from entering and executing
                 a test. */
-                //testRunner.targetFunction = "fun1";
-                testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                testRunner.targetFunction = "fun1";
+                //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                 break;
             }
             case TestRunner::TestState_enum::BeginOfFunction: {
@@ -221,8 +224,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 SetEvent(hEventReqGuiLine);
                 WaitForSingleObject(hEventReqValue, INFINITE);
                 if (forGui.ValueFromGui == 0) {
-                    //testRunner.targetFunction = "fun1";
-                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.targetFunction = "fun1";
+                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     /* Remove the calls file
@@ -241,8 +244,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                     WaitForSingleObject(hEventReqValue, INFINITE);
                     testRunner.cleanSetByUser = true;
                     ResetGlobals();
-                    //testRunner.targetFunction = "fun1";
-                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.targetFunction = "fun1";
+                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
@@ -1041,7 +1044,88 @@ bool interactionWGui(Variable& ret, Node* node)
     }
     return retVal;
 }
+void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
+    auto itPar = call.pointsTo->intStruct.begin();
+    auto itArg = arguments.begin();
+    nlohmann::json j;
+    std::string prefix;
+    std::string cantataCheckInstance;
+    std::string cantataCall = "//Expected\n\"" + call.pointsTo->name + "\"\t\"#";
+    std::string cantataCallInstance =
+        "s_r_" +
+        std::to_string(call.pointsTo->value);
+    Variable::outputFile = std::ofstream(testRunner.callsFile, std::ofstream::out | std::ofstream::app);
+    prefix = "//Description\nCalling function " + call.pointsTo->name + "\n";
+    Variable::outputFile << prefix;
+    prefix = "";
+    for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
+        prefix += "\tArg " + itPar->name + " = " + "";
+        itArg->print(prefix, "", false);
+        prefix = "";
+        cantataCallInstance += "_p_" + std::to_string(itArg->value);
+    }
+    cantataCall += cantataCallInstance + "\"\n";
+    Variable::outputFile << "\tReturn = " << std::to_string(call.pointsTo->value) << "\n";
+    Variable::outputFile << cantataCall;
+    /* Build Cantata IfInstance */
+    if (call.pointsTo->functionHasBody == false) {
+        /* No function with this name has a body, so the Cantata Drive will be a stub */
+        cantataCheckInstance = "//Stub\nIF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        itPar = call.pointsTo->intStruct.begin();
+        itArg = arguments.begin();
+        for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
+            cantataCheckInstance +=
+                "CHECK_S_INT(" +
+                itPar->name +
+                ", " +
+                std::to_string(itArg->value) +
+                ");\n";
+        }
+        cantataCheckInstance +=
+            "return " +
+            std::to_string(call.pointsTo->value) +
+            ";\n}\n\n\n";
+    }
+    else {
+        /* A function with this name has a body, so the Cantata Drive will be a replace wrap 
+        For now, no call will be am after wrapper, all calls are stubbed or replaced.*/
+        /* Before part  */
+        cantataCheckInstance = "//Before\nIF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        itPar = call.pointsTo->intStruct.begin();
+        itArg = arguments.begin();
+        for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
+            cantataCheckInstance +=
+                "CHECK_S_INT(" +
+                itPar->name +
+                ", " +
+                std::to_string(itArg->value) +
+                ");\n";
+        }
+        cantataCheckInstance +=
+            "return REPLACE_WRAPPER;\n}\n\n\n";
 
+        /* Replace part  */
+        cantataCheckInstance += "//Replace\nIF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        itPar = call.pointsTo->intStruct.begin();
+        itArg = arguments.begin();
+        for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
+            cantataCheckInstance +=
+                "CHECK_S_INT(" +
+                itPar->name +
+                ", " +
+                std::to_string(itArg->value) +
+                ");\n";
+        }
+        cantataCheckInstance +=
+            "return " +
+            std::to_string(call.pointsTo->value) +
+            ";\n}\n\n\n";
+
+    }
+    Variable::outputFile << cantataCheckInstance;
+
+    Variable::outputFile.close();
+}
 Variable getTypDef(std::string uType) {
     std::smatch smTypeDef;
     std::smatch smStructType;
@@ -1939,7 +2023,26 @@ Variable fFunctionDecl(Node* node) {
         }
         vFunction.push_back(func);
     }
-
+    /* Update the functionHasBody flag, which will be useful to build instances for 
+    stubs, or before wrappers and after wrappers. 
+    At this point the function is declared */
+    if (testRunner.buildGlobals == true) {
+        if (node->child) {
+            node2 = node->child;
+            while (node2) {
+                if (node2->astType.compare("CompoundStmt") == 0) {
+                    for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                        if (it->name.compare(func.name) == 0) {
+                            it->functionHasBody = true;
+                            goto NodeLoop;
+                        }
+                    }
+                }
+                node2 = node2->nextSib;
+            }
+        NodeLoop:;
+        }
+    }
     /* This is the case where we are executing the target function, either in freerunning mode
     or in interactive mode.
     Here we don't care if function are declared more than once, since only one instance can have a
@@ -2103,7 +2206,6 @@ Variable fCallExpr(Node* node) {
     Variable call, arg;
     Node* node2;
     bool interactionOccour = false;
-    std::string prefix;
     std::vector<Variable> arguments;
     call = visit(node->child);
     node2 = node->child->nextSib;
@@ -2114,49 +2216,10 @@ Variable fCallExpr(Node* node) {
     }
     /* For the moment, every function returns 100, 
     so to prevent error because of division by zero. */
-
     interactionOccour = interactionWGui(call, node);
     /* Calls must all be recorded because each time the return value may be different */
     if (interactionOccour) {
-        auto itPar = call.pointsTo->intStruct.begin();
-        auto itArg = arguments.begin();
-        std::string cantataCall = "\"" + call.pointsTo->name + "\"\t\"#";
-        std::string cantataCallInstance =
-            "s_r_" +
-            std::to_string(call.pointsTo->value);
-        Variable::outputFile = std::ofstream(testRunner.callsFile, std::ofstream::out | std::ofstream::app);
-        prefix = "Calling function " + call.pointsTo->name + "\n";
-        Variable::outputFile << prefix;
-        prefix = "";
-        for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
-            prefix += "\tArg " + itPar->name + " = " + "";
-            itArg->print(prefix, "", false);
-            prefix = "";
-            cantataCallInstance += "_p_" + std::to_string(itArg->value);
-        }
-        cantataCall += cantataCallInstance + "\"\n";
-        Variable::outputFile << "\tReturn = " << std::to_string(call.pointsTo->value) << "\n";
-        Variable::outputFile << cantataCall;
-        /* Build Cantata string value */
-        std::string cantataCheckInstance;
-        cantataCheckInstance += "IF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
-        itPar = call.pointsTo->intStruct.begin();
-        itArg = arguments.begin();
-        for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
-            cantataCheckInstance += 
-                "CHECK_S_INT(" + 
-                itPar->name + 
-                ", " + 
-                std::to_string(itArg->value) + 
-                ");\n";
-        }
-        cantataCheckInstance += 
-            "return " + 
-            std::to_string(call.pointsTo->value) + 
-            ";\n}\n\n\n";
-        Variable::outputFile << cantataCheckInstance;
-
-        Variable::outputFile.close();
+        buildCallInstance(call, arguments);
     }
     return *call.pointsTo;
 }

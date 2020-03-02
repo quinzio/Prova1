@@ -181,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BbSize.h" />
+    <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\TestRunner.h" />
     <ClInclude Include="src\ValuesFile.h" />
     <ClInclude Include="src\CoreTypes.h" />
