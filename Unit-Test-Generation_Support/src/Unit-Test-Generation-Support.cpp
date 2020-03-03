@@ -322,6 +322,27 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 break;
             }
             case TestRunner::TestState_enum::Finish: {
+                /* Update json Calls file with target function parameters types and return type */
+                std::ifstream callsFile(testRunner.callsFile);
+                nlohmann::json j;
+                callsFile >> j;
+                callsFile.close();
+                for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                    if (it->name.compare(testRunner.targetFunction) == 0) {
+                        j["targetName"] = testRunner.targetFunction;
+                        j["returnType"] = it->type;
+                        j["returnVal"] = it->value;
+                        for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
+                            j["parameters"].push_back(nlohmann::json());
+                            j["parameters"].back()["name"] = it->intStruct[0].name;
+                            j["parameters"].back()["type"] = it->intStruct[0].type;
+                            j["parameters"].back()["val"] = it->intStruct[0].value;
+                        }
+                    }
+                }
+                std::ofstream callsFile_out(testRunner.callsFile, std::ofstream::out | std::ofstream::trunc);
+                callsFile_out << j.dump(4);
+                callsFile_out.close();
                 /* Copy variables values to input file */
                 Variable::outputFile = std::ofstream(testRunner.inputValuesFile);
                 for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
@@ -1047,30 +1068,39 @@ bool interactionWGui(Variable& ret, Node* node)
 void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
     auto itPar = call.pointsTo->intStruct.begin();
     auto itArg = arguments.begin();
-    nlohmann::json j;
+    nlohmann::json j, jList, jFile;
     std::string prefix;
     std::string cantataCheckInstance;
     std::string cantataCall = "//Expected\n\"" + call.pointsTo->name + "\"\t\"#";
     std::string cantataCallInstance =
         "s_r_" +
         std::to_string(call.pointsTo->value);
-    Variable::outputFile = std::ofstream(testRunner.callsFile, std::ofstream::out | std::ofstream::app);
-    prefix = "//Description\nCalling function " + call.pointsTo->name + "\n";
-    Variable::outputFile << prefix;
+
+    prefix = "Calling function " + call.pointsTo->name + "\n";
+    /*json*/ 
+    j["name"] = call.pointsTo->name;
     prefix = "";
     for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
         prefix += "\tArg " + itPar->name + " = " + "";
         itArg->print(prefix, "", false);
         prefix = "";
         cantataCallInstance += "_p_" + std::to_string(itArg->value);
+        /*json*/ 
+        nlohmann::json jTemp;
+        jTemp[itPar->name] = itArg->value;
+        j["arg"].push_back(jTemp);
     }
+    /*json*/
+    j["cantataCallInstance"] = cantataCallInstance;
+    jList = "\t\"" + call.pointsTo->name + "\"\t\t\"#" + cantataCallInstance + ";\"\n";
     cantataCall += cantataCallInstance + "\"\n";
-    Variable::outputFile << "\tReturn = " << std::to_string(call.pointsTo->value) << "\n";
-    Variable::outputFile << cantataCall;
+    cantataCall += "\tReturn = " + std::to_string(call.pointsTo->value) + "\n";
+    j["return"] = call.pointsTo->value;
+    j["log"] = cantataCall;
     /* Build Cantata IfInstance */
     if (call.pointsTo->functionHasBody == false) {
         /* No function with this name has a body, so the Cantata Drive will be a stub */
-        cantataCheckInstance = "//Stub\nIF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        cantataCheckInstance = "IF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
         itPar = call.pointsTo->intStruct.begin();
         itArg = arguments.begin();
         for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
@@ -1085,12 +1115,14 @@ void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
             "return " +
             std::to_string(call.pointsTo->value) +
             ";\n}\n\n\n";
+        /*json*/
+        j["stubInstance"] = cantataCheckInstance;
     }
     else {
         /* A function with this name has a body, so the Cantata Drive will be a replace wrap 
         For now, no call will be am after wrapper, all calls are stubbed or replaced.*/
         /* Before part  */
-        cantataCheckInstance = "//Before\nIF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        cantataCheckInstance = "IF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
         itPar = call.pointsTo->intStruct.begin();
         itArg = arguments.begin();
         for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
@@ -1104,8 +1136,11 @@ void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
         cantataCheckInstance +=
             "return REPLACE_WRAPPER;\n}\n\n\n";
 
+        /*json*/
+        j["BeforeWrapInstance"] = cantataCheckInstance;
+
         /* Replace part  */
-        cantataCheckInstance += "//Replace\nIF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        cantataCheckInstance += "IF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
         itPar = call.pointsTo->intStruct.begin();
         itArg = arguments.begin();
         for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
@@ -1120,12 +1155,48 @@ void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
             "return " +
             std::to_string(call.pointsTo->value) +
             ";\n}\n\n\n";
+        /*json*/
+        j["ReplaceWrapInstance"] = cantataCheckInstance;
+    }
+
+    /*json*/
+    std::ifstream InJson = std::ifstream(testRunner.callsFile);
+    try {
+        InJson >> jFile;
+        InJson.close();
+    }
+    catch (std::exception&) {
+    }
+    jFile["expectedCalls"]["singleInstances"].push_back(j);
+    jFile["expectedCalls"]["list"].push_back(jList);
+    std::ofstream OutJson = std::ofstream(testRunner.callsFile);
+    OutJson << jFile.dump(4);
+    OutJson.close();
+
+}
+void writeCantataTestFile() {
+    std::vector<std::string> testFileVec;
+    std::ifstream testFilesStr(testRunner.testFile);
+    std::string str1;
+    while (getline(testFilesStr, str1)) {
+        testFileVec.push_back(str1);
+    }
+    testFilesStr.close();
+
+    // Search begin of test function declaration
+    for (auto str : testFileVec) {
+        
+
+
 
     }
-    Variable::outputFile << cantataCheckInstance;
 
-    Variable::outputFile.close();
+
+
+
+
 }
+
 Variable getTypDef(std::string uType) {
     std::smatch smTypeDef;
     std::smatch smStructType;
@@ -1982,6 +2053,7 @@ Variable fArraySubscriptExpr(Node* node) {
 Variable fFunctionDecl(Node* node) {
     Variable temp;
     Variable func;
+    struct coreType_str CoreTypes;
     Node* node2;
     bool hasBody = false;
     bool alreadyDeclared = false;
@@ -1990,6 +2062,11 @@ Variable fFunctionDecl(Node* node) {
     func.name = smFunctionDecl[1];
     func.typeEnum = Variable::typeEnum_t::isFunction;
     func.type = smFunctionDecl[2];
+    /* Must find core types for the return value */
+    CoreTypes.coreType = func.type;
+    stripParametersFunction(CoreTypes);
+    func.type = CoreTypes.core;
+
     /* Search if funtion was already declared, even if only as a prototype */
     for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
         if (it->name.compare(func.name) == 0) {

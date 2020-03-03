@@ -165,6 +165,22 @@ void findCoreType(struct coreType_str& str, bool init)
     return;
 }
 
+/* This function is to be used only with function types 
+Function types may be something like "int (int, int, int)"
+The findCoreType doesn't correctly recognize the parameters
+*/
+void stripParametersFunction(struct coreType_str& str) {
+    int unbalanced = 0;
+    auto it = str.coreType.end()-1;
+    for (; it >= str.coreType.begin(); it--) {
+        if (*it == ')') unbalanced++;
+        if (*it == '(' && unbalanced == 1) {
+            break;
+        }
+        if (*it == '(') unbalanced--;
+    }
+    str.core = std::string(str.coreType.begin(), it);
+}
 
 //void findCoreType(struct coreType_str& str, bool init)
 //{

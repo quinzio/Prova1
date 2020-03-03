@@ -13,4 +13,4 @@ struct coreType_str {
 };
 
 void findCoreType(struct coreType_str& str, bool init = true);
-
+void stripParametersFunction(struct coreType_str& CoreTypes);

@@ -1,0 +1,1252 @@
+{
+  "version": "2.0.0",
+  "$schema": "http://json.schemastore.org/sarif-2.0.0",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "name": "PREfast",
+        "fullName": "PREfast Code Analysis",
+        "version": "14.24.28315.0",
+        "fileVersion": "14.00.28315.00"
+      },
+      "invocations": [
+        {
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.24.28314\\bin\\HostX86\\x86\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00183180 -il C:\\Users\\munarid\\AppData\\Local\\Temp\\_CL_386a0736ast -typedil -f minimal.cpp -Ze -D_MSC_EXTENSIONS -Zp8 -Gs -pc \\:/ -D_MSC_VER=1924 -D_MSC_FULL_VER=192428315 -D_MSC_BUILD=0 -D_WIN32 -D_M_IX86=600 -D_M_IX86_FP=2 -I C:\\Users\\munarid\\source\\repos\\Unit-Test-Generation_Support\\Unit-Test-Generation_Support\\src -I C:\\wxWidgets-3.1.3\\lib\\vc_lib\\mswud -I C:\\wxWidgets-3.1.3\\include -I C:\\Users\\munarid\\source\\repos\\Unit-Test-Generation_Support\\minimal -I C:\\wxWidgets-3.1.3\\samples -nologo -W 4 -diagnostics:column -Ot -DCODE_ANALYSIS -DWIN32 -D_DEBUG -D_CRT_SECURE_NO_DEPRECATE=1 -D_CRT_NON_CONFORMING_SWPRINTFS=1 -D_SCL_SECURE_NO_WARNINGS=1 -D__WXMSW__ -D_WINDOWS -DNOPCH -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -Zc:wchar_t -Zc:forScope -GR -D_CPPRTTI -Fovc_mswud\\minimal\\minimal.obj -Fdvc_mswud\\minimal.pdb -Gd -analyze:projectdirectory C:\\Users\\munarid\\source\\repos\\Unit-Test-Generation_Support\\minimal\\ -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets; -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\MinimumRecommendedRules.ruleset -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.24.28314\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.24.28314\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.24.28314\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\ucrt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\UnitTest\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um"
+        }
+      ],
+      "files": {
+        "file:///c:/wxwidgets-3.1.3/lib/vc_lib/mswud/wx/setup.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/users/munarid/source/repos/unit-test-generation_support/minimal/minimal.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/compiler.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/anystr.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/meta/int2type.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/wxprec.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/checklst.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/event.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/stream.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/chkconf.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/defs.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/scopeguard.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/features.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/libraries.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/wx.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/platform.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/winver.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dc.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/cursor.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/hash.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/chkconf.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/unichar.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/language.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/version.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/geometry.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/translation.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/cpp.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/strconv.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dlimpexp.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/types.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/debug.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/chartype.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/vector.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/combobox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/stringops.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/windowid.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/meta/if.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/xti.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/object.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagbmp.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/meta/pod.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/memory.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/stringimpl.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/string.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/menu.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/intl.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/control.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/gauge.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/gridctrl.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/flags.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/wxcrtbase.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/strvararg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/buffer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/fontenc.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/beforestd.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/afterstd.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/wxcrt.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/winundef.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/iosfwrap.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/meta/convertible.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/xti2.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msgout.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/sharedptr.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/rtti.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dynarray.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/except.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/meta/movable.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/list.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/hashmap.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/typeinfo.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/arrstr.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/scopedptr.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/checkeddelete.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/valtext.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/log.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/thread.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/panel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/logg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/gdiobj.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/clntdata.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/slider.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/math.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/gdicmn.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/gdiimage.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/cursor.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/statusbr.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/utils.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/filefn.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/versioninfo.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/eventfilter.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/meta/implicitconversion.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/mousestate.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/kbdstate.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/longlong.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/platinfo.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/timer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/tracker.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/any.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/datetime.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/ole/dataform.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/variant.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/meta/removeref.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/app.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/build.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/cmdargs.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/frame.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/init.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/init.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/wrapwin.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/app.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/listbox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/icon.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/iconloc.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/icon.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/stopwatch.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/time.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/module.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/radiobox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/wxcrtvararg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/window.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/font.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/font.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/colour.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/colour.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/region.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/region.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/validate.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/palette.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/palette.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/accel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/accel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/access.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/ole/access.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/statusbar.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/window.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/settings.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/containr.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/panel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/toplevel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/nonownedwnd.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/nonownedwnd.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/tooltip.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/iconbndl.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/weakref.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/toplevel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/bitmap.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/control.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagpcx.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagpnm.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/tooltip.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/frame.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/image.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagxpm.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagpng.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imaggif.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/ole/dataobj2.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagjpeg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagtga.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dialog.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagtiff.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imagiff.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/bitmap.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/brush.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/brush.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/pen.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/peninfobase.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/pen.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/choice.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/affinematrix2d.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/affinematrix2dbase.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dcclient.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dcmemory.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/grid.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dcprint.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dcscreen.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/button.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/anybutton.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/anybutton.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/bmpbuttn.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/button.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/menuitem.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/menuitem.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/ownerdrw.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/ownerdrw.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/menu.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/atomic.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/dialog.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msgdlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/stockitem.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/msgdlgg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/msgdlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dirdlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/dataobj.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/ole/dataobj.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/ctrlsub.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/compositewin.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/ctrlsub.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/bmpbuttn.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/checkbox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/checkbox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/ownerdrawnbutton.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/checklst.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/listbox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/choice.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/scrolbar.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/scrolbar.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/stattext.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/stattext.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/statbmp.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/statbmp.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/textdlgg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/statbox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/statbox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/radiobox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/radiobut.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/radiobut.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/textctrl.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/textentry.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/textentry.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/ioswrap.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/textctrl.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/slider.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/gauge.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/scrolwin.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/scrolwin.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/combobox.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/recguard.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/dirdlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/toolbar.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/tbarbase.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/toolbar.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/imaglist.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/imaglist.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/layout.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/sizer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/choicdlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/choicdgg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/textdlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/filedlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/filedlg.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/mdi.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/msw/mdi.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/grid.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/wxwidgets-3.1.3/include/wx/generic/grideditors.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/users/munarid/source/repos/unit-test-generation_support/unit-test-generation_support/src/forgui.h": {
+          "roles": [
+            "resultFile"
+          ]
+        }
+      },
+      "logicalLocations": {},
+      "resources": {
+        "rules": {}
+      }
+    }
+  ]
+}

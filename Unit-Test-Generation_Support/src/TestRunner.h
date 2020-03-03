@@ -13,6 +13,7 @@ public:
 	std::string inputValuesFile;
 	std::string expectedValuesFile;
 	std::string callsFile;
+	std::string testFile;
 
 	enum class TestState_enum {
 		Init,

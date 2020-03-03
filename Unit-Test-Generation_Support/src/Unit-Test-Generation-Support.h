@@ -26,6 +26,8 @@ void careUnions(Variable* v);
 bool interactionWGui(Variable& ret, Node* node);
 unsigned long long interactionWGuiCore(Variable& ret, Node* node);
 void ResetGlobals(void);
+void buildCallInstance(Variable& call, std::vector<Variable> arguments);
+void writeCantataTestFile(void);
 Variable visit(Node* node);
 Variable getTypDef(std::string uType);
 Variable fVarDecl(Node* node);

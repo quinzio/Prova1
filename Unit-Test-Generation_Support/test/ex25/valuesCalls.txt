@@ -1,68 +1,76 @@
-//Description
-Calling function f1
-	Arg f1a =  = 1
-	Arg f1b =  = 2
-	Arg f1c = par1 = 1
-	Return = 2
-//Expected
-"f1"	"#s_r_2_p_1_p_2_p_1"
-//Stub
-IF_INSTANCE(
-"s_r_2_p_1_p_2_p_1"
-) {
-CHECK_S_INT(f1a, 1);
-CHECK_S_INT(f1b, 2);
-CHECK_S_INT(f1c, 1);
-return 2;
+{
+    "expectedCalls": {
+        "list": [
+            "\t\"f1\"\t\t\"#s_r_22_p_1_p_2_p_11;\"\n",
+            "\t\"f2\"\t\t\"#s_r_33_p_10_p_20_p_11;\"\n",
+            "\t\"f3\"\t\t\"#s_r_44_p_11_p_12_p_12;\"\n"
+        ],
+        "singleInstances": [
+            {
+                "arg": [
+                    {
+                        "f1a": 1
+                    },
+                    {
+                        "f1b": 2
+                    },
+                    {
+                        "f1c": 11
+                    }
+                ],
+                "cantataCallInstance": "s_r_22_p_1_p_2_p_11",
+                "log": "//Expected\n\"f1\"\t\"#s_r_22_p_1_p_2_p_11\"\n\tReturn = 22\n",
+                "name": "f1",
+                "return": 22,
+                "stubInstance": "IF_INSTANCE(\n\"s_r_22_p_1_p_2_p_11\"\n) {\nCHECK_S_INT(f1a, 1);\nCHECK_S_INT(f1b, 2);\nCHECK_S_INT(f1c, 11);\nreturn 22;\n}\n\n\n"
+            },
+            {
+                "BeforeWrapInstance": "IF_INSTANCE(\n\"s_r_33_p_10_p_20_p_11\"\n) {\nCHECK_S_INT(f2a, 10);\nCHECK_S_INT(f2b, 20);\nCHECK_S_INT(f2c, 11);\nreturn REPLACE_WRAPPER;\n}\n\n\n",
+                "ReplaceWrapInstance": "IF_INSTANCE(\n\"s_r_33_p_10_p_20_p_11\"\n) {\nCHECK_S_INT(f2a, 10);\nCHECK_S_INT(f2b, 20);\nCHECK_S_INT(f2c, 11);\nreturn REPLACE_WRAPPER;\n}\n\n\nIF_INSTANCE(\n\"s_r_33_p_10_p_20_p_11\"\n) {\nCHECK_S_INT(f2a, 10);\nCHECK_S_INT(f2b, 20);\nCHECK_S_INT(f2c, 11);\nreturn 33;\n}\n\n\n",
+                "arg": [
+                    {
+                        "f2a": 10
+                    },
+                    {
+                        "f2b": 20
+                    },
+                    {
+                        "f2c": 11
+                    }
+                ],
+                "cantataCallInstance": "s_r_33_p_10_p_20_p_11",
+                "log": "//Expected\n\"f2\"\t\"#s_r_33_p_10_p_20_p_11\"\n\tReturn = 33\n",
+                "name": "f2",
+                "return": 33
+            },
+            {
+                "arg": [
+                    {
+                        "f3a": 11
+                    },
+                    {
+                        "f3b": 12
+                    },
+                    {
+                        "f3c": 12
+                    }
+                ],
+                "cantataCallInstance": "s_r_44_p_11_p_12_p_12",
+                "log": "//Expected\n\"f3\"\t\"#s_r_44_p_11_p_12_p_12\"\n\tReturn = 44\n",
+                "name": "f3",
+                "return": 44,
+                "stubInstance": "IF_INSTANCE(\n\"s_r_44_p_11_p_12_p_12\"\n) {\nCHECK_S_INT(f3a, 11);\nCHECK_S_INT(f3b, 12);\nCHECK_S_INT(f3c, 12);\nreturn 44;\n}\n\n\n"
+            }
+        ]
+    },
+    "parameters": [
+        {
+            "name": "par1",
+            "type": "int",
+            "val": 13
+        }
+    ],
+    "returnType": "int ",
+    "returnVal": 1431655765,
+    "targetName": "fun1"
 }
-
-
-//Description
-Calling function f2
-	Arg f2a =  = 10
-	Arg f2b =  = 20
-	Arg f2c = par1 = 1
-	Return = 3
-//Expected
-"f2"	"#s_r_3_p_10_p_20_p_1"
-//Before
-IF_INSTANCE(
-"s_r_3_p_10_p_20_p_1"
-) {
-CHECK_S_INT(f2a, 10);
-CHECK_S_INT(f2b, 20);
-CHECK_S_INT(f2c, 1);
-return REPLACE_WRAPPER;
-}
-
-
-//Replace
-IF_INSTANCE(
-"s_r_3_p_10_p_20_p_1"
-) {
-CHECK_S_INT(f2a, 10);
-CHECK_S_INT(f2b, 20);
-CHECK_S_INT(f2c, 1);
-return 3;
-}
-
-
-//Description
-Calling function f3
-	Arg f3a =  = 11
-	Arg f3b =  = 12
-	Arg f3c = par1 = 2
-	Return = 4
-//Expected
-"f3"	"#s_r_4_p_11_p_12_p_2"
-//Stub
-IF_INSTANCE(
-"s_r_4_p_11_p_12_p_2"
-) {
-CHECK_S_INT(f3a, 11);
-CHECK_S_INT(f3b, 12);
-CHECK_S_INT(f3c, 2);
-return 4;
-}
-
-
