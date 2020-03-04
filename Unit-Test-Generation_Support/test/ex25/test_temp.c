@@ -4,7 +4,7 @@
 /*
  *    Filename: test_temp.c
  *    Author: MUNARID
- *    Generated on: 03-Mar-2020 12:23:00
+ *    Generated on: 04-Mar-2020 17:09:42
  *    Generated from: temp.c
  */
 /*****************************************************************************/
@@ -32,10 +32,14 @@ int f3(int f3a, int f3b, int f3c);
 /* Global data */
 extern int a;
 extern int b;
+extern int c;
+extern int d[3];
 
 /* Expected variables for global data */
 int expected_a;
 int expected_b;
+int expected_c;
+int expected_d[3];
 
 /* This function initialises global data to default values. This function       */
 /* is called by every test case so must not contain test case specific settings */
@@ -43,6 +47,8 @@ static void initialise_global_data(){
     TEST_SCRIPT_WARNING("Verify initialise_global_data()\n");
     INITIALISE(a);
     INITIALISE(b);
+    INITIALISE(c);
+    INITIALISE(d);
 }
 
 /* This function copies the global data settings into expected variables for */
@@ -52,6 +58,8 @@ static void initialise_expected_global_data(){
     TEST_SCRIPT_WARNING("Verify initialise_expected_global_data()\n");
     COPY_TO_EXPECTED(a, expected_a);
     COPY_TO_EXPECTED(b, expected_b);
+    COPY_TO_EXPECTED(c, expected_c);
+    COPY_TO_EXPECTED(d, expected_d);
 }
 
 /* This function checks global data against the expected values. */
@@ -59,6 +67,8 @@ static void check_global_data(){
     TEST_SCRIPT_WARNING("Verify check_global_data()\n");
     CHECK_S_INT(a, expected_a);
     CHECK_S_INT(b, expected_b);
+    CHECK_S_INT(c, expected_c);
+    CHECK_MEMORY("d", d, expected_d, sizeof(expected_d));
 }
 
 /* Prototypes for test functions */

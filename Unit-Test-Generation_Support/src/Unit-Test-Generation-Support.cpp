@@ -1116,7 +1116,7 @@ void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
             std::to_string(call.pointsTo->value) +
             ";\n}\n\n\n";
         /*json*/
-        j["stubInstance"] = cantataCheckInstance;
+        j["StubInstance"] = cantataCheckInstance;
     }
     else {
         /* A function with this name has a body, so the Cantata Drive will be a replace wrap 
@@ -1140,7 +1140,7 @@ void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
         j["BeforeWrapInstance"] = cantataCheckInstance;
 
         /* Replace part  */
-        cantataCheckInstance += "IF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
+        cantataCheckInstance = "IF_INSTANCE(\n\"" + cantataCallInstance + "\"\n) {\n";
         itPar = call.pointsTo->intStruct.begin();
         itArg = arguments.begin();
         for (; itPar != call.pointsTo->intStruct.end() && itArg != arguments.end(); itPar++, itArg++) {
