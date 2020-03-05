@@ -10,7 +10,12 @@ std::string Variable::print(bool replaceWSetByUser) {
 	return "";
 }
 
-std:: string Variable::print(std::string prefix, std::string postfix, bool replaceWSetByUser) {
+std::string Variable::print(std::string prefix, std::string postfix, bool replaceWSetByUser) {
+	return Variable::print2(prefix, this->name, postfix, replaceWSetByUser);
+}
+
+
+std::string Variable::print2(std::string prefix, std::string nameComposite, std::string postfix, bool replaceWSetByUser) {
 	std::string tempPrefix;
 	std::string tempPostfix;
 	std::string res;
@@ -33,35 +38,37 @@ std:: string Variable::print(std::string prefix, std::string postfix, bool repla
 	}
 	if (this->uData.uSize.getBytes() == 4) {
 		if (unsignedType) {
-			res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)localValue) + "\n";
+			res = prefix + nameComposite + " = " + std::to_string((uint32_t)localValue) + postfix + "\n";
 		}
 		else {
-			res = prefix + this->name + postfix + " = " + std::to_string((int32_t)localValue) + "\n";
+			res = prefix + nameComposite + " = " + std::to_string((int32_t)localValue) + postfix + "\n";
 		}
 	}
 	else if (this->uData.uSize.getBytes() == 2) {
 		if (unsignedType) {
-			res = prefix + this->name + postfix + " = " + std::to_string((uint16_t)localValue) + "\n";
+			res = prefix + nameComposite +  " = " + std::to_string((uint16_t)localValue) + postfix + "\n";
 		}
 		else {
-			res = prefix + this->name + postfix + " = " + std::to_string((int16_t)localValue) + "\n";
+			res = prefix + nameComposite + " = " + std::to_string((int16_t)localValue) + postfix + "\n";
 		}
 	}
 	else if (this->uData.uSize.getBytes() == 1) {
 		if (unsignedType) {
-			res = prefix + this->name + postfix + " = " + std::to_string((uint8_t)localValue) + "\n";
+			res = prefix + nameComposite + " = " + std::to_string((uint8_t)localValue) + postfix + "\n";
 		}
 		else {
-			res = prefix + this->name + postfix + " = " + std::to_string((int8_t)localValue) + "\n";
+			res = prefix + nameComposite + " = " + std::to_string((int8_t)localValue) + postfix + "\n";
 		}
 	}
 	else {
-		res = prefix + this->name + postfix + " = " + std::to_string((uint32_t)localValue) + "\n";
+		res = prefix + nameComposite + " = " + std::to_string((uint32_t)localValue) + postfix + "\n";
 	}
 	if (this->usedInTest == true) {
-		std::cout << res;
+		if (this->typeEnum == Variable::typeEnum_t::isValue) {
+			std::cout << res;
+			Variable::outputFile << res;
+		}
 	}
-	Variable::outputFile << res;
 	int ix = 0;
 	if (this->typeEnum == Variable::typeEnum_t::isArray) {
 		int lastDiff = 0;
@@ -78,36 +85,42 @@ std:: string Variable::print(std::string prefix, std::string postfix, bool repla
 			}
 			else {
 				lastDiff = ix;
-				tempPrefix = prefix + this->name + "[" + std::to_string(ix) + "]";
+				tempPrefix = prefix;
+				nameComposite += "[" + std::to_string(ix) + "]";
 				tempPostfix = postfix;
-				v->print(tempPrefix, tempPostfix, replaceWSetByUser);
+				v->print2(tempPrefix, nameComposite, tempPostfix, replaceWSetByUser);
 			}
 			ix++;
 		}
 	}
 	if (this->typeEnum == Variable::typeEnum_t::isStruct) {
 		for (auto v = this->intStruct.begin(); v != this->intStruct.end(); v++) {
-			tempPrefix = prefix + this->name + ".";
+			std::string newNameComposite;
+			tempPrefix = prefix;
+			newNameComposite = nameComposite + "." + v->name;
 			tempPostfix = postfix;
-			v->print(tempPrefix, tempPostfix, replaceWSetByUser);
+			v->print2(tempPrefix, newNameComposite, tempPostfix, replaceWSetByUser);
 		}
 	}
 	if (this->typeEnum == Variable::typeEnum_t::isUnion) {
 		for (auto v = this->intStruct.begin(); v != this->intStruct.end(); v++) {
-			tempPrefix = prefix + this->name + ".";
+			std::string newNameComposite;
+			tempPrefix = prefix;
+			newNameComposite = nameComposite = "." + v->name;
 			tempPostfix = postfix;
-			v->print(tempPrefix, tempPostfix, replaceWSetByUser);
+			v->print2(tempPrefix, newNameComposite, tempPostfix, replaceWSetByUser);
 		}
 	}
 	if (this->typeEnum == Variable::typeEnum_t::isRef) {
 		if (this->pointsTo) {
-			tempPrefix = prefix + this->name + "->";
+			tempPrefix = prefix;
+			nameComposite = "(*" + nameComposite + ")";
 			tempPostfix = postfix;
-			this->pointsTo->print(tempPrefix, postfix, replaceWSetByUser);
+			this->pointsTo->print2(tempPrefix, nameComposite, tempPostfix, replaceWSetByUser);
 		}
 		else {
-			std::cout << "Null pointer\n";
-			Variable::outputFile << "Null pointer\n";
+			std::cerr << "Null pointer\n";
+			//Variable::outputFile << "Null pointer\n";
 		}
 	}
 	prefix = "";

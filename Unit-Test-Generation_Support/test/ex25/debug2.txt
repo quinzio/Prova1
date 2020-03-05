@@ -2,16 +2,16 @@
     "f1": {
         "BeforeWrapInstance": "",
         "ReplaceWrapInstance": "",
-        "stubInstance": "IF_INSTANCE(\n\"s_r_22_p_1_p_2_p_11\"\n) {\nCHECK_S_INT(f1a, 1);\nCHECK_S_INT(f1b, 2);\nCHECK_S_INT(f1c, 11);\nreturn 22;\n}\n\n\n"
+        "StubInstance": ""
     },
     "f2": {
         "BeforeWrapInstance": "IF_INSTANCE(\n\"s_r_33_p_10_p_20_p_11\"\n) {\nCHECK_S_INT(f2a, 10);\nCHECK_S_INT(f2b, 20);\nCHECK_S_INT(f2c, 11);\nreturn REPLACE_WRAPPER;\n}\n\n\n",
         "ReplaceWrapInstance": "IF_INSTANCE(\n\"s_r_33_p_10_p_20_p_11\"\n) {\nCHECK_S_INT(f2a, 10);\nCHECK_S_INT(f2b, 20);\nCHECK_S_INT(f2c, 11);\nreturn 33;\n}\n\n\n",
-        "stubInstance": ""
+        "StubInstance": ""
     },
     "f3": {
         "BeforeWrapInstance": "",
         "ReplaceWrapInstance": "",
-        "stubInstance": "IF_INSTANCE(\n\"s_r_44_p_11_p_12_p_12\"\n) {\nCHECK_S_INT(f3a, 11);\nCHECK_S_INT(f3b, 12);\nCHECK_S_INT(f3c, 12);\nreturn 44;\n}\n\n\n"
+        "StubInstance": ""
     }
 }

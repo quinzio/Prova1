@@ -86,6 +86,7 @@ public:
     void updateCommonArea(void);
     void updateUnion();
     [[maybe_unused]] std::string print(std::string prefix, std::string postfix, bool replaceWSetByUser);
+    [[maybe_unused]] std::string print2(std::string prefix, std::string nameComposite, std::string postfix, bool replaceWSetByUser);
     [[maybe_unused]] std::string print(bool replaceWSetByUser);
 
 private:

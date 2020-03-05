@@ -151,25 +151,25 @@ void test_fun1_001(int doIt) {
     if (doIt) {
         /* Test case data declarations */
         int par1;
-	int returnValue;
-	int expected_returnValue;
+	int  returnValue;
+	int  expected_returnValue;
 
         /* Set global data */
         initialise_global_data();
-        	a = 21845;
-	b = 21845;
-	c = 21845;
-	d = 1431655765;
-	d[0] = 21845;
-	par1 = 11;
+        	 a = 21845
+	 b = 21845
+	 c = 21845
+	 d = 1431655765
+	 d[0] = 21845
+	 par1 = 11
 
         /* Set expected values for global data checks */
         initialise_expected_global_data();
-        	expected_a = 33;
-	expected_b = 44;
-	expected_c = 21845;
-	expected_d = 1431655765;
-	expected_d[0] = 21845;
+        	 a = 33
+	 b = 44
+	 c = 21845
+	 d = 1431655765
+	 d[0] = 21845
 
 
         START_TEST("test_fun1_001",
@@ -268,16 +268,6 @@ int f1(int f1a,
         return CANTATA_DEFAULT_VALUE;
     }
 
-IF_INSTANCE(
-"s_r_22_p_1_p_2_p_11"
-) {
-CHECK_S_INT(f1a, 1);
-CHECK_S_INT(f1b, 2);
-CHECK_S_INT(f1c, 11);
-return 22;
-}
-
-
 
     LOG_SCRIPT_ERROR("Call instance not defined.");
     return CANTATA_DEFAULT_VALUE;
@@ -292,16 +282,6 @@ int f3(int f3a,
     IF_INSTANCE("default") {
         return CANTATA_DEFAULT_VALUE;
     }
-
-IF_INSTANCE(
-"s_r_44_p_11_p_12_p_12"
-) {
-CHECK_S_INT(f3a, 11);
-CHECK_S_INT(f3b, 12);
-CHECK_S_INT(f3c, 12);
-return 44;
-}
-
 
 
     LOG_SCRIPT_ERROR("Call instance not defined.");

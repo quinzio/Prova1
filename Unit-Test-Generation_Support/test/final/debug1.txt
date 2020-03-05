@@ -1,0 +1,122 @@
+   285:
+ void test_ACM_DoFrequencyRampPU_002(int);
+   371:
+ 	test_ACM_DoFrequencyRampPU_002(1);
+   398:
+ 
+void test_ACM_DoFrequencyRampPU_002(int doIt) {
+    if (doIt) {
+        /* Test case data declarations */
+        u16 u16NewFreqPU;
+
+        /* Set global data */
+        initialise_global_data();
+        	 VectVarFilt[0].s16NewOutput = 97;
+	 IbattStateMachine.BOOLForceGainFlag = 1431655765;
+	 BOOLSteadyStateFlag = 1431655765;
+	 u16NewFreqPU = 13;
+
+        /* Set expected values for global data checks */
+        initialise_expected_global_data();
+        	 expected_VectVarFilt[0].s16NewOutput = 97;
+	 expected_IbattStateMachine.BOOLForceGainFlag = 0;
+	 expected_BOOLSteadyStateFlag = 1;
+
+
+        START_TEST("test_ACM_DoFrequencyRampPU_002",
+            "<Insert test case description here>");
+
+        /* Expected Call Sequence  */
+        EXPECTED_CALLS(
+        	"ACM_Get_u16FreqRampPU"		"#s_r_12;"
+	"Temp_Get_BOOLSOATemperatureCorr"		"#s_r_0;"
+	"ACM_Get_u16FreqRampPU"		"#s_r_99;"
+	"FIR_UpdateFilt"		"#s_r_98_p_0_p_49;"
+	"ACM_Set_u16FreqRampSmoothPU"		"#s_r_96_p_194;"
+
+        );
+
+        /* Call SUT */
+        ACM_DoFrequencyRampPU( u16NewFreqPU);
+
+        /* Test case checks */
+         
+        /* Checks on global data */
+        check_global_data();
+        END_CALLS();
+        END_TEST();
+    }
+}
+
+  1501:
+ IF_INSTANCE(
+"s_r_0"
+) {
+return 0;
+}
+
+
+
+  1524:
+ IF_INSTANCE(
+"s_r_98_p_0_p_49"
+) {
+CHECK_S_INT(enumFilt, 0);
+CHECK_S_INT(s16NewInput, 49);
+return ;
+}
+
+
+
+  1716:
+ IF_INSTANCE(
+"s_r_12"
+) {
+return REPLACE_WRAPPER;
+}
+
+
+IF_INSTANCE(
+"s_r_99"
+) {
+return REPLACE_WRAPPER;
+}
+
+
+
+  1748:
+ IF_INSTANCE(
+"s_r_12"
+) {
+return 12;
+}
+
+
+IF_INSTANCE(
+"s_r_99"
+) {
+return 99;
+}
+
+
+
+  1799:
+ IF_INSTANCE(
+"s_r_96_p_194"
+) {
+CHECK_S_INT(value, 194);
+return REPLACE_WRAPPER;
+}
+
+
+
+  1826:
+ IF_INSTANCE(
+"s_r_96_p_194"
+) {
+CHECK_S_INT(value, 194);
+return 96;
+}
+
+
+

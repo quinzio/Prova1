@@ -1,0 +1,4 @@
+MODIFICHE CORE:
+
+19/01/2016: versione iniziale.
+10/05/2016: riporto core in PU.

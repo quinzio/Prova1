@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-std::string baseDir = "../../Unit-Test-Generation_Support/Unit-Test-Generation_Support/test/ex25/";
+std::string baseDir = "../../Unit-Test-Generation_Support/Unit-Test-Generation_Support/test/final/";
 
 std::string testCase001 = R"(
 void test_xxxx1xxxx(int doIt) {
@@ -154,11 +154,11 @@ int main()
     std::ifstream testFilesStr(baseDir + "test_temp.c");
     std::string str1;
     std::stringstream ss, ssLine;
-    std::string function = "fun1";
+    std::string function;
     std::smatch sm_testCaseDecl;
-    std::regex e_testCaseDecl(R"(void\s*test_)" + function + R"((?:_(\d+))?)");
+    std::regex e_testCaseDecl;
     std::smatch sm_stubwr;
-    std::regex e_stubwr(R"(int\s+(BEFORE_|AFTER_|REPLACE_|)(\w[\w\d]+)\s*\()");
+    std::regex e_stubwr(R"(\s+(BEFORE_|AFTER_|REPLACE_|)(\w[\w\d]+)\s*\()");
     int lastTest = 0;
     int lastTestIndex = 0;
     int testCaseIndex = 0;
@@ -184,14 +184,15 @@ int main()
     int ix = 0;
     auto str = testFileVec.begin();
     /* Search begin of test function declarations */
-    for ( str = testFileVec.begin(); str != testFileVec.end(); str++) {
+    for ( str = testFileVec.begin(); str != testFileVec.end(); str++, ix++) {
         if (str->find("/* Prototypes for test functions */") != std::string::npos) {
             std::cout << "Found prototypes at " << ix << "\n";
             break;
         }
-        ix++;
     }
     /* Find highest function occourence or find end of test functions declarations */
+    function = j["targetName"].get<std::string>();
+    e_testCaseDecl = std::regex(R"(void\s*test_)" + function + R"((?:_(\d+))?)");
     for (; str != testFileVec.end(); str++, ix++) {
         if (std::regex_search(*str, sm_testCaseDecl, e_testCaseDecl)) {
             if (sm_testCaseDecl[1].length() > 0) {
@@ -274,8 +275,11 @@ int main()
     for (auto it = j["parameters"].begin(); it != j["parameters"].end(); it++) {
         x2x += (*it)["type"].get<std::string>() + " " + (*it)["name"].get<std::string>() + ";\n";
     }
-    x2x += "\t" + j["returnType"].get<std::string>() + "returnValue;\n";
-    x2x += "\t" + j["returnType"].get<std::string>() + "expected_returnValue;\n";
+    /* if == npos means not found */
+    if (j["returnType"].get<std::string>().find("void") == std::string::npos) {
+        x2x += "\t" + j["returnType"].get<std::string>() + " returnValue;\n";
+        x2x += "\t" + j["returnType"].get<std::string>() + " expected_returnValue;\n";
+    }
     x3x = x1x;
     jTemp = j["expectedCalls"]["list"];
     for (auto it = jTemp.begin(); it != jTemp.end(); it++) {
@@ -294,18 +298,21 @@ int main()
     }
     x5x.erase(x5x.end() - 1);
     x5x += ");";
-    x6x = "CHECK_S_INT(returnValue, expected_returnValue);";
+    /* if == npos means not found */
+    if (j["returnType"].get<std::string>().find("void") == std::string::npos) {
+        x6x = "CHECK_S_INT(returnValue, expected_returnValue);";
+    }
 
     std::ifstream inputValues(baseDir + "valuesInput.txt");
     std::string line;
     while (std::getline(inputValues, line)) {
-        x7x += "\t" + line + ";\n";
+        x7x += "\t " + line + "\n";
     }
     inputValues.close();
 
     std::ifstream expectedValues(baseDir + "valuesExpected.txt");
     while (std::getline(expectedValues, line)) {
-        x8x += "\texpected_" + line + ";\n";
+        x8x += "\t " + line + "\n";
     }
     expectedValues.close();
 
@@ -347,20 +354,27 @@ int main()
     /* Collect stubs wrappers, etc */
     for (auto it = j["expectedCalls"]["singleInstances"] .begin(); it != j["expectedCalls"]["singleInstances"].end(); it++) {
         std::string nameF = (*it)["name"].get<std::string>();
-        jIfInstance[nameF]["stubInstance"] = "";
-        jIfInstance[nameF]["BeforeWrapInstance"]  = "";
-        jIfInstance[nameF]["ReplaceWrapInstance"] = "";
-        if ((*it).find("stubInstance") != (*it).end()) {
-            std::string stubs = (*it)["stubInstance"].get<std::string>();
-            jIfInstance[nameF]["stubInstance"] = jIfInstance[nameF]["stubInstance"].get<std::string>() + stubs;
+        if (jIfInstance[nameF].find("StubInstance") == jIfInstance[nameF].end()) {
+            jIfInstance[nameF]["StubInstance"] = "";
+        }
+        if (jIfInstance[nameF].find("BeforeWrapInstance") == jIfInstance[nameF].end()) {
+            jIfInstance[nameF]["BeforeWrapInstance"] = "";
+        }
+        if (jIfInstance[nameF].find("ReplaceWrapInstance") == jIfInstance[nameF].end()) {
+            jIfInstance[nameF]["ReplaceWrapInstance"] = "";
+        }
+
+        if ((*it).find("StubInstance") != (*it).end()) {
+            std::string stubs = jIfInstance[nameF]["StubInstance"].get<std::string>() + (*it)["StubInstance"].get<std::string>();
+            jIfInstance[nameF]["StubInstance"] = stubs;
         }
         if ((*it).find("BeforeWrapInstance") != (*it).end()) {
-            std::string befores = (*it)["BeforeWrapInstance"].get<std::string>();
-            jIfInstance[nameF]["BeforeWrapInstance"] = jIfInstance[nameF]["BeforeWrapInstance"].get<std::string>() + befores;
+            std::string befores = jIfInstance[nameF]["BeforeWrapInstance"].get<std::string>() + (*it)["BeforeWrapInstance"].get<std::string>();
+            jIfInstance[nameF]["BeforeWrapInstance"] = befores;
         }
         if ((*it).find("ReplaceWrapInstance") != (*it).end()) {
-            std::string replaces = (*it)["ReplaceWrapInstance"].get<std::string>();
-            jIfInstance[nameF]["ReplaceWrapInstance"] = jIfInstance[nameF]["ReplaceWrapInstance"].get<std::string>() + replaces;
+            std::string replaces = jIfInstance[nameF]["ReplaceWrapInstance"].get<std::string>() + (*it)["ReplaceWrapInstance"].get<std::string>();
+            jIfInstance[nameF]["ReplaceWrapInstance"] = replaces;
         }
     }
 
@@ -388,9 +402,9 @@ int main()
                 }
                 /* Copy the stub istances if it's a stub, ecc. */
                 if (mockType.compare("") == 0 && 
-                    jIfInstance[mockName].find("stubInstance") != jIfInstance[mockName].end()) 
+                    jIfInstance[mockName].find("StubInstance") != jIfInstance[mockName].end()) 
                 {
-                    mInsert[ix] = jIfInstance[mockName]["stubInstance"].get<std::string>();
+                    mInsert[ix] = jIfInstance[mockName]["StubInstance"].get<std::string>();
                 }
                 else if (mockType.compare("BEFORE_") == 0 && 
                     jIfInstance[mockName].find("BeforeWrapInstance") != jIfInstance[mockName].end()) 
@@ -419,7 +433,6 @@ int main()
     std::ofstream debugFile2(baseDir + "debug2.txt");
     debugFile2 << jIfInstance.dump(4);
     debugFile2.close();
-
 
     std::ofstream modifiedtestDrive(baseDir + "modifiedtestDrive.c", std::ofstream::trunc);
     if (modifiedtestDrive.good() == false) {

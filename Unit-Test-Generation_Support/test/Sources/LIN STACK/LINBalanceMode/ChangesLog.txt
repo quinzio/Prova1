@@ -1,0 +1,1 @@
+- ver 1.1 : inserita la macro per entrare nell' operating mode di BALANCE_TEST

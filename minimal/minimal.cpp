@@ -114,8 +114,8 @@ wxThread::ExitCode MyThreadTest::Entry()
     //testCompare("ex22");	getchar();
     //testCompare("ex23");	getchar();
     //testCompare("ex24");	getchar();
-    testCompare("ex25");	getchar();
-    //testCompare("final");	getchar();
+    //testCompare("ex25");	getchar();
+    testCompare("final");	getchar();
 
     return NULL;
 }

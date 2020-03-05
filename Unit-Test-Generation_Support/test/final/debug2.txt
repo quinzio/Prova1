@@ -1,0 +1,22 @@
+{
+    "ACM_Get_u16FreqRampPU": {
+        "BeforeWrapInstance": "IF_INSTANCE(\n\"s_r_12\"\n) {\nreturn REPLACE_WRAPPER;\n}\n\n\nIF_INSTANCE(\n\"s_r_99\"\n) {\nreturn REPLACE_WRAPPER;\n}\n\n\n",
+        "ReplaceWrapInstance": "IF_INSTANCE(\n\"s_r_12\"\n) {\nreturn 12;\n}\n\n\nIF_INSTANCE(\n\"s_r_99\"\n) {\nreturn 99;\n}\n\n\n",
+        "StubInstance": ""
+    },
+    "ACM_Set_u16FreqRampSmoothPU": {
+        "BeforeWrapInstance": "IF_INSTANCE(\n\"s_r_96_p_194\"\n) {\nCHECK_S_INT(value, 194);\nreturn REPLACE_WRAPPER;\n}\n\n\n",
+        "ReplaceWrapInstance": "IF_INSTANCE(\n\"s_r_96_p_194\"\n) {\nCHECK_S_INT(value, 194);\nreturn 96;\n}\n\n\n",
+        "StubInstance": ""
+    },
+    "FIR_UpdateFilt": {
+        "BeforeWrapInstance": "",
+        "ReplaceWrapInstance": "",
+        "StubInstance": "IF_INSTANCE(\n\"s_r_98_p_0_p_49\"\n) {\nCHECK_S_INT(enumFilt, 0);\nCHECK_S_INT(s16NewInput, 49);\nreturn ;\n}\n\n\n"
+    },
+    "Temp_Get_BOOLSOATemperatureCorr": {
+        "BeforeWrapInstance": "",
+        "ReplaceWrapInstance": "",
+        "StubInstance": "IF_INSTANCE(\n\"s_r_0\"\n) {\nreturn 0;\n}\n\n\n"
+    }
+}

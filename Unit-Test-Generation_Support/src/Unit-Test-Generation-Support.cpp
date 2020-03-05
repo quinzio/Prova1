@@ -206,8 +206,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 testRunner.buildGlobals = true;
                 /* This will prevent from entering and executing
                 a test. */
-                testRunner.targetFunction = "fun1";
-                //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                //testRunner.targetFunction = "fun1";
+                testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                 break;
             }
             case TestRunner::TestState_enum::BeginOfFunction: {
@@ -224,8 +224,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 SetEvent(hEventReqGuiLine);
                 WaitForSingleObject(hEventReqValue, INFINITE);
                 if (forGui.ValueFromGui == 0) {
-                    testRunner.targetFunction = "fun1";
-                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    //testRunner.targetFunction = "fun1";
+                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     /* Remove the calls file
@@ -244,8 +244,8 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                     WaitForSingleObject(hEventReqValue, INFINITE);
                     testRunner.cleanSetByUser = true;
                     ResetGlobals();
-                    testRunner.targetFunction = "fun1";
-                    //testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    //testRunner.targetFunction = "fun1";
+                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
@@ -330,13 +330,15 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
                     if (it->name.compare(testRunner.targetFunction) == 0) {
                         j["targetName"] = testRunner.targetFunction;
-                        j["returnType"] = it->type;
-                        j["returnVal"] = it->value;
                         for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
-                            j["parameters"].push_back(nlohmann::json());
-                            j["parameters"].back()["name"] = it->intStruct[0].name;
-                            j["parameters"].back()["type"] = it->intStruct[0].type;
-                            j["parameters"].back()["val"] = it->intStruct[0].value;
+                            if (itit->name.compare("returnValue") != 0) {
+                                j["parameters"].push_back(nlohmann::json());
+                                j["parameters"].back()["name"] = itit->name;
+                                j["parameters"].back()["type"] = itit->type;
+                                j["parameters"].back()["val"] = itit->value;
+                            }
+                            j["returnType"] = itit->type;
+                            j["returnVal"] = itit->value;
                         }
                     }
                 }
@@ -347,7 +349,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 Variable::outputFile = std::ofstream(testRunner.inputValuesFile);
                 for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
                     for (auto itit = it->begin(); itit != it->end(); itit++) {
-                        (*itit)->print(true);
+                        (*itit)->print("", ";", true);
                     }
                 }
                 Variable::outputFile.close();
@@ -356,7 +358,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
                     if (it->name.compare(testRunner.targetFunction) == 0) {
                         for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
-                            itit->print(true);
+                            itit->print("", ";", true);
                         }
                     }
                 }
@@ -364,7 +366,17 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 Variable::outputFile = std::ofstream(testRunner.expectedValuesFile);
                 for (auto it = vShadowedVar.shadows.rbegin(); it != vShadowedVar.shadows.rend(); it++) {
                     for (auto itit = it->begin(); itit != it->end(); itit++) {
-                        (*itit)->print(false);
+                        (*itit)->print("expected_", ";", false);
+                    }
+                }
+                /* Print the expected return value */
+                for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                    if (it->name.compare(testRunner.targetFunction) == 0) {
+                        for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
+                            if (itit->name.compare("returnValue") == 0) {
+                                itit->print("expected_", ";", false);
+                            }
+                        }
                     }
                 }
                 Variable::outputFile.close();
@@ -427,7 +439,7 @@ Variable visit(Node *node)
 {
     //Logger(std::to_string(node->astFileRow));
     //std::cout << node->astFileRow << "\n";
-    if (node->astFileRow == 58) {
+    if (node->astFileRow == 57) {
         myP++;
     }
     if (node->astType.compare("IntegerLiteral") == 0) {
@@ -1111,10 +1123,12 @@ void buildCallInstance(Variable& call, std::vector<Variable> arguments) {
                 std::to_string(itArg->value) +
                 ");\n";
         }
-        cantataCheckInstance +=
-            "return " +
-            std::to_string(call.pointsTo->value) +
-            ";\n}\n\n\n";
+        cantataCheckInstance += "return ";
+        // If the function returns void don't add any value
+        if (call.pointsTo->type.find("void") == std::string::npos) {
+            cantataCheckInstance += std::to_string(call.pointsTo->value);
+        }
+        cantataCheckInstance += ";\n}\n\n\n";
         /*json*/
         j["StubInstance"] = cantataCheckInstance;
     }
@@ -2013,7 +2027,7 @@ Variable fCompoundStmt(Node* node) {
     }
     vShadowedVar.shadows.pop_back();
     shadowLevel--;
-    return ret;
+    return temp;
 }
 Variable fTranslationUnitDecl(Node* node) {
     Variable temp;
@@ -2098,6 +2112,9 @@ Variable fFunctionDecl(Node* node) {
                 node2 = node2->nextSib;
             }
         }
+        Variable retValue; 
+        retValue.name = "returnValue";
+        func.intStruct.push_back(retValue);
         vFunction.push_back(func);
     }
     /* Update the functionHasBody flag, which will be useful to build instances for 
@@ -2131,6 +2148,18 @@ Variable fFunctionDecl(Node* node) {
                 if (node2->astType.compare("CompoundStmt") == 0) {
                     try {
                         temp = visit(node2);
+                        /* The value that comes out from the visit should be the return value
+                        of the code under test. */
+                        for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                            if (it->name.compare(func.name) == 0) {
+                                for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
+                                    if (itit->name.compare("returnValue") == 0) {
+                                        temp.name = "returnValue";
+                                        *itit = temp;
+                                    }
+                                }
+                            }
+                        }
                     }
                     catch (Variable v) {
                         v;
@@ -2310,6 +2339,7 @@ Variable fParenExpr(Node* node) {
 Variable fReturnStmt(Node* node) {
     Variable retV;
     retV = visit(node->child);
+    retV.usedInTest = true;
     retV.returnSignalled = true;
     return retV;
 }
