@@ -37,12 +37,3 @@ Node::ValueEnum_t Node::get_type()
     return type;
 }
 
-bool Node::getCallExprEvaluated()
-{
-	return callExprEvaluated;
-}
-
-void Node::setCallExprEvaluated(bool val)
-{
-    callExprEvaluated = val;
-}

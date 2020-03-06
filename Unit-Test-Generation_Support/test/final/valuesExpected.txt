@@ -1,0 +1,8 @@
+expected_strMachine.u16VoFVoltagePU = 50;
+expected_strMachine.u16VoltagePU = 0;
+expected_strMachine.u16CurrentPU = 55;
+expected_strMachine.u16FrequencyPU = 66;
+expected_strMachine.s16AngleDeltaPU = -20026;
+expected_strMachine.s16AnglePhiPU = 22000;
+expected_SINPU[127] = 100;
+expected_returnValue = -20026;

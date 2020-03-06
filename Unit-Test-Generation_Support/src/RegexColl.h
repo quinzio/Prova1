@@ -239,7 +239,7 @@ std::regex eCompoundAssignOperator(
 );
 
 std::regex eUnaryOperator(
-    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
+    R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>\s'([^']+)'(?::'[^']+')?(?:\slvalue)?\s(postfix|prefix)\s'([^']+)')###");
 
 std::regex eDeclStmt(
     R"###([^\w<]*[\w<]+\s0x[\da-f]{6,11}\s<[^>]*>)###");

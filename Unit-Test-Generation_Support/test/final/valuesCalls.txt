@@ -1,17 +1,28 @@
 {
     "expectedCalls": {
         "list": [
-            "\t\"ACM_Get_u16FreqRampPU\"\t\t\"#s_r_112;\"\n"
+            "\t\"ACM_GetMaximumVoltageApp\"\t\t\"#s_r_1000;\"\n",
+            "\t\"Curr_GetPeakCurrent\"\t\t\"#s_r_0;\"\n"
         ],
         "singleInstances": [
             {
-                "BeforeWrapInstance": "IF_INSTANCE(\n\"s_r_112\"\n) {\nreturn REPLACE_WRAPPER;\n}\n\n\n",
-                "ReplaceWrapInstance": "IF_INSTANCE(\n\"s_r_112\"\n) {\nreturn 112;\n}\n\n\n",
-                "cantataCallInstance": "s_r_112",
-                "log": "//Expected\n\"ACM_Get_u16FreqRampPU\"\t\"#s_r_112\"\n\tReturn = 112\n",
-                "name": "ACM_Get_u16FreqRampPU",
-                "return": 112
+                "BeforeWrapInstance": "IF_INSTANCE(\n\"s_r_1000\"\n) {\nreturn REPLACE_WRAPPER;\n}\n\n\n",
+                "ReplaceWrapInstance": "IF_INSTANCE(\n\"s_r_1000\"\n) {\nreturn 1000;\n}\n\n\n",
+                "cantataCallInstance": "s_r_1000",
+                "log": "//Expected\n\"ACM_GetMaximumVoltageApp\"\t\"#s_r_1000\"\n\tReturn = 1000\n",
+                "name": "ACM_GetMaximumVoltageApp",
+                "return": 1000
+            },
+            {
+                "StubInstance": "IF_INSTANCE(\n\"s_r_0\"\n) {\nreturn 0;\n}\n\n\n",
+                "cantataCallInstance": "s_r_0",
+                "log": "//Expected\n\"Curr_GetPeakCurrent\"\t\"#s_r_0\"\n\tReturn = 0\n",
+                "name": "Curr_GetPeakCurrent",
+                "return": 0
             }
         ]
-    }
+    },
+    "returnType": "int16_t",
+    "returnVal": 18446744073709531590,
+    "targetName": "ACM_ComputeDeltaAngle"
 }

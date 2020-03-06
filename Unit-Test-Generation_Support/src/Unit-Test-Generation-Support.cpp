@@ -207,7 +207,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 /* This will prevent from entering and executing
                 a test. */
                 //testRunner.targetFunction = "fun1";
-                testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                testRunner.targetFunction = "ACM_ComputeDeltaAngle";
                 break;
             }
             case TestRunner::TestState_enum::BeginOfFunction: {
@@ -225,7 +225,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 WaitForSingleObject(hEventReqValue, INFINITE);
                 if (forGui.ValueFromGui == 0) {
                     //testRunner.targetFunction = "fun1";
-                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.targetFunction = "ACM_ComputeDeltaAngle";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     /* Remove the calls file
@@ -245,7 +245,7 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                     testRunner.cleanSetByUser = true;
                     ResetGlobals();
                     //testRunner.targetFunction = "fun1";
-                    testRunner.targetFunction = "ACM_DoFrequencyRampPU";
+                    testRunner.targetFunction = "ACM_ComputeDeltaAngle";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
@@ -256,6 +256,11 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 testRunner.buildGlobals = false;
                 testRunner.freeRunning = true;
                 testRunner.cleanSetByUser = false;
+                /* Reset the function stores values (variables) to zero */
+                for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                    it->funcRetIndex = 0;
+                }
+
                 ResetGlobals();
                 break;
             }
@@ -263,6 +268,11 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 testRunner.buildGlobals = false;
                 testRunner.freeRunning = false;
                 testRunner.cleanSetByUser = false;
+                /* Reset the function stores values (variables) to zero */
+                for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                    it->funcRetIndex = 0;
+                }
+
                 ResetGlobals();
                 break;
             }
@@ -325,8 +335,10 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 /* Update json Calls file with target function parameters types and return type */
                 std::ifstream callsFile(testRunner.callsFile);
                 nlohmann::json j;
-                callsFile >> j;
-                callsFile.close();
+                if (callsFile.good() == true) {
+                    callsFile >> j;
+                    callsFile.close();
+                }
                 for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
                     if (it->name.compare(testRunner.targetFunction) == 0) {
                         j["targetName"] = testRunner.targetFunction;
@@ -408,10 +420,18 @@ void ResetGlobals(void) {
         }
     }
     for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+        /* Reset the function stores values (variables) to zero */
+        it->funcRetIndex = 0;
+        if (testRunner.cleanSetByUser == true) {
+            it->functionReturns = std::vector<Variable>();
+        }
+        /* Now clean the parameters. */
         for (auto itit = it->intStruct.begin(); itit != it->intStruct.end(); itit++) {
             recurseVariable(&*itit, NULL,
                 [](Variable* va, Variable* vb) {
                     va->usedInTest = false;
+                    /* For enums it is wrong to erase the value because enums are 
+                    constants which are set right from the beginning of the test*/
                     if (va->typeEnum != Variable::typeEnum_t::isEnum) {
                         va->value = va->valueDefault;
                         va->valueDouble = va->valueDoubleDefault;
@@ -423,6 +443,7 @@ void ResetGlobals(void) {
             );
         }
     }
+
 }
 void createBuiltInTypes(void)
 {
@@ -439,7 +460,7 @@ Variable visit(Node *node)
 {
     //Logger(std::to_string(node->astFileRow));
     //std::cout << node->astFileRow << "\n";
-    if (node->astFileRow == 57) {
+    if (node->astFileRow == 33006) {
         myP++;
     }
     if (node->astType.compare("IntegerLiteral") == 0) {
@@ -1044,16 +1065,31 @@ bool interactionWGui(Variable& ret, Node* node)
     so they are never set by uset and never use in test (?)
     They always interact with user */
     if (ret.pointsTo->typeEnum == Variable::typeEnum_t::isFunction) {
-        if (node->getCallExprEvaluated() == false
-            && testRunner.freeRunning == false
-            ) {
-            userValue = interactionWGuiCore(ret, node);
-            ret.pointsTo->value = userValue;
-            ret.pointsTo->valueDouble = userValue;
-            ret.pointsTo->setByUser = false;
-            ret.pointsTo->usedInTest = false;
-            node->setCallExprEvaluated(true);
-            retVal = true;
+        if (testRunner.freeRunning == false) {
+            /* Check if the functionReturns vector has other values to supply the test
+            If there are no other values to supply, let's ask the user. */
+            if (ret.pointsTo->funcRetIndex < ret.pointsTo->functionReturns.size()) {
+                userValue = ret.pointsTo->functionReturns[ret.pointsTo->funcRetIndex].value;
+                ret.pointsTo->value = ret.pointsTo->functionReturns[ret.pointsTo->funcRetIndex].value;
+                ret.pointsTo->valueDouble = ret.pointsTo->functionReturns[ret.pointsTo->funcRetIndex].valueDouble;
+                ret.pointsTo->funcRetIndex++;
+            }
+            else {
+                Variable newFuncRet;
+                userValue = interactionWGuiCore(ret, node);
+                /* Update the function return main value because it will be used 
+                to store the result in the valueCalls file */
+                ret.pointsTo->value = userValue;
+                ret.pointsTo->valueDouble = userValue;
+                newFuncRet.value = userValue;
+                newFuncRet.valueDouble = userValue;
+                newFuncRet.ValueEnum = Variable::ValueEnum_t::isInteger;
+                ret.pointsTo->functionReturns.push_back(newFuncRet);
+                ret.pointsTo->funcRetIndex++;
+                ret.pointsTo->setByUser = false;
+                ret.pointsTo->usedInTest = false;
+                retVal = true;
+            }
         }
         else {
             userValue = ret.pointsTo->value = ret.pointsTo->valueByUser;
@@ -1561,6 +1597,7 @@ Variable fDeclRefExpr(Node* node) {
     but the variable was set by user. Then we want to show the user set 
     value before the L to R conversion. The conversion may even never happen 
     if the variable is to be assigned by a var = 1 kind of instruction */
+
     if (ret.pointsTo) {
         if (ret.pointsTo->usedInTest == false && ret.pointsTo->setByUser) {
             if (ret.pointsTo->ValueEnum == Variable::ValueEnum_t::isInteger) {
@@ -1579,7 +1616,6 @@ Variable fDeclRefExpr(Node* node) {
             }
         }
     }
-
     return ret;
 }
 Variable fImplicitCastExpr(Node* node) {
@@ -1638,19 +1674,29 @@ Variable fUnaryOperator(Node* node) {
     opa = visit(node->child);
     if (uoperator.compare("++") == 0) {
         if (fix.compare("postfix") == 0) {
+            interactionWGui(opa, node);
             ret = *opa.pointsTo;
+            /* Doesn't apply to float ? */
+            opa.pointsTo->value++;
         }
-        opa.pointsTo->value++;
         if (fix.compare("prefix") == 0) {
+            /* Doesn't apply to float ? */
+            interactionWGui(opa, node);
+            opa.pointsTo->value++;
             ret = *opa.pointsTo;
         }
     }
     if (uoperator.compare("--") == 0) {
         if (fix.compare("postfix") == 0) {
+            interactionWGui(opa, node);
             ret = *opa.pointsTo;
+            /* Doesn't apply to float ? */
+            opa.pointsTo->value--;
         }
-        opa.pointsTo->value++;
         if (fix.compare("prefix") == 0) {
+            /* Doesn't apply to float ? */
+            interactionWGui(opa, node);
+            opa.pointsTo->value--;
             ret = *opa.pointsTo;
         }
     }
@@ -1968,21 +2014,26 @@ Variable fMemberExpr(Node* node) {
 Variable fIfStmt(Node* node) {
     Variable cond, vtrue, vfalse;
     Node* node2;
-    //cond = visit(node->child->nextSib->nextSib);  You may see this version <<NULL>>
     node2 = node->child;
     while (node2->astType.compare("<<<NULL") == 0) {
         node2 = node2->nextSib;
     }
     cond = visit(node2);
     if (cond.value) {
-        if (node2->nextSib)
-            //vtrue = visit(node->child->nextSib->nextSib->nextSib); You may see this version <<NULL>>
+        if (node2->nextSib) {
             vtrue = visit(node2->nextSib);
+            if (vtrue.ValueEnum == Variable::ValueEnum_t::isInteger) node->setValue(vtrue.value);
+            else node->setValueDouble(vtrue.valueDouble);
+            return vtrue;
+        }
     }
     else {
-        if (node2->nextSib->nextSib)
-            //vfalse = visit(node->child->nextSib->nextSib->nextSib->nextSib); You may see this version <<NULL>>
+        if (node2->nextSib->nextSib) {
             vfalse = visit(node2->nextSib->nextSib);
+            if (vfalse.ValueEnum == Variable::ValueEnum_t::isInteger) node->setValue(vfalse.value);
+            else node->setValueDouble(vfalse.valueDouble);
+            return vfalse;
+        }
     }
     return Variable();
 }
@@ -2009,6 +2060,7 @@ Variable fCompoundStmt(Node* node) {
     shadowLevel++;
     vShadowedVar.shadows.push_back(v);
     for (auto next = node->child; next != NULL; next = next->nextSib) {
+        Logger(next->text);
         temp = visit(next);
         if (temp.returnSignalled == true) break;
     }
@@ -2334,6 +2386,8 @@ Variable fParenExpr(Node* node) {
     for (auto next = node->child; next != NULL; next = next->nextSib) {
         temp = visit(next);
     }
+    if (temp.ValueEnum == Variable::ValueEnum_t::isInteger) node->setValue(temp.value);
+    else node->setValueDouble(temp.valueDouble);
     return temp;
 }
 Variable fReturnStmt(Node* node) {
@@ -2417,6 +2471,24 @@ Variable fCompoundAssignOperator(Node* node) {
         ret.typeEnum = Variable::typeEnum_t::isValue;
         return ret;
     }
+    else if (boperator.compare("*=") == 0) {
+        opa.pointsTo->value *= opb.value;
+        ret.typeEnum = Variable::typeEnum_t::isValue;
+        return ret;
+    }
+    else if (boperator.compare("/=") == 0) {
+        if (opb.value == 0) {
+            Logger("Divisione by zero in compound assignment");
+        }
+        else {
+            opa.pointsTo->value /= opb.value;
+            ret.typeEnum = Variable::typeEnum_t::isValue;
+        }
+        return ret;
+    }
+    else {
+        Logger("Unrecognized compound operator " + boperator);
+    }
 }
 Variable fWhileStmt(Node* node) {
     Variable cond, vtrue, vfalse;
@@ -2455,11 +2527,17 @@ Variable fConditionalOperator(Node* node) {
         if (node->child->nextSib)
             //vtrue = visit(node->child->nextSib->nextSib->nextSib); You may see this version <<NULL>>
             vtrue = visit(node->child->nextSib);
+            if (vtrue.ValueEnum == Variable::ValueEnum_t::isInteger) node->setValue(vtrue.value);
+            else node->setValueDouble(vtrue.valueDouble);
+            return vtrue;
     }
     else {
         if (node->child->nextSib->nextSib)
             //vfalse = visit(node->child->nextSib->nextSib->nextSib->nextSib); You may see this version <<NULL>>
             vfalse = visit(node->child->nextSib->nextSib);
+            if (vfalse.ValueEnum == Variable::ValueEnum_t::isInteger) node->setValue(vfalse.value);
+            else node->setValueDouble(vfalse.valueDouble);
+            return vfalse;
     }
     return Variable();
 }

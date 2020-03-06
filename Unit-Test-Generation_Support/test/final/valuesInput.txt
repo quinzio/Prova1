@@ -1,0 +1,8 @@
+strMachine.u16VoFVoltagePU = 50;
+strMachine.u16VoltagePU = 0;
+strMachine.u16CurrentPU = 55;
+strMachine.u16FrequencyPU = 66;
+strMachine.s16AngleDeltaPU = 21845;
+strMachine.s16AnglePhiPU = 22000;
+SINPU[127] = 100;
+returnValue = 21845;

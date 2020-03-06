@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "json.hpp"
 
 class TestRunner
 {
@@ -23,6 +24,11 @@ public:
 		LockedRun, 
 		Finish
 	} testState;
+
+	class callsInstanceRunning {
+		int ix;
+		nlohmann::json jCalls;
+	};
 
 	TestRunner();
 };

@@ -82,6 +82,14 @@ public:
     /* If Variable is a function whis will tell if the function has a body 
     Otherwise, the meaning is not defined */
     bool functionHasBody = false;
+    /* The vector of values that the function returns during the test. 
+    A vector is necessary because the function may return different vaues durinf the test. 
+    Each function has its own counter so that adding or removing a function to the test 
+    doesn't affect the return list of the othervariables. */
+    std::vector<Variable> functionReturns;
+    /* During the test the function is accessed many times, so this keeps track of how 
+    many times the function was accessed. */
+    int funcRetIndex;
     /* Public methods */
     void updateCommonArea(void);
     void updateUnion();

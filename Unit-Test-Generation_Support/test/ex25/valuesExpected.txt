@@ -1,5 +1,4 @@
-a = 33
-b = 44
-c = 21845
-d = 1431655765
-d[0] = 21845
+expected_a = 13;
+expected_b = 13;
+expected_c = 14;
+expected_returnValue = 0;

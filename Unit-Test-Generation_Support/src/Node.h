@@ -35,8 +35,6 @@ public:
     void setValueDouble(float value);
     float getValueDouble();
     ValueEnum_t get_type();
-    bool getCallExprEvaluated();
-    void setCallExprEvaluated(bool val);
 private:
     unsigned long long value;
     float valueDouble;

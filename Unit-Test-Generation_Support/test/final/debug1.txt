@@ -1,46 +1,53 @@
-   285:
- void test_ACM_DoFrequencyRampPU_002(int);
-   371:
- 	test_ACM_DoFrequencyRampPU_002(1);
-   398:
+   309:
+ void test_ACM_ComputeDeltaAngle_001(int);
+   386:
+ 	test_ACM_ComputeDeltaAngle_001(1);
+   410:
  
-void test_ACM_DoFrequencyRampPU_002(int doIt) {
+void test_ACM_ComputeDeltaAngle_001(int doIt) {
     if (doIt) {
         /* Test case data declarations */
-        u16 u16NewFreqPU;
+        	int16_t returnValue;
+	int16_t expected_returnValue;
 
         /* Set global data */
         initialise_global_data();
-        	 VectVarFilt[0].s16NewOutput = 97;
-	 IbattStateMachine.BOOLForceGainFlag = 1431655765;
-	 BOOLSteadyStateFlag = 1431655765;
-	 u16NewFreqPU = 13;
+        	 strMachine.u16VoFVoltagePU = 50;
+	 strMachine.u16VoltagePU = 0;
+	 strMachine.u16CurrentPU = 55;
+	 strMachine.u16FrequencyPU = 66;
+	 strMachine.s16AngleDeltaPU = 21845;
+	 strMachine.s16AnglePhiPU = 22000;
+	 SINPU[127] = 100;
+	 returnValue = 21845;
 
         /* Set expected values for global data checks */
         initialise_expected_global_data();
-        	 expected_VectVarFilt[0].s16NewOutput = 97;
-	 expected_IbattStateMachine.BOOLForceGainFlag = 0;
-	 expected_BOOLSteadyStateFlag = 1;
+        	 expected_strMachine.u16VoFVoltagePU = 50;
+	 expected_strMachine.u16VoltagePU = 0;
+	 expected_strMachine.u16CurrentPU = 55;
+	 expected_strMachine.u16FrequencyPU = 66;
+	 expected_strMachine.s16AngleDeltaPU = -20026;
+	 expected_strMachine.s16AnglePhiPU = 22000;
+	 expected_SINPU[127] = 100;
+	 expected_returnValue = -20026;
 
 
-        START_TEST("test_ACM_DoFrequencyRampPU_002",
+        START_TEST("test_ACM_ComputeDeltaAngle_001",
             "<Insert test case description here>");
 
         /* Expected Call Sequence  */
         EXPECTED_CALLS(
-        	"ACM_Get_u16FreqRampPU"		"#s_r_12;"
-	"Temp_Get_BOOLSOATemperatureCorr"		"#s_r_0;"
-	"ACM_Get_u16FreqRampPU"		"#s_r_99;"
-	"FIR_UpdateFilt"		"#s_r_98_p_0_p_49;"
-	"ACM_Set_u16FreqRampSmoothPU"		"#s_r_96_p_194;"
+        	"ACM_GetMaximumVoltageApp"		"#s_r_1000;"
+	"Curr_GetPeakCurrent"		"#s_r_0;"
 
         );
 
         /* Call SUT */
-        ACM_DoFrequencyRampPU( u16NewFreqPU);
+        returnValue = ACM_ComputeDeltaAngle);
 
         /* Test case checks */
-         
+        CHECK_S_INT(returnValue, expected_returnValue); 
         /* Checks on global data */
         check_global_data();
         END_CALLS();
@@ -48,7 +55,7 @@ void test_ACM_DoFrequencyRampPU_002(int doIt) {
     }
 }
 
-  1501:
+  1859:
  IF_INSTANCE(
 "s_r_0"
 ) {
@@ -57,65 +64,20 @@ return 0;
 
 
 
-  1524:
+  2708:
  IF_INSTANCE(
-"s_r_98_p_0_p_49"
-) {
-CHECK_S_INT(enumFilt, 0);
-CHECK_S_INT(s16NewInput, 49);
-return ;
-}
-
-
-
-  1716:
- IF_INSTANCE(
-"s_r_12"
-) {
-return REPLACE_WRAPPER;
-}
-
-
-IF_INSTANCE(
-"s_r_99"
+"s_r_1000"
 ) {
 return REPLACE_WRAPPER;
 }
 
 
 
-  1748:
+  2725:
  IF_INSTANCE(
-"s_r_12"
+"s_r_1000"
 ) {
-return 12;
-}
-
-
-IF_INSTANCE(
-"s_r_99"
-) {
-return 99;
-}
-
-
-
-  1799:
- IF_INSTANCE(
-"s_r_96_p_194"
-) {
-CHECK_S_INT(value, 194);
-return REPLACE_WRAPPER;
-}
-
-
-
-  1826:
- IF_INSTANCE(
-"s_r_96_p_194"
-) {
-CHECK_S_INT(value, 194);
-return 96;
+return 1000;
 }
 
 

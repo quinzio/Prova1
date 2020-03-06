@@ -84,11 +84,12 @@ std::string Variable::print2(std::string prefix, std::string nameComposite, std:
 				) {
 			}
 			else {
+				std::string newNameComposite;
 				lastDiff = ix;
 				tempPrefix = prefix;
-				nameComposite += "[" + std::to_string(ix) + "]";
+				newNameComposite = nameComposite + "[" + std::to_string(ix) + "]";
 				tempPostfix = postfix;
-				v->print2(tempPrefix, nameComposite, tempPostfix, replaceWSetByUser);
+				v->print2(tempPrefix, newNameComposite, tempPostfix, replaceWSetByUser);
 			}
 			ix++;
 		}
