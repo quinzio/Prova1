@@ -8,6 +8,7 @@ struct coreType_str {
     int brackPos[BRACK_POS_LENGTH] = { -1, -1 ,-1 ,-1, -1, -1 };
     std::string coreType;
     std::string finalType;
+    bool declaredConst;
     std::string core;
     bool fun;
 };

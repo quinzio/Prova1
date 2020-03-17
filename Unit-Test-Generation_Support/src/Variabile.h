@@ -36,6 +36,8 @@ public:
     bool usedInTest = false;
     /* Variable was set by user during a previous test */
     bool setByUser = false;
+    /* Variable (or array of variables are declared const in the code) */
+    bool declaredConst = false;
     /* The integer value */
     unsigned long long value = 0x55555555ULL;
     /* The double value */

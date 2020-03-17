@@ -49,8 +49,13 @@ void findCoreType(struct coreType_str& str, bool init)
         Strip qualifiers as volatile, const, extern ?
         */
         std::regex_search(str.coreType, smFinalType, std::regex("(volatile|const)?(.*)"));
+        if (smFinalType[1].compare("const") == 0) {
+            str.declaredConst = true;
+        }
+        /* str.coreType was used in the regex as source so  
+        be careful when you touch it */
         str.coreType = smFinalType[2];
-        /* 
+        /*
         Must strip the final type which can be
         void (only with pointer ?)
         char

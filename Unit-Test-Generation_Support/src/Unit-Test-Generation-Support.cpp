@@ -228,8 +228,14 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                     testRunner.targetFunction = "ACM_ComputeDeltaAngle";
                     testRunner.buildGlobals = false;
                     testRunner.freeRunning = true;
-                    /* Remove the calls file
-                    */
+                    /* Reset Globals to allow const variables to set the setByUser and usedInTest flags*/
+                    testRunner.cleanSetByUser = false;
+                    /* Reset the function stores values (variables) to zero */
+                    for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
+                        it->funcRetIndex = 0;
+                    }
+                    ResetGlobals();
+                    /* Remove the calls file */
                     std::experimental::filesystem::remove(testRunner.callsFile);
                     testRunner.testState = TestRunner::TestState_enum::FreeRun;
                 }
@@ -260,7 +266,6 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
                     it->funcRetIndex = 0;
                 }
-
                 ResetGlobals();
                 break;
             }
@@ -272,7 +277,6 @@ int inner_main(int argc, std::string argv[]) throw (const std::exception&)
                 for (auto it = vFunction.begin(); it != vFunction.end(); it++) {
                     it->funcRetIndex = 0;
                 }
-
                 ResetGlobals();
                 break;
             }
@@ -407,8 +411,17 @@ void ResetGlobals(void) {
         for (auto itit = (*it).begin(); itit != (*it).end(); itit++) {
             recurseVariable(*itit, NULL,
                 [](Variable* va, Variable* vb) {
-                    va->usedInTest = false;
-                    if (va->typeEnum != Variable::typeEnum_t::isEnum) {
+                    if (va->declaredConst == true || 
+                        va->uData.myParent->declaredConst == true) {
+                        va->usedInTest = true;
+                        va->setByUser = true;
+                    }
+                    else {
+                        va->usedInTest = false;
+                    } 
+                    if ( (va->typeEnum == Variable::typeEnum_t::isEnum ||  
+                        va->declaredConst ||
+                        va->uData.myParent->declaredConst) == false)  {
                         va->value = va->valueDefault;
                         va->valueDouble = va->valueDoubleDefault;
                     }
@@ -460,7 +473,7 @@ Variable visit(Node *node)
 {
     //Logger(std::to_string(node->astFileRow));
     //std::cout << node->astFileRow << "\n";
-    if (node->astFileRow == 33006) {
+    if (node->astFileRow == 35) {
         myP++;
     }
     if (node->astType.compare("IntegerLiteral") == 0) {
@@ -555,6 +568,9 @@ Variable visit(Node *node)
     }
     if (node->astType.compare("WhileStmt") == 0) {
         return fWhileStmt(node);
+    }
+    if (node->astType.compare("InitListExpr") == 0) {
+        return fInitListExpr(node);
     }
     if (node->astType.compare("ConditionalOperator") == 0) {
         return fConditionalOperator(node);
@@ -1285,6 +1301,7 @@ Variable fVarDecl(Node* node) {
     Core type is *[10]
     */
     CoreTypes.coreType = rawType; 
+    CoreTypes.declaredConst = false;
     findCoreType(CoreTypes);
     /* In CoreTypes.typeChainA there's now the vector of the types. 
        An array is made as of [11], a pointer is written as *, 
@@ -1300,18 +1317,34 @@ Variable fVarDecl(Node* node) {
     temp.type = rawType;
     temp.used = true;
     temp.braceNested = shadowLevel;
+    temp.declaredConst = CoreTypes.declaredConst;
     /* Try to initialize the variable, but only for value type of variable 
     smVarDecl[5] is the cinit */
+    /* Variable initializers. For the moment, only array and simple values are supported. */
     if (smVarDecl[5].compare("cinit")) {
         Variable init;
-        if (node->child && node->astType.compare("IntegerLiteral") == 0) {
+        if (node->child && node->child->astType.compare("IntegerLiteral") == 0) {
             init = visit(node->child);
             temp.value = init.value;
             temp.valueDouble = init.valueDouble;
             temp.ValueEnum = init.ValueEnum;
         }
+        if (node->child && node->child->astType.compare("InitListExpr") == 0) {
+            if (temp.typeEnum == Variable::typeEnum_t::isArray) {
+                init = visit(node->child);
+                temp.array = init.array;
+                for (auto it = temp.array.begin(); it != temp.array.end(); it++) {
+                    it->valueByUser = it->value;
+                    it->valueDoubleByUser = it->valueDouble;
+                }
+                temp.value = init.value;
+                temp.valueDouble = init.valueDouble;
+                temp.ValueEnum = init.ValueEnum;
+                temp.valueByUser = init.value;
+                temp.valueDoubleByUser = init.valueDouble;
+            }
+        }
     }
-
 
 /*
 //    if (smGenericType[5].length() > 0) {
@@ -1598,7 +1631,9 @@ Variable fDeclRefExpr(Node* node) {
     value before the L to R conversion. The conversion may even never happen 
     if the variable is to be assigned by a var = 1 kind of instruction */
 
-    if (ret.pointsTo) {
+    if (ret.pointsTo && 
+        (ret.pointsTo->typeEnum == Variable::typeEnum_t::isEnum ||
+         ret.pointsTo->typeEnum == Variable::typeEnum_t::isValue)) {
         if (ret.pointsTo->usedInTest == false && ret.pointsTo->setByUser) {
             if (ret.pointsTo->ValueEnum == Variable::ValueEnum_t::isInteger) {
                 node->setValue(ret.pointsTo->valueByUser);
@@ -2111,6 +2146,9 @@ Variable fArraySubscriptExpr(Node* node) {
     }
     ret.pointsTo = &pArray.pointsTo->array[ix];
     ret.typeEnum = Variable::typeEnum_t::isRef;
+    ret.declaredConst = pArray.pointsTo->declaredConst;
+    ret.setByUser = pArray.pointsTo->setByUser;
+    ret.usedInTest = pArray.pointsTo->usedInTest;
     // Write node result value 
     node->setValue(ret.pointsTo->value);
     node->setValueDouble(ret.pointsTo->valueDouble);
@@ -2541,4 +2579,15 @@ Variable fConditionalOperator(Node* node) {
     }
     return Variable();
 }
-
+Variable fInitListExpr(Node* node) {
+    Node* node2;
+    Variable temp;
+    Variable vArray;
+    node2 = node->child;
+    while (node2) {
+        temp = visit(node2);
+        vArray.array.push_back(temp);
+        node2 = node2->nextSib;
+    }
+    return vArray;
+}

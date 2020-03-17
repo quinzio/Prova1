@@ -1,20 +1,12 @@
 
-int a, b, c, d, e, f;
-
-const unsigned int k1 = 9;
 const unsigned int k2[2] = {3, 4};
-int const * k3;
 
-
-struct ts1{
-    const int ts1a;
-    int ts1b;
-} vs1;
-
+int a = 7;
+int b;
 
 int fun1(int par1) {
-    k3 = &a;
-    vs1.ts1b = 1;
+    a = k2[1];
+    a = b;
 	return 0;
 }
 

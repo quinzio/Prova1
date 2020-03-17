@@ -2,7 +2,7 @@
     "expectedCalls": {
         "list": [
             "\t\"ACM_GetMaximumVoltageApp\"\t\t\"#s_r_1000;\"\n",
-            "\t\"Curr_GetPeakCurrent\"\t\t\"#s_r_0;\"\n"
+            "\t\"Curr_GetPeakCurrent\"\t\t\"#s_r_8000;\"\n"
         ],
         "singleInstances": [
             {
@@ -14,15 +14,12 @@
                 "return": 1000
             },
             {
-                "StubInstance": "IF_INSTANCE(\n\"s_r_0\"\n) {\nreturn 0;\n}\n\n\n",
-                "cantataCallInstance": "s_r_0",
-                "log": "//Expected\n\"Curr_GetPeakCurrent\"\t\"#s_r_0\"\n\tReturn = 0\n",
+                "StubInstance": "IF_INSTANCE(\n\"s_r_8000\"\n) {\nreturn 8000;\n}\n\n\n",
+                "cantataCallInstance": "s_r_8000",
+                "log": "//Expected\n\"Curr_GetPeakCurrent\"\t\"#s_r_8000\"\n\tReturn = 8000\n",
                 "name": "Curr_GetPeakCurrent",
-                "return": 0
+                "return": 8000
             }
         ]
-    },
-    "returnType": "int16_t",
-    "returnVal": 18446744073709531590,
-    "targetName": "ACM_ComputeDeltaAngle"
+    }
 }

@@ -62,5 +62,5 @@ Variable fCStyleCastExprt(Node* node);
 Variable fCompoundAssignOperator(Node* node);
 Variable fWhileStmt(Node* node);
 Variable fConditionalOperator(Node* node);
-
+Variable fInitListExpr(Node* node);
 
